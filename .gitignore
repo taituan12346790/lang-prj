@@ -48,9 +48,9 @@ env/
 *.log
 logs/
 
-# Alembic backup folder (đã chuyển sang migrations/)
-alembic/
-alembic/versions/*.py
+# Alembic backup folder (giữ lại cho backup)
+# alembic/
+# alembic/versions/*.py
 
 # Jupyter Notebook
 .ipynb_checkpoints
