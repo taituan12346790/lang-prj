@@ -1,4 +1,6 @@
 import asyncio
+import sys
+import os
 from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config
@@ -6,6 +8,9 @@ from sqlalchemy import pool
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
 from alembic import context
+
+# Add project root to Python path for Render deployment
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Import models và settings của project
 from app.core.database import Base
