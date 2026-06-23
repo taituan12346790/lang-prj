@@ -10,6 +10,7 @@ python-jose[cryptography]==3.3.0
 passlib[bcrypt]==1.7.4
 python-multipart==0.0.6
 alembic==1.13.1
+loguru==0.7.2
 
 # LangChain & AI
 langchain==0.1.5
