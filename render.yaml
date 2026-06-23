@@ -38,4 +38,4 @@ services:
     startCommand: streamlit run streamlit_app.py --server.port=$PORT --server.address=0.0.0.0
     envVars:
       - key: API_BASE_URL
-        value: https://ai-language-tutor-api-brqj.onrender.com
+        value: https://ai-language-tutor-api-brqu.onrender.com
