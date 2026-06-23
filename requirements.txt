@@ -1,12 +1,17 @@
 # ============================================================
-# CORE FASTAPI & WEB FRAMEWORK
+# STREAMLIT FRONTEND (Required)
+# ============================================================
+streamlit>=1.28.0
+
+# ============================================================
+# CORE FASTAPI & WEB FRAMEWORK (Backend only)
 # ============================================================
 fastapi==0.109.0
 uvicorn[standard]==0.27.0
 python-multipart==0.0.6
 
 # ============================================================
-# DATABASE & ORM
+# DATABASE & ORM (Backend only)
 # ============================================================
 sqlalchemy[asyncio]==2.0.25
 asyncpg==0.29.0
@@ -22,7 +27,7 @@ python-dotenv==1.0.0
 email-validator
 
 # ============================================================
-# AUTHENTICATION & SECURITY
+# AUTHENTICATION & SECURITY (Backend only)
 # ============================================================
 python-jose[cryptography]
 bcrypt
@@ -31,7 +36,7 @@ itsdangerous
 authlib
 
 # ============================================================
-# LLM & AI
+# LLM & AI (Backend only)
 # ============================================================
 groq
 langchain==0.1.5
@@ -41,12 +46,12 @@ langgraph==0.0.20
 openai
 
 # ============================================================
-# NLP & LANGUAGE TOOLS
+# NLP & LANGUAGE TOOLS (Backend only)
 # ============================================================
 language-tool-python
 
 # ============================================================
-# HTTP CLIENTS & UTILITIES
+# HTTP CLIENTS & UTILITIES (Shared)
 # ============================================================
 httpx
 requests
