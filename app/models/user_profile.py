@@ -1,6 +1,6 @@
 # app/models/user_profile.py
 from uuid import uuid4
-from sqlalchemy import Column, String, Float, ForeignKey, DateTime, Integer
+from sqlalchemy import Column, String, Float, ForeignKey, DateTime, Integer, Boolean
 from sqlalchemy.dialects.postgresql import UUID, JSONB
 from sqlalchemy.ext.mutable import MutableDict, MutableList
 from sqlalchemy.orm import relationship
@@ -38,6 +38,15 @@ class UserProfile(Base):
     total_sessions = Column(Integer, default=0)
     total_conversations = Column(Integer, default=0)
     streak_days = Column(Integer, default=0)
+    
+    # Onboarding flag for OAuth users
+    onboarding_completed = Column(Boolean, default=True, nullable=False)  # True for email/password, False for OAuth initially
+
+    # Learning context - Sprint 1
+    active_topic_id = Column(String(50), nullable=True)
+    active_lesson_order = Column(Integer, nullable=True)
+    learning_mode = Column(String(50), default="normal", nullable=False)  # normal, quiz_review, free_chat
+    last_chat_session_id = Column(String(255), nullable=True)
 
     last_active = Column(DateTime(timezone=True), server_default=func.now())
 

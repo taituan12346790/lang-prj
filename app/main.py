@@ -9,9 +9,11 @@ import uvicorn
 from loguru import logger
 
 from app.core.config import settings
-from app.routers import auth, chat
+from app.routers import auth, chat, test, profile, analytics
+from app.routers import learning_path, quiz as quiz_router
 from app.core.register_tools import register_all_tools
 from app.llm.llm_client import get_llm_client
+from app.core.database import get_db
 
 
 # ====================== LIFESPAN EVENTS ======================
@@ -29,6 +31,16 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         logger.error(f"❌ Failed to register tools: {e}")
         raise
+
+    # Seed topics if DB is empty
+    try:
+        from app.services.topic_service import seed_topics_if_empty
+        async for db in get_db():
+            await seed_topics_if_empty(db)
+            break
+        logger.success("✅ Topics seeded/verified")
+    except Exception as e:
+        logger.warning(f"⚠️  Topic seeding skipped: {e}")
     
     logger.success(
         f"🎉 App initialized | Environment: {settings.ENVIRONMENT} | Debug: {settings.DEBUG}"
@@ -50,12 +62,54 @@ app = FastAPI(
     lifespan=lifespan
 )
 
+# ====================== ROUTE REGISTRATION (MUST BE BEFORE MIDDLEWARE) ======================
+# Auth Routes
+app.include_router(auth.router, tags=["Authentication"])
+
+# Profile Routes
+app.include_router(profile.router, tags=["Profile"])
+
+# Chat Routes
+app.include_router(chat.router, tags=["Chat"])
+
+# Test Routes
+app.include_router(test.router, tags=["Test & Level"])
+
+# Learning Path Routes
+logger.info(f"📌 Registering learning_path router: {learning_path.router}")
+logger.info(f"   Router ID: {id(learning_path.router)}")
+logger.info(f"   Prefix: {learning_path.router.prefix}")
+logger.info(f"   Routes: {len(learning_path.router.routes)}")
+for r in learning_path.router.routes:
+    if hasattr(r, 'path'):
+        logger.info(f"      - {r.path}")
+app.include_router(learning_path.router, tags=["Learning Path"])
+logger.success("✅ Learning Path routes registered")
+
+# Quiz Routes
+app.include_router(quiz_router.router, tags=["Quiz"])
+
+# Analytics Routes
+app.include_router(analytics.router, tags=["Analytics"])
+
+# Writing Routes
+from app.routers import writing
+app.include_router(writing.router, tags=["Writing"])
+
+# AI Exercise Routes
+from app.routers import ai_exercise
+app.include_router(ai_exercise.router, tags=["AI Exercise"])
 
 # ====================== MIDDLEWARE ======================
-# CORS Configuration - Allow all origins (OAuth needs this for redirects)
+# CORS Configuration - Allow Streamlit Cloud and localhost
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # OAuth redirects need to work from any origin
+    allow_origins=[
+        "http://localhost:8501",  # Local Streamlit
+        "https://*.streamlit.app",  # Streamlit Cloud
+        "https://streamlit.app",
+        "*"  # Allow all (fine for public API)
+    ],
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["Content-Type", "Authorization"],
@@ -71,20 +125,6 @@ app.add_middleware(
     same_site="lax",
     https_only=False,  # Set True if using HTTPS
 )
-
-# ====================== ROUTE REGISTRATION ======================
-# Auth Routes
-app.include_router(
-    auth.router,
-    tags=["Authentication"]
-)
-
-# Chat Routes (Main AI Interaction)
-app.include_router(
-    chat.router,
-    tags=["Chat"]
-)
-
 
 # ====================== OAUTH TEST PAGE ======================
 @app.get("/auth/test")

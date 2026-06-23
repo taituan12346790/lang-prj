@@ -16,10 +16,15 @@ class LLMClient:
         self.max_tokens = max_tokens
 
     async def generate_async(self, user_input: str, system_prompt: str = "", **kwargs):
+        # Accept alias user_prompt for backward compatibility
+        if not user_input and kwargs.get("user_prompt"):
+            user_input = kwargs["user_prompt"]
         messages = []
         if system_prompt:
             messages.append({"role": "system", "content": system_prompt})
         messages.append({"role": "user", "content": user_input})
+        temperature = kwargs.get("temperature", self.temperature)
+        max_tokens = kwargs.get("max_tokens", self.max_tokens)
         loop = asyncio.get_running_loop()
         try:
             response = await loop.run_in_executor(
@@ -27,8 +32,8 @@ class LLMClient:
                 lambda: self.client.chat.completions.create(
                     model=self.model,
                     messages=messages,
-                    temperature=self.temperature,
-                    max_tokens=self.max_tokens,
+                    temperature=temperature,
+                    max_tokens=max_tokens,
                 )
             )
             return response.choices[0].message.content.strip()

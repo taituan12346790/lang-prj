@@ -29,15 +29,16 @@ class Conversation(Base):
     
     session_id = Column(String, index=True, nullable=False)
     
-    role = Column(
-        SQLEnum(MessageRole, name="message_role"), 
-        nullable=False
-    )
+    role = Column(String(20), nullable=False)  # "user" or "assistant"
     
     message = Column(Text, nullable=False)
     
     tokens = Column(Integer, default=0)                    # Tổng tokens (prompt + completion)
     model_used = Column(String, nullable=False)            # Bắt buộc phải ghi model
+
+    # Sprint 2: Learning context
+    topic_id = Column(String(50), nullable=True)           # Which topic this chat is about
+    learning_mode = Column(String(50), default="normal")   # normal, quiz_review, free_chat
 
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(

@@ -1,0 +1,123 @@
+# Environment variables (QUAN TRỌNG - ĐỪNG UPLOAD)
+.env
+.env.local
+.env.production
+.env.*.local
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+ENV/
+env/
+.venv
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Logs
+*.log
+logs/
+
+# Alembic backup folder (đã chuyển sang migrations/)
+alembic/
+alembic/versions/*.py
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Temporary files
+*.tmp
+*.bak
+*.cache
+temp/
+tmp/
+
+# Documentation (files báo cáo - không cần deploy)
+*.txt
+!requirements.txt
+!requirements-frontend.txt
+!runtime.txt
+*.docx
+*.pdf
+chuong*.txt
+bao_cao*.txt
+cursor*.txt
+sua_lan*.txt
+vande_va_muctieu.txt
+latex_bao_cao.txt
+can_bo_sung*.txt
+
+# Scripts tiện ích (không cần production)
+vietnamize*.py
+fix_*.py
+extract_*.py
+check_*.py
+split_*.py
+update_*.py
+final_*.py
+complete_*.py
+auto_*.py
+*_test.py
+test_*.py
+
+# Markdown documentation files (giữ README.md, bỏ còn lại)
+HUONG_DAN*.md
+VIETNAMIZATION*.md
+AI_*.md
+AGENT_*.md
+CHAT_*.md
+FIXES_*.md
+CHƯƠNG*.md
+*_GUIDE.md
+*_CHECKLIST.md
+*_STATUS.md
+NEON_SETUP.md
+DEPLOY_*.md
+
+# Backup files
+*.backup
+*.bak
+*_sua.txt
+
+# Demo/example files
+*_DEMO_*.py
+topic_*_edited.py
+topics_data_DEMO*.py
+
+# OAuth test
+test_oauth.html

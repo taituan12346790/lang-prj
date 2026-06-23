@@ -59,6 +59,7 @@ class StrategySelector:
         user_id: str,
         user_input: str,
         long_mem: UserProfile,
+        analytics_context: Optional[Dict[str, Any]] = None,
     ) -> Dict[str, Any]:
         # Guard: missing profile
         if long_mem is None:
@@ -93,8 +94,8 @@ class StrategySelector:
 
         base_mode = self._rule_based_intent(text_lower)
 
-        # LLM decision
-        decision = await self._llm_decide(normalized_input, long_mem, base_mode)
+        # LLM decision with analytics
+        decision = await self._llm_decide(normalized_input, long_mem, base_mode, analytics_context)
 
         if not isinstance(decision, StrategyDecision):
             logger.warning(f"LLM returned invalid type for {user_id}, using fallback")
@@ -164,40 +165,88 @@ class StrategySelector:
         self,
         user_input: str,
         long_mem: UserProfile,
-        base_mode: str
+        base_mode: str,
+        analytics_context: Optional[Dict[str, Any]] = None
     ) -> StrategyDecision:
         weak_skills = getattr(long_mem, 'weak_skills', None)
         weak_skills_str = ", ".join(list(weak_skills.keys())[:6]) if weak_skills else "None"
         target_lang = getattr(long_mem, 'target_language', None) or "Unknown"
         current_level = getattr(long_mem, 'current_level', 'A1')
+        
+        # Add analytics info to prompt
+        analytics_info = ""
+        if analytics_context:
+            weak_from_analytics = analytics_context.get("weak_skills", {})
+            if weak_from_analytics:
+                top_weak = sorted(weak_from_analytics.items(), key=lambda x: x[1])[:3]
+                analytics_info = f"\nWeak skills from recent quizzes: {', '.join([f'{s} ({a*100:.0f}%)' for s, a in top_weak])}"
+            
+            if analytics_context.get("needs_review"):
+                analytics_info += f"\n⚠️ User has {analytics_context.get('due_reviews_count', 0)} topics due for review (spaced repetition)"
+        
+        # Add learning context (active topic/lesson) - CRITICAL for topic awareness
+        learning_context_str = ""
+        priority_focus = []
+        if analytics_context and "learning_context" in analytics_context:
+            lc = analytics_context["learning_context"]
+            learning_context_str = f"\n\n🎯 ACTIVE LEARNING CONTEXT:\nTopic: {lc.get('topic_name', 'N/A')} ({lc.get('topic_name_vi', '')})\nLevel: {lc.get('level', 'N/A')}\nGrammar Focus: {', '.join(lc.get('grammar_focus', []))}"
+            if "lesson_title" in lc:
+                learning_context_str += f"\nCurrent Lesson: {lc.get('lesson_title', '')} ({lc.get('lesson_type', '')})"
+            learning_context_str += "\n\n⚠️ IMPORTANT: User is currently studying this topic. Prioritize responses related to this topic's content and grammar focus!"
+            
+            # Extract priority focus from grammar_focus
+            priority_focus = lc.get('grammar_focus', [])[:3]
 
-        prompt = f"""User Level: {current_level}
-Target: {target_lang}
-Weak skills: {weak_skills_str}
-Request: {user_input}
+        # Phase 2: Enable LLM structured call for intelligent strategy decision
+        system_prompt = f"""You are a Strategy Selector for an AI Language Tutor.
 
-Hãy phân tích và chọn mode phù hợp nhất."""
+Target Language: {target_lang}
+User Level: {current_level}
+Weak Skills: {weak_skills_str}
+{analytics_info}
+{learning_context_str}
 
+Base mode from keywords: {base_mode}
+
+User input: "{user_input}"
+
+Choose the best teaching mode and suggest tools. Consider:
+1. If user is in active learning context, prioritize that topic's focus
+2. Weak skills should influence difficulty and focus
+3. Due reviews should trigger review mode if appropriate
+
+Return JSON:
+{{
+  "mode": "grammar|translation|exercise|vocabulary|conversation|general",
+  "reasoning": "short explanation",
+  "priority_focus": ["grammar_point1", "grammar_point2"],
+  "suggested_tools": ["translator", "grammar_checker", "exercise_generator", "llm_response"],
+  "difficulty_adjustment": "increase|decrease|maintain"
+}}
+"""
+        
         try:
-            decision = await self.llm.generate_structured_async(
-                system_prompt="Bạn là Language Learning Strategist.",
-                user_prompt=prompt,
-                response_format=StrategyDecision,
-                temperature=0.4
+            decision_dict = await self.llm.generate_structured_async(
+                user_input=user_input,
+                system_prompt=system_prompt,
+                response_model=StrategyDecision,
+                temperature=0.3
             )
-            if decision and isinstance(decision, StrategyDecision):
-                return decision
-            else:
-                logger.warning("LLM returned None or invalid type, using fallback")
-                return StrategyDecision(
-                    mode=base_mode,
-                    reasoning="Fallback strategy due to LLM response error"
-                )
-        except Exception:
-            # Giảm log spam: chỉ warning + debug traceback
-            logger.warning("LLM strategy failed (check debug logs for traceback)")
-            logger.debug(traceback.format_exc())
-            return StrategyDecision(
-                mode=base_mode,
-                reasoning="Fallback strategy due to LLM failure"
-            )
+            
+            if decision_dict and isinstance(decision_dict, dict):
+                return StrategyDecision(**decision_dict)
+        except Exception as e:
+            logger.warning(f"LLM strategy decision failed: {e}, using fallback")
+        
+        # Fallback if LLM fails
+        reasoning = f"Fallback after LLM error: mode={base_mode}"
+        if learning_context_str:
+            reasoning += f" | Active topic detected"
+        
+        return StrategyDecision(
+            mode=base_mode,
+            reasoning=reasoning,
+            priority_focus=priority_focus,
+            suggested_tools=["llm_response"],
+            difficulty_adjustment="maintain"
+        )

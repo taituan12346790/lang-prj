@@ -61,3 +61,35 @@ async def update_profile(
     await db.commit()
     await db.refresh(profile)
     return _build_profile_response(profile, current_user)
+
+
+@router.post("/onboarding")
+async def complete_onboarding(
+    profile_data: UserProfileUpdate,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """Complete onboarding for OAuth users who skipped initial setup"""
+    result = await db.execute(select(UserProfile).where(UserProfile.user_id == current_user.id))
+    profile = result.scalar_one_or_none()
+    
+    if not profile:
+        raise HTTPException(status_code=404, detail="Profile not found")
+    
+    # Update profile with onboarding data
+    update_dict = profile_data.model_dump(exclude_unset=True)
+    for key, value in update_dict.items():
+        if value is not None:
+            setattr(profile, key, value)
+    
+    # Mark onboarding as completed
+    profile.onboarding_completed = True
+    
+    await db.commit()
+    await db.refresh(profile)
+    
+    return {
+        "success": True,
+        "message": "Onboarding completed successfully",
+        "profile": _build_profile_response(profile, current_user)
+    }

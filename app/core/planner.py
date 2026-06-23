@@ -1,5 +1,5 @@
 # app/core/planner.py
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Optional
 from pydantic import BaseModel, Field
 from loguru import logger
 
@@ -37,7 +37,8 @@ class ReActPlanner:
         user_input: str,
         user_id: str,
         strategy: Dict[str, Any],
-        long_mem: UserProfile
+        long_mem: UserProfile,
+        analytics_context: Optional[Dict[str, Any]] = None
     ) -> LearningPlan:
         """
         Tạo kế hoạch học tập có cấu trúc
@@ -47,56 +48,101 @@ class ReActPlanner:
             logger.warning(f"Planner received empty input from user {user_id}")
             return self._get_fallback_plan("Empty request")
 
-        try:
-            # Xây dựng context an toàn
-            weak_skills_str = (
-                ", ".join(list(long_mem.weak_skills.keys())[:6])
-                if long_mem.weak_skills else "None"
-            )
-            interests_str = (
-                ", ".join(long_mem.interests[-5:])
-                if long_mem.interests else "None"
-            )
+        # Build learning context string for plan goal
+        learning_context_goal = ""
+        steps_context = "Trả lời trực tiếp yêu cầu của người dùng"
+        
+        if analytics_context and "learning_context" in analytics_context:
+            lc = analytics_context["learning_context"]
+            topic_name = lc.get('topic_name_vi', lc.get('topic_name', ''))
+            grammar_focus = lc.get('grammar_focus', [])
+            
+            learning_context_goal = f" trong ngữ cảnh chủ đề '{topic_name}'"
+            if grammar_focus:
+                learning_context_goal += f" (tập trung: {', '.join(grammar_focus[:2])})"
+            
+            steps_context = f"Trả lời câu hỏi và kết nối với chủ đề '{topic_name}'"
 
-            context = f"""
-User Level: {long_mem.current_level}
-Target Language: {long_mem.target_language}
-Weak Skills: {weak_skills_str}
-Interests: {interests_str}
+        # Phase 2: Enable LLM planning for intelligent tool selection
+        mode = strategy.get('mode', 'general')
+        suggested_tools = strategy.get('suggested_tools', [])
+        priority_focus = strategy.get('priority_focus', [])
+        
+        # Map mode to suggested tools if strategy didn't provide
+        # Phase 2: Use correct tool names that match registry
+        if not suggested_tools or suggested_tools == ["llm_response"]:
+            mode_tool_map = {
+                "grammar": ["grammar", "llm_response"],  # Fixed: grammar_checker → grammar
+                "translation": ["translator", "llm_response"],
+                "exercise": ["exercise", "llm_response"],  # Fixed: exercise_generator → exercise
+                "vocabulary": ["llm_response"],
+                "conversation": ["llm_response"],
+            }
+            suggested_tools = mode_tool_map.get(mode, ["llm_response"])
+        
+        system_prompt = f"""You are a Learning Planner for an AI Language Tutor.
+
+User request: "{user_input}"
+Mode: {mode}
+Priority Focus: {', '.join(priority_focus) if priority_focus else 'None'}
+Suggested Tools: {', '.join(suggested_tools)}
+{learning_context_goal}
+
+Create a 1-3 step plan. Each step should use appropriate tools:
+- grammar: Check grammar of user's text (registered as 'grammar' or 'grammar_check')
+- translator: Translate between languages (registered as 'translator' or 'translate')
+- exercise: Generate practice exercises (registered as 'exercise' or 'generate_exercises')
+- llm_response: Generate teaching content / explanations
+
+Return JSON with steps array:
+{{
+  "overall_goal": "Clear goal statement",
+  "reasoning": "Why this plan",
+  "steps": [
+    {{
+      "step": 1,
+      "action": "What to do",
+      "tool": "tool_name or null (use: grammar, translator, exercise, llm_response)",
+      "purpose": "Why",
+      "expected_outcome": "What user gets"
+    }}
+  ],
+  "tools_to_use": ["tool1", "tool2"],
+  "estimated_duration": "X minutes",
+  "personalization_notes": "How it fits user's learning"
+}}
 """
-
-            prompt = f"""Bạn là Senior Language Learning Planner chuyên nghiệp.
-
-{context}
-
-CURRENT REQUEST: {user_input}
-CURRENT STRATEGY: {strategy.get('mode', 'general')}
-
-Tạo kế hoạch học tập thông minh, thực tế, tối đa 5 bước.
-Mỗi bước phải rõ ràng, có tool (nếu cần) và mục đích cụ thể.
-
-Trả về JSON theo đúng schema LearningPlan."""
-
-            plan = await self.llm.generate_structured_async(
-                system_prompt="Bạn là Senior Language Learning Planner chuyên nghiệp.",
-                user_prompt=prompt,
-                response_format=LearningPlan,
-                temperature=0.35
+        
+        try:
+            plan_dict = await self.llm.generate_structured_async(
+                user_input=user_input,
+                system_prompt=system_prompt,
+                response_model=LearningPlan,
+                temperature=0.3
             )
-
-            if plan is None:
-                logger.warning(f"Planner returned None for user {user_id}, using fallback")
-                return self._get_fallback_plan(user_input)
-
-            # Nếu trả về dict thì convert sang model
-            if isinstance(plan, dict):
-                return LearningPlan.model_validate(plan)
-
-            return plan
-
-        except Exception:
-            logger.exception(f"Planner failed for user {user_id}")
-            return self._get_fallback_plan(user_input)
+            
+            if plan_dict and isinstance(plan_dict, dict):
+                return LearningPlan(**plan_dict)
+        except Exception as e:
+            logger.warning(f"LLM planning failed: {e}, using fallback")
+        
+        # Fallback if LLM fails
+        return LearningPlan(
+            overall_goal=f"Hỗ trợ yêu cầu: {user_input[:60]}...{learning_context_goal}",
+            reasoning=f"Fallback plan after LLM error for mode={mode}",
+            steps=[
+                PlanStep(
+                    step=1,
+                    action=steps_context,
+                    tool=suggested_tools[0] if suggested_tools else "llm_response",
+                    purpose="Xử lý câu hỏi chính",
+                    expected_outcome="Người dùng nhận được câu trả lời"
+                )
+            ],
+            tools_to_use=suggested_tools[:2] if len(suggested_tools) > 1 else suggested_tools,
+            estimated_duration="5-8 phút",
+            personalization_notes=f"Tập trung vào chủ đề đang học{learning_context_goal}"
+        )
 
     def _get_fallback_plan(self, user_input: str) -> LearningPlan:
         """Fallback plan an toàn"""

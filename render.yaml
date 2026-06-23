@@ -1,0 +1,36 @@
+services:
+  # Backend API Service
+  - type: web
+    name: ai-language-tutor-api
+    env: python
+    region: singapore  # Chọn Singapore (gần Việt Nam)
+    plan: free
+    buildCommand: |
+      pip install -r requirements.txt
+      alembic upgrade head
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: DATABASE_URL
+        sync: false  # Set manually in Render dashboard
+      - key: SECRET_KEY
+        generateValue: true
+      - key: GROQ_API_KEY
+        sync: false
+      - key: ALGORITHM
+        value: HS256
+      - key: ACCESS_TOKEN_EXPIRE_MINUTES
+        value: 30
+      - key: ENVIRONMENT
+        value: production
+      - key: DEBUG
+        value: False
+      - key: LOG_LEVEL
+        value: INFO
+    healthCheckPath: /health
+    
+  # PostgreSQL Database (Optional - hoặc dùng Neon)
+  # - type: pserv
+  #   name: ai-language-tutor-db
+  #   env: docker
+  #   plan: free
+  #   region: singapore

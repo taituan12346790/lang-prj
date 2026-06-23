@@ -1,8 +1,94 @@
 """
-Prompt Builder for AI Language Tutor
-Giữ nguyên tinh thần prompt gốc
-Tương thích Agent Loop
+Prompt Builder for AI Language Tutor - REFACTORED
+- System instructions in English (better LLM understanding)
+- Few-shot examples in Vietnamese (natural student-teacher interaction)
+- Fixed strategy/plan field mapping
+- Added missing MODE_RULES (translation, exercise, conversation)
+- Updated few-shot to English language examples
+- Added weak skills section
 """
+# ============================================================
+# SENSITIVE CONTENT RULES
+# ============================================================
+
+# ============================================================
+# HELPER FUNCTIONS
+# ============================================================
+
+def _extract_conversation_summary(conversation_history: str) -> str:
+    """
+    Extract a brief summary from conversation history
+    to help AI remember context better
+    """
+    try:
+        # Simple heuristic: look for last AI response to understand what was taught
+        lines = conversation_history.split('\n')
+        
+        # Find last AI response and last user input
+        last_ai_response = None
+        last_user_input = None
+        
+        for i, line in enumerate(lines):
+            if line.startswith("AI Tutor:"):
+                last_ai_response = line.replace("AI Tutor:", "").strip()
+            elif line.startswith("User:"):
+                last_user_input = line.replace("User:", "").strip()
+        
+        # Build summary
+        summary_parts = []
+        
+        if last_user_input:
+            summary_parts.append(f"Last user message: {last_user_input[:150]}")
+            
+            # CRITICAL: Detect if user is submitting practice answers
+            # Pattern: "1 a has b have 2 a His..." or numbered answers
+            if any(pattern in last_user_input.lower() for pattern in ["1 a", "1.", "2 a", "2.", "a has", "a have"]):
+                summary_parts.append("⚠️⚠️⚠️ USER IS SUBMITTING PRACTICE ANSWERS - DO NOT RE-TEACH, GRADE THEIR WORK!")
+        
+        if last_ai_response:
+            # Extract key topic from AI response
+            if "📚" in last_ai_response or "PHẦN" in last_ai_response:
+                summary_parts.append("Teaching mode: Structured lesson")
+            
+            # Check if AI gave practice exercises
+            if "✏️" in last_ai_response or "LUYỆN TẬP" in last_ai_response or "📮" in last_ai_response:
+                summary_parts.append("⚠️ AI JUST GAVE PRACTICE EXERCISES - Waiting for student answers")
+            
+            # Detect topic keywords
+            topics = []
+            if "there is" in last_ai_response.lower() or "there are" in last_ai_response.lower():
+                topics.append("there is/are structure")
+            if "possessive" in last_ai_response.lower() or "my, your, his" in last_ai_response.lower():
+                topics.append("Possessive Adjectives")
+            if "past simple" in last_ai_response.lower() or "quá khứ" in last_ai_response.lower():
+                topics.append("Past Simple tense")
+            if "vũ trụ" in last_ai_response or "space" in last_ai_response.lower():
+                topics.append("Space vocabulary")
+            if "vocabulary" in last_ai_response.lower() or "từ vựng" in last_ai_response:
+                topics.append("Vocabulary")
+            if "grammar" in last_ai_response.lower() or "ngữ pháp" in last_ai_response:
+                topics.append("Grammar")
+            
+            if topics:
+                summary_parts.append(f"Current topics: {', '.join(topics)}")
+            
+            # Check if there were corrections
+            if "❌" in last_ai_response or "✅" in last_ai_response or "sai" in last_ai_response:
+                summary_parts.append("⚠️ Just corrected student's mistakes")
+        
+        # Count exchanges
+        user_count = conversation_history.count("User:")
+        summary_parts.append(f"Conversation depth: {user_count} exchanges")
+        
+        if summary_parts:
+            return "\n".join(summary_parts)
+        else:
+            return "General conversation (no specific topic detected)"
+        
+    except Exception:
+        return "Conversation ongoing (summary extraction failed)"
+
+
 # ============================================================
 # SENSITIVE CONTENT RULES
 # ============================================================
@@ -69,209 +155,164 @@ This is SENSITIVE POLITICAL / RELIGIOUS TERM mode.
 # ============================================================
 
 def get_teaching_few_shot(target_lang: str) -> str:
+    """Few-shot examples showing pedagogical style - Using English as target language"""
     return f"""
 ---
-VÍ DỤ MẪU VỀ CÁCH GIẢNG DẠY:
+TEACHING STYLE EXAMPLES (Vietnamese student learning {target_lang}):
 
 ==================================================
-VÍ DỤ 1: GIẢI THÍCH THÌ QUÁ KHỨ
+EXAMPLE 1: EXPLAINING PAST TENSE
 ==================================================
-Người dùng:
-"giải thích thì preterito perfeito / thì quá khứ tiếng Bồ Đào Nha Brazil dùng thế nào?"
+Student:
+"giải thích thì quá khứ đơn trong tiếng Anh"
 
 AI Tutor:
-"Chào bạn! Trong {target_lang}, thì 'Pretérito Perfeito' 
-tương đương với thì quá khứ của tiếng Việt mình.
+"Chào bạn! Trong {target_lang}, thì 'Past Simple' (quá khứ đơn)
+dùng để nói về một hành động đã xảy ra và kết thúc hoàn toàn trong quá khứ.
 
 1. Khái niệm:
-Dùng để diễn tả một hành động đã xảy ra và kết thúc hoàn toàn trong quá khứ.
+Dùng để diễn tả một hành động đã xảy ra và kết thúc trong quá khứ, 
+hoặc một thói quen trong quá khứ.
 
 2. Công thức:
-[Gốc động từ] + [đuôi động từ được chia ở thì quá khứ]
+Câu khẳng định:
+Subject + V2 (past form)
 
-- Với động từ nguyên thể đuôi -ar:
-bỏ đuôi ar và thêm:
--ei, -ou, -amos, -aram
+Câu phủ định:
+Subject + did not (didn't) + V1 (base form)
 
-- Với động từ nguyên thể đuôi -er:
-bỏ đuôi er và thêm:
--i, -eu, -emos, -eram
+Câu nghi vấn:
+Did + Subject + V1 (base form)?
 
-- Với động từ nguyên thể đuôi -ir:
-bỏ đuôi ir và thêm:
--i, -iu, -imos, -iram
+3. Cách chia động từ:
+Động từ có quy tắc: thêm -ed
+- work → worked
+- play → played
+- study → studied (y → ied)
 
-Tuy nhiên vẫn có động từ bất quy tắc:
-
-ser:
-eu fui
-você foi
-nós fomos
-eles foram
-
-estar:
-eu estive
-você esteve
-nós estivemos
-eles estiveram
-
-3. Ví dụ:
-- Eu comi pão (Tôi đã ăn bánh mì)
-- Ela viajou ontem (Cô ấy đã đi du lịch hôm qua)
-- Eu estive no Rio ontem (Tôi ở Rio ngày hôm qua)
-
-Rất dễ hiểu đúng không nào! Bạn thử thực hành đặt vài câu sử dụng thì này nhé "
-
-==================================================
-VÍ DỤ 2: GIẢI THÍCH THỨC NGỮ PHÁP
-==================================================
-
-Người dùng:
-"giải thích thì conjuntivo / thì subjuntivo tiếng Bồ Đào Nha Brazil dùng thế nào? / thể giả định tiếng Bồ Brazil"
-
-AI Tutor:
-"Chào bạn!
-
-Trong tiếng Bồ Đào Nha Brazil, 'Conjuntivo' (hay còn gọi là Subjuntivo) là một thức ngữ pháp dùng để diễn đạt:
-
-- điều chưa chắc chắn
-- mong muốn
-- giả định
-- nghi ngờ
-- cảm xúc
-- khả năng xảy ra
-
-1. Khái niệm:
-
-Nếu Pretérito hay Presente trả lời câu hỏi:
-'Khi nào hành động xảy ra?'
-
-thì Conjuntivo trả lời câu hỏi:
-'Hành động này có chắc chắn hay chỉ là khả năng / mong muốn?'
-
-2. Các trường hợp thường dùng:
-
-a) Sau các động từ mong muốn:
-
-- Espero que...
-(Tôi hy vọng rằng...)
-
-- Quero que...
-(Tôi muốn rằng...)
-
-b) Sau các cụm chỉ nghi ngờ / khả năng:
-
-- Talvez...
-(Có lẽ...)
-
-- É possível que...
-(Có thể rằng...)
-
-c) Sau biểu đạt cảm xúc:
-
-- Fico feliz que...
-(Tôi vui vì...)
-
-3. Công thức chia động từ
-Có 3 thì đơn và 3 thì phức trong thể subjuntivo:
-Thì được dùng phổ biến nhất là thì hiện tại (presente do subjuntivo):
-
-Động từ đuôi -ar:  
-Cách chia động từ: Chia động từ ở thì hiện tại ngôi thứ nhất số ít (tức ngôi "eu"),  bỏ đuôi -o và thêm lần lượt: (eu/você/ele/ela/a gente) -e, (nós) -emos, (eles/elas) -em
-Ví dụ : falar →  eu falo → fal- → (que) eu fale, (que) ela fale, (que) nós falemos, (que) eles falem.
-
-Động từ đuôi -er và -ir:
-bỏ đuôi -er/-ir và thêm lần lượt: (eu/você/ele/ela/a gente) -a, (nós) -amos, (eles/elas) -am
-Ví dụ : comer  → eu como  → com-  → (que) eu coma, (que) ela coma, (que) nós comamos, (que) eles comam.
-        dormir → eu durmo → durm- → (que) eu durma, (que) ela durma, (que) nós durmamos, (que) eles durmam.
-Một số động từ bất quy tắc:
-
-ser → (que) seja, sejamos, sejam.
-estar → (que) esteja, estejamos, estejam.
-ir → (que) vá, vamos, vão.
-ter → (que) tenha, tenhamos, tenham.
-quer → (que) queira, queiramos, queiram.
-...
+Động từ bất quy tắc:
+- go → went
+- eat → ate
+- see → saw
+- have → had
 
 4. Ví dụ:
+- I visited Ha Noi last year.
+  (Tôi đã đến Hà Nội năm ngoái)
+  
+- She didn't go to school yesterday.
+  (Cô ấy không đi học hôm qua)
+  
+- Did you watch the movie?
+  (Bạn đã xem phim chưa?)
 
-- Espero que ele venha amanhã.
-(Tôi hy vọng anh ấy đến vào ngày mai)
+5. Dấu hiệu nhận biết:
+yesterday, last week, last year, ago, in 2020...
 
-- Talvez ela more perto daqui.
-(Có lẽ cô ấy sống ở gần đây).
-
-- É importante que você estude.
-(Bạn cần phải học).
-
-Điểm cần nhớ:
-Conjuntivo không dùng để mô tả sự thật chắc chắn, mà để diễn đạt khả năng hoặc mong muốn.
-Bạn thấy sự khác biệt chưa nào?
-
-Mà bạn có thấy thì này quen quen, giống với thì nào không?"
+Bạn thử đặt vài câu sử dụng thì này nhé!"
 
 ==================================================
-VÍ DỤ 3: GIẢI THÍCH CẤU TRÚC CỐ ĐỊNH
+EXAMPLE 2: EXPLAINING PRESENT CONTINUOUS
 ==================================================
-
-Người dùng:
-"giải thích gostar de"
+Student:
+"giải thích thì hiện tại tiếp diễn"
 
 AI Tutor:
 "Chào bạn!
 
-Trong tiếng Bồ Đào Nha Brazil, 'gostar de' là một cấu trúc rất phổ biến dùng để diễn đạt sở thích.
+Trong tiếng Anh, thì 'Present Continuous' (hiện tại tiếp diễn)
+dùng để nói về hành động đang xảy ra ngay lúc nói.
 
 1. Khái niệm:
-
-Nó tương đương với:
-
-'thích'
-trong tiếng Việt.
+- Hành động đang diễn ra tại thời điểm nói
+- Hành động tạm thời trong giai đoạn hiện tại
+- Kế hoạch tương lai đã sắp xếp
 
 2. Công thức:
+Subject + am/is/are + V-ing
 
-Gostar + de + danh từ / động từ
+- I am working
+- You are working
+- He/She/It is working
+- We/You/They are working
+
+3. Cách thêm -ing:
+Thông thường: thêm -ing
+- play → playing
+- read → reading
+
+Động từ kết thúc bằng -e: bỏ -e, thêm -ing
+- make → making
+- write → writing
+
+Động từ 1 âm tiết kết thúc bằng phụ âm: gấp đôi phụ âm
+- run → running
+- sit → sitting
+
+4. Ví dụ:
+- I am studying English now.
+  (Tôi đang học tiếng Anh bây giờ)
+  
+- She is cooking dinner.
+  (Cô ấy đang nấu bữa tối)
+  
+- They are playing football.
+  (Họ đang chơi bóng đá)
+
+5. Dấu hiệu nhận biết:
+now, right now, at the moment, at present...
+
+Rất dễ hiểu đúng không nào! Bạn thử thực hành đặt vài câu nhé."
+
+==================================================
+EXAMPLE 3: EXPLAINING FIXED STRUCTURE
+==================================================
+Student:
+"giải thích 'used to'"
+
+AI Tutor:
+"Chào bạn!
+
+Trong tiếng Anh, 'used to' là một cấu trúc đặc biệt dùng để 
+nói về thói quen hoặc trạng thái trong quá khứ (nhưng hiện tại không còn nữa).
+
+1. Khái niệm:
+Dùng để diễn tả:
+- Thói quen trong quá khứ (nhưng giờ không làm nữa)
+- Trạng thái trong quá khứ (nhưng giờ không còn)
+
+2. Công thức:
+Subject + used to + V1 (base form)
 
 Lưu ý:
-Giới từ 'de' là bắt buộc.
+'used to' không thay đổi theo chủ ngữ.
 
-Không được nói:
+3. Phủ định và nghi vấn:
+Phủ định:
+Subject + didn't use to + V1
 
-Eu gosto sorvete ❌
-
-Phải nói:
-
-Eu gosto de sorvete ✅
-
-3. Cách chia ở thì hiện tại:
-
-Eu gosto
-Você gosta
-Ele/Ela gosta
-Nós gostamos
-Eles gostam
+Nghi vấn:
+Did + Subject + use to + V1?
 
 4. Ví dụ:
+- I used to play football when I was young.
+  (Tôi từng chơi bóng đá khi còn trẻ)
+  
+- She used to live in Ha Noi.
+  (Cô ấy từng sống ở Hà Nội)
+  
+- Did you use to smoke?
+  (Bạn có từng hút thuốc không?)
 
-- Eu gosto de café.
-(Tôi thích cà phê)
+5. So sánh với 'be used to':
+'used to' → thói quen quá khứ (không còn nữa)
+'be used to' → quen với cái gì đó (hiện tại)
 
-- Ela gosta de estudar português.
-(Cô ấy thích học tiếng Bồ Đào Nha)
+Ví dụ:
+- I used to wake up at 5 AM. (quá khứ, giờ không còn)
+- I am used to waking up at 5 AM. (hiện tại, đã quen)
 
-- Nós gostamos de viajar.
-(Chúng tôi thích đi du lịch)
-
-5. Mẹo nhớ nhanh:
-
-Hãy nhớ:
-'gostar' luôn đi cùng 'de'
-giống như trong tiếng Việt mình luôn nói
-'thích cái gì'
-
-Bạn thử đặt một câu với 'gostar de' nhé!"
-
+Bạn thấy sự khác biệt chưa nào? Thử đặt câu với 'used to' nhé!"
 
 """
 
@@ -444,35 +485,273 @@ Prioritize educational value. If user requests prohibited content, politely refu
 
 
 # ============================================================
-# MODE RULES
+# MODE RULES (ENGLISH INSTRUCTIONS + Add missing modes)
 # ============================================================
 
+# P2.7: Add 5-step pedagogy for grammar/general teaching
+FIVE_STEP_PEDAGOGY = """
+⚠️ CRITICAL: 5-STEP TEACHING METHOD (For grammar & general explanations)
+
+When explaining grammar or concepts, ALWAYS follow this 5-step structure:
+
+**1. KHÁI NIỆM (Concept)**
+   - Explain what the concept is (in Vietnamese)
+   - Compare with Vietnamese if possible
+   - When to use it
+
+**2. CÔNG THỨC (Formula/Pattern)**
+   - Specific structure / formula
+   - Variations if any
+   - Important notes
+
+**3. VÍ DỤ (Examples)**
+   - Minimum 3-5 examples
+   - Both in English and Vietnamese translation
+   - Diverse contexts
+
+**4. LUYỆN TẬP (Practice)**
+   - Give 3-5 questions for student to try
+   - Or suggest practice methods
+   - Encourage student to practice
+
+**5. TÓM TẮT & TIPS (Summary & Tips)**
+   - Summarize main points
+   - Quick memory tips
+   - Encourage to continue
+
+FORMAT: Use clear headers (1., 2., 3., 4., 5.) and bullet points.
+TONE: Friendly, pedagogical, encouraging.
+"""
+
 MODE_RULES = {
-    "chat_mode": """
-Trả lời tự nhiên, thân thiện, lồng ghép dạy học.
+    "chat_mode": f"""
+CHAT MODE - STRUCTURED FREE LEARNING:
+
+⚠️ CRITICAL: Every teaching session MUST follow this 4-stage flow!
+
+**MANDATORY 4-STAGE LEARNING FLOW:**
+
+📚 **STAGE 1: THEORY (Lý thuyết)** - Explain concepts
+📝 **STAGE 2: EXAMPLES (Ví dụ)** - Show 3-5 examples  
+✏️ **STAGE 3: PRACTICE (Luyện tập)** - Generate 3-5 exercises for student to DO NOW
+🎯 **STAGE 4: QUIZ (Kiểm tra)** - After student submits practice, give 5 quiz questions
+
+---
+
+**STAGE 1 & 2: Theory + Examples**
+
+When student asks to learn something new:
+- Grammar/Theory → Use 5-step pedagogy (Khái niệm, Công thức, Ví dụ)
+- Vocabulary → Teach 8-10 words with meanings, examples, usage
+- Use clear headers: "📚 PHẦN 1: LÝ THUYẾT", "💡 PHẦN 2: VÍ DỤ"
+
+**STAGE 3: Practice (MANDATORY)**
+
+After explaining theory, you MUST generate practice exercises immediately:
+
+Format:
+```
+✏️ **PHẦN 3: LUYỆN TẬP (Practice)**
+
+Bây giờ đến lượt bạn thực hành! Hãy làm các bài tập sau:
+
+1. [Fill in the blank]: She ___ (go) to school yesterday.
+2. [Translation]: Dịch sang tiếng Anh: "Có nhiều sao trong bầu trời"
+3. [Sentence writing]: Write 3 sentences using "there is/are"
+4. [Error correction]: Fix this: "there are much stars"
+5. [Question]: Make a question using Past Simple
+
+📮 Gửi câu trả lời cho mình để được chấm điểm và feedback nhé!
+```
+
+⚠️ DO NOT just say "Hãy viết 3 câu" - give SPECIFIC, NUMBERED exercises!
+
+**STAGE 4: Quiz (After Practice)**
+
+When student submits their practice answers:
+
+1. First, correct their mistakes with ✅/❌ format
+2. Then IMMEDIATELY give a quiz:
+
+```
+🎯 **PHẦN 4: KIỂM TRA (Quiz)**
+
+Bạn đã hiểu khá tốt rồi! Giờ làm quiz này để kiểm tra nhé (5 câu):
+
+**Quiz - [Topic Name]**
+
+1. Choose the correct answer:
+   ___ a book on the table.
+   A) There is  B) There are  C) It is
+
+2. Fill in the blank:
+   Yesterday, I ___ (watch) a movie.
+
+3. True or False:
+   "There are much water" is correct grammar.
+
+4. Translate: Có một con mèo trong phòng.
+
+5. Error correction: "He go to school yesterday"
+
+⏰ Làm xong gửi lại mình để xem điểm nhé!
+```
+
+---
+
+**Example Complete Flow:**
+
+Student: "Giải thích past simple cho tôi"
+
+AI Response:
+```
+📚 **PHẦN 1: LÝ THUYẾT - PAST SIMPLE**
+[Explain: Khái niệm, Công thức]
+
+💡 **PHẦN 2: VÍ DỤ**
+[5 examples with translations]
+
+✏️ **PHẦN 3: LUYỆN TẬP**
+1. She ___ (eat) breakfast at 7am yesterday.
+2. Translate: Tôi đã đi học hôm qua.
+3. Make negative: He went to the park.
+4. Make question: They watched TV last night.
+5. Write 2 sentences about what you did yesterday.
+
+📮 Gửi câu trả lời cho mình nhé!
+```
+
+Student: [submits answers]
+
+AI Response:
+```
+Chấm bài:
+1. ✅ ate - Đúng rồi!
+2. ❌ "I go to school yesterday" → ✅ "I went to school yesterday"
+...
+
+🎯 **PHẦN 4: QUIZ**
+[5 quiz questions as shown above]
+```
+
+---
+
+⚠️ RULES:
+- Never skip Stage 3 (Practice)
+- Never skip Stage 4 (Quiz) after student does practice
+- Practice must have 3-5 specific exercises
+- Quiz must have 5 questions with clear answer format
+- Track each stage with headers so system can log activity type
+
+{FIVE_STEP_PEDAGOGY}
+""",
+
+    "grammar": f"""
+GRAMMAR MODE:
+- Explain grammar structures clearly and systematically
+- Use the 5-step method
+- Provide clear formulas and multiple examples
+
+{FIVE_STEP_PEDAGOGY}
+""",
+
+    "general": f"""
+GENERAL TEACHING MODE:
+- Provide comprehensive language teaching
+- Cover all aspects: grammar, vocabulary, usage
+- Be thorough but not overwhelming
+
+{FIVE_STEP_PEDAGOGY}
+""",
+
+    "vocabulary": f"""
+VOCABULARY MODE:
+- Teach vocabulary with context and examples
+- Include pronunciation, usage, and collocations
+- Provide real-world examples
+
+{FIVE_STEP_PEDAGOGY}
+""",
+
+    "translation": """
+TRANSLATION MODE:
+REQUIRED FORMAT:
+
+1. Provide accurate translation
+2. Explain key vocabulary and grammar structures used
+3. Give 2-3 alternative ways to express the same meaning
+4. Note any cultural or contextual nuances
+
+FORMAT:
+🌐 Translation: [translated text]
+📝 Explanation: [key points]
+💡 Alternatives: [other ways to say it]
+""",
+
+    "exercise": """
+EXERCISE GENERATION MODE:
+REQUIRED:
+
+1. Generate 3-5 practice questions matching the topic
+2. Include diverse question types: fill-in-blank, multiple choice, sentence writing
+3. Match the student's level
+4. DO NOT provide answers immediately
+5. After student attempts, then provide corrections and explanations
+
+FORMAT:
+📝 Practice Questions:
+1. [question]
+2. [question]
+...
+
+Hãy thử làm và gửi câu trả lời cho mình nhé!
+""",
+
+    "conversation": """
+CONVERSATION PRACTICE MODE:
+REQUIRED:
+
+1. Engage in natural conversation practice
+2. Correct mistakes gently inline: "Bạn có thể nói '[corrected]' thay vì '[wrong]'"
+3. Ask follow-up questions to encourage more practice
+4. Use vocabulary and grammar appropriate for the current lesson
+5. Keep responses conversational, not lecturing
+
+TONE: Like chatting with a language exchange partner who occasionally helps with corrections.
 """,
 
     "correction_mode": """
-BẮT BUỘC FORMAT:
+CORRECTION MODE:
+REQUIRED FORMAT:
 
-❌ lỗi sai
-✅ câu đúng
+❌ [Original mistake]
+✅ [Corrected version]
 
-Sau đó giải thích ngắn gọn bằng tiếng Việt.
+Then provide brief explanation in Vietnamese why it was wrong and why the correction is right.
+
+Keep corrections focused and encouraging, not overwhelming.
 """,
 
     "example_mode": """
-BẮT BUỘC:
+EXAMPLE MODE:
+REQUIRED:
 
-1. Dịch chính xác
-2. Giải thích từ khóa
-3. Đưa tối thiểu 2 ví dụ
+1. Provide accurate translation
+2. Explain key vocabulary
+3. Give minimum 2 examples showing usage in different contexts
+4. Include both formal and informal examples if relevant
+
+Focus on practical, real-world usage.
 """,
 
     "practice_mode": """
-Tạo bài tập.
+PRACTICE MODE:
+Generate exercises matching the lesson topic.
 
-KHÔNG đưa đáp án ngay.
+DO NOT provide answers immediately.
+Wait for student to attempt, then provide feedback.
+
+Include variety: fill-in-blank, sentence construction, translation.
 """
 }
 
@@ -481,16 +760,31 @@ def build_prompt(
     user_input: str,
     strategy: dict,
     plan: dict,
-    rag_context: str = ""
+    rag_context: str = "",
+    analytics_context: dict = None,
+    quiz_context: dict = None,
+    short_mem: str = None,
+    tool_results: dict = None  # P3: Add tool results
 ) -> str:
     """
-    Build prompt cho agent pipeline
+    Build prompt for agent pipeline
+    FIX P1: Map strategy fields correctly
+    FIX P2: Map plan fields correctly
+    FIX P3: Add tool results section
+    FIX P6: Add weak skills section
     """
 
-    # Lấy thông tin động từ strategy
-    teaching_lang = strategy.get("explain_in", "Tiếng Việt")
-    target_lang = strategy.get("target_lang", "Tiếng Anh")          # Mặc định tiếng Anh nếu không có
-    user_level = strategy.get("difficulty", "Beginner")
+    # FIX P1: Map strategy fields correctly
+    # Strategy returns: teaching_language, learning_target, personalization.level
+    # But build_prompt reads: explain_in, target_lang, difficulty
+    
+    teaching_lang = strategy.get("teaching_language", strategy.get("explain_in", "Tiếng Việt"))
+    target_lang = strategy.get("learning_target", strategy.get("target_lang", "English"))
+    
+    # Map user level from personalization or fallback to difficulty
+    personalization = strategy.get("personalization", {})
+    user_level = personalization.get("level", strategy.get("difficulty", "A1"))
+    
     mode = strategy.get("mode", "chat_mode")
 
     base_prompt = get_system_prompt(
@@ -499,12 +793,267 @@ def build_prompt(
         user_level=user_level
     )
 
-    mode_rules = MODE_RULES.get(mode, "")
+    mode_rules = MODE_RULES.get(mode, MODE_RULES["chat_mode"])
 
-    # Sensitive mode (nếu có)
+    # Sensitive mode (if any)
     sensitive_mode = ""
     if strategy.get("sensitive_mode"):
         sensitive_mode = SENSITIVE_MODES.get(strategy["sensitive_mode"], "")
+    
+    # FIX P2: Map plan fields correctly
+    # Planner returns: overall_goal, steps, tools_to_use
+    # But we were reading: goal, required_sections, constraints
+    plan_goal = plan.get("overall_goal", plan.get("goal", "Support language learning"))
+    plan_steps = plan.get("steps", [])
+    plan_tools = plan.get("tools_to_use", [])
+    
+    # Format plan steps for prompt
+    plan_section = ""
+    if plan_steps:
+        plan_section = "\nSteps to follow:\n" + "\n".join([f"  {i+1}. {step}" for i, step in enumerate(plan_steps)])
+    
+    if plan_tools:
+        plan_section += f"\nTools available: {', '.join(plan_tools)}"
+    
+    # Build learning context section from analytics_context
+    learning_context_section = ""
+    if analytics_context and "learning_context" in analytics_context:
+        lc = analytics_context["learning_context"]
+        learning_context_section = f"""
+===================================
+🎯 ACTIVE LEARNING CONTEXT
+===================================
+
+The student is currently studying:
+
+Topic: {lc.get('topic_name', 'N/A')} ({lc.get('topic_name_vi', '')})
+Level: {lc.get('level', 'N/A')}
+Grammar Focus: {', '.join(lc.get('grammar_focus', []))}
+Progress: {lc.get('lesson_completed', 0)}/{lc.get('total_lessons', '?')} lessons completed ({lc.get('progress_percent', 0)}%)
+"""
+        if lc.get('quiz_score') is not None:
+            learning_context_section += f"Quiz Score: {lc.get('quiz_score')}% ({lc.get('quiz_attempts', 0)} attempts)\n"
+        
+        if lc.get('status'):
+            learning_context_section += f"Status: {lc.get('status')}\n"
+        
+        if "lesson_title" in lc:
+            learning_context_section += f"Current Lesson: {lc.get('lesson_title', '')} ({lc.get('lesson_type', '')})\n"
+        
+        # Phase 1: Add lesson content if available
+        if "lesson_content" in lc:
+            lc_content = lc["lesson_content"]
+            learning_context_section += "\n**LESSON CONTENT FROM DATABASE:**\n"
+            
+            if lc_content.get("key_points"):
+                learning_context_section += "\nKey Points:\n"
+                for kp in lc_content["key_points"]:
+                    learning_context_section += f"- {kp}\n"
+            
+            if lc_content.get("grammar_rules"):
+                learning_context_section += "\nGrammar Rules:\n"
+                for gr in lc_content["grammar_rules"]:
+                    learning_context_section += f"- {gr}\n"
+            
+            if lc_content.get("examples"):
+                learning_context_section += "\nExamples:\n"
+                for ex in lc_content["examples"]:
+                    learning_context_section += f"- {ex}\n"
+            
+            if lc_content.get("vocabulary"):
+                learning_context_section += "\nKey Vocabulary:\n"
+                for vocab in lc_content["vocabulary"][:5]:  # Limit to 5
+                    learning_context_section += f"- {vocab}\n"
+        
+        learning_context_section += """
+⚠️ CRITICAL INSTRUCTION:
+The student's questions and practice should be STRONGLY RELATED to this active topic.
+When they ask general questions (like "xin chào"), interpret them in the context of the CURRENT TOPIC they are studying.
+Provide examples, explanations, and exercises that align with the topic's grammar focus and content.
+Use the LESSON CONTENT above as the source of truth - do not make up different grammar rules or examples.
+
+Example: If student is studying "Numbers, Age & Time" and says "xin chào", respond with greetings PLUS introduce numbers/age questions like "How old are you?" "What time is it?"
+"""
+    
+    # FIX P6: Add weak skills section from analytics
+    weak_skills_section = ""
+    if analytics_context and "weak_skills" in analytics_context:
+        weak_skills = analytics_context["weak_skills"]
+        if weak_skills:
+            weak_skills_section = f"""
+===================================
+⚠️ STUDENT WEAK POINTS
+===================================
+
+The student has shown weakness in these areas:
+"""
+            for skill, accuracy in weak_skills.items():
+                weak_skills_section += f"- {skill}: {int(accuracy * 100)}% accuracy (needs improvement)\n"
+            
+            weak_skills_section += """
+⚠️ INSTRUCTION:
+When relevant to the current conversation, gently reinforce these weak areas.
+Provide extra examples and practice for concepts the student struggles with.
+Don't overwhelm them, but look for natural opportunities to review weak points.
+"""
+    
+    # Phase 0: Build recent conversation section from short_mem
+    recent_conversation_section = ""
+    if short_mem:
+        # Parse conversation to extract context summary
+        conversation_summary = _extract_conversation_summary(short_mem)
+        
+        recent_conversation_section = f"""
+===================================
+💬 RECENT CONVERSATION HISTORY
+===================================
+
+{short_mem}
+
+📌 CONVERSATION CONTEXT SUMMARY:
+{conversation_summary}
+
+⚠️ CRITICAL - MANDATORY CONTEXT CHECK BEFORE RESPONDING:
+
+**STEP 1: READ CONVERSATION HISTORY FIRST**
+Before generating ANY response, you MUST answer these questions:
+1. What did I teach in my last message? (grammar topic, vocabulary, etc.)
+2. Did I give exercises/practice to the student?
+3. Is the student NOW submitting answers to those exercises?
+4. Or is the student asking a new question?
+
+**STEP 2: DETERMINE CORRECT RESPONSE TYPE**
+
+If student is submitting practice answers (e.g., "1 a has b have 2 a His..."):
+→ DO NOT re-teach theory!
+→ IMMEDIATELY grade their answers with ✅/❌
+→ Then give Quiz (Stage 4)
+
+If student asks vague follow-up ("hơi sai sai", "cho tôi bài tập"):
+→ Check context: what were we just discussing?
+→ Refer back explicitly: "Về bài tập 'there is/are' mà mình vừa cho..."
+
+If student asks NEW topic:
+→ Start fresh with Stage 1-2-3-4 flow
+
+**STEP 3: EXPLICIT REFERENCING**
+Always mention what you're building on:
+✅ "Dựa vào các câu bạn vừa viết về Possessive Adjectives..."
+✅ "Mình thấy bạn đã làm bài tập về Past Simple, giờ chấm nhé..."
+✅ "Về từ vựng vũ trụ mình vừa dạy, đây là quiz..."
+
+❌ DON'T re-explain theory if student already learned it
+❌ DON'T ignore practice answers and give new practice
+
+---
+
+**EXAMPLE - CORRECT FLOW:**
+
+Turn 1:
+User: "giải thích possessive adjectives"
+AI: [📚 Theory + 💡 Examples + ✏️ 5 Practice exercises]
+
+Turn 2:
+User: "1 a has b have 2 a His b Our 3 my mother has..."  ← SUBMITTING ANSWERS
+AI: **"Chấm bài của bạn về Possessive Adjectives:"**
+     1. ✅ has/have - Đúng!
+     2. ✅ His/Our - Chính xác!
+     3. ❌ "german car" → "German car" (viết hoa)
+     Điểm: 4/5
+     
+     🎯 **QUIZ - Possessive Adjectives**
+     [5 quiz questions]
+
+**EXAMPLE - WRONG (what NOT to do):**
+
+Turn 2:
+User: "1 a has b have..."
+AI: ❌ "📚 PHẦN 1: LÝ THUYẾT..."  ← WRONG! Don't re-teach!
+    ❌ Re-explains same concept
+    ❌ Gives practice again instead of grading
+"""
+    
+    # FIX P3: Add tool results section
+    tool_results_section = ""
+    if tool_results:
+        tool_results_section = """
+===================================
+🔧 TOOL RESULTS
+===================================
+
+The following tools were executed and returned results:
+
+"""
+        for tool_name, result in tool_results.items():
+            tool_results_section += f"\n**{tool_name}**:\n{result}\n"
+        
+        tool_results_section += """
+⚠️ INSTRUCTION:
+Use the tool results above to inform your response.
+If grammar checker found errors, explain them.
+If translator provided translation, use it as reference.
+If exercise generator created questions, include them in your response.
+"""
+    
+    # A3: Build quiz review context section
+    quiz_review_section = ""
+    if quiz_context and quiz_context.get("wrong_answers"):
+        wrong_answers = quiz_context["wrong_answers"]
+        quiz_review_section = f"""
+===================================
+📝 QUIZ REVIEW MODE
+===================================
+
+The student just completed a quiz and got {len(wrong_answers)} questions WRONG.
+Your task is to help them review and understand these mistakes.
+
+WRONG ANSWERS:
+"""
+        for idx, qa in enumerate(wrong_answers, 1):
+            quiz_review_section += f"""
+{idx}. Question: {qa.get('question', 'N/A')}
+   Student's answer: {qa.get('user_answer', 'N/A')}
+   Correct answer: {qa.get('correct_answer', 'N/A')}
+   Skill: {qa.get('skill_tag', 'unknown')}
+"""
+        
+        quiz_review_section += """
+⚠️ QUIZ REVIEW INSTRUCTION:
+1. Identify the pattern of mistakes (which grammar/vocab concepts they're struggling with)
+2. Explain each mistake clearly in Vietnamese
+3. Provide 3-5 similar practice examples for EACH mistake
+4. Keep explanations concise but thorough
+5. Encourage the student and show them they can improve
+
+Focus on the SPECIFIC grammar/vocab points they got wrong, not general teaching.
+"""
+
+    # P2.7: Add difficulty adjustment section
+    # Strategy returns difficulty_adjustment: increase|decrease|maintain
+    difficulty_adjustment = strategy.get("difficulty_adjustment", "maintain")
+    
+    # Map to actual difficulty level
+    difficulty_map = {
+        "increase": ("hard", "Advanced - More complex structures, nuanced explanations"),
+        "decrease": ("easy", "Beginner - Use simple words, short sentences, many examples"),
+        "maintain": ("medium", "Intermediate - Standard explanations with moderate complexity")
+    }
+    
+    difficulty_level, difficulty_instruction = difficulty_map.get(difficulty_adjustment, difficulty_map["maintain"])
+    
+    difficulty_section = f"""
+===================================
+🎯 DIFFICULTY ADJUSTMENT
+===================================
+
+Adjustment: {difficulty_adjustment.upper()}
+Current difficulty: {difficulty_level.upper()}
+Instruction: {difficulty_instruction}
+
+- Adjust vocabulary complexity to match difficulty
+- Adjust sentence structure complexity
+- Adjust number of concepts per explanation
+"""
 
     prompt = f"""
 {base_prompt}
@@ -517,23 +1066,21 @@ Mode: {mode}
 Target Language: {target_lang}
 Teaching Language: {teaching_lang}
 Student Level: {user_level}
+Difficulty Adjustment: {difficulty_adjustment.upper()} → {difficulty_level.upper()}
 {"Sensitive Mode: " + strategy.get("sensitive_mode", "None") if strategy.get("sensitive_mode") else ""}
 
-Goal:
-{plan.get("goal", "Trả lời và hỗ trợ học ngôn ngữ")}
-
-Required Sections:
-{", ".join(plan.get("required_sections", []))}
-
-Constraints:
-{", ".join(plan.get("constraints", []))}
+Goal: {plan_goal}{plan_section}
 
 {mode_rules}
 {sensitive_mode}
-
+{difficulty_section}
 Additional Rules:
 {strategy.get("additional_rules", "")}
-
+{learning_context_section}
+{weak_skills_section}
+{tool_results_section}
+{recent_conversation_section}
+{quiz_review_section}
 ===================================
 USER REQUEST
 ===================================

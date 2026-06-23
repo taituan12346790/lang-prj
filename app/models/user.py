@@ -1,5 +1,5 @@
 # app/models/user.py
-from sqlalchemy import Column, String, DateTime, Boolean
+from sqlalchemy import Column, String, DateTime, Boolean, Integer
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
@@ -25,6 +25,10 @@ class User(Base):
     is_active = Column(Boolean, default=True, nullable=False)
     is_verified = Column(Boolean, default=False, nullable=False)
     
+    # NEW: Gamification & study tracking
+    study_streak = Column(Integer, default=0, nullable=False)  # Số ngày học liên tục
+    last_study_date = Column(DateTime(timezone=True), nullable=True)  # Ngày học gần nhất
+    
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
     last_login = Column(DateTime(timezone=True), nullable=True)
@@ -35,6 +39,10 @@ class User(Base):
     exercise_results = relationship("ExerciseResult", back_populates="user", cascade="all, delete")
     conversations = relationship("Conversation", back_populates="user", cascade="all, delete-orphan")
     memories = relationship("MemoryEntry", back_populates="user", cascade="all, delete-orphan")
+    error_logs = relationship("UserErrorLog", back_populates="user", cascade="all, delete-orphan")
+    chat_learning_activities = relationship("ChatLearningActivity", back_populates="user", cascade="all, delete-orphan")
+    writings = relationship("UserWriting", back_populates="user", cascade="all, delete-orphan")
+    ai_exercises = relationship("AIExercise", back_populates="user", cascade="all, delete-orphan")
 
     def __repr__(self):
         return f"<User {self.email} ({self.auth_provider})>"

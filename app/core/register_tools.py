@@ -29,15 +29,17 @@ def register_all_tools(llm_client):
         translator_wrapper = TranslatorWrapper(tool=translator_tool)
         exercise_wrapper = ExerciseWrapper(tool=exercise_tool)
 
-        # Đăng ký vào registry
+        # Đăng ký vào registry với nhiều aliases
         tool_registry.register("translator", translator_wrapper.execute)
         tool_registry.register("translate", translator_wrapper.execute)
 
         tool_registry.register("grammar_check", grammar_wrapper.execute)
         tool_registry.register("grammar", grammar_wrapper.execute)
+        tool_registry.register("grammar_checker", grammar_wrapper.execute)  # Phase 2: Add planner alias
 
         tool_registry.register("exercise", exercise_wrapper.execute)
         tool_registry.register("generate_exercises", exercise_wrapper.execute)
+        tool_registry.register("exercise_generator", exercise_wrapper.execute)  # Phase 2: Add planner alias
         tool_registry.register("lesson", exercise_wrapper.execute)
 
         logger.success("🎉 All tools and wrappers registered successfully!")

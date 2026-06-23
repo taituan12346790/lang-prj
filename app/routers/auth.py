@@ -116,7 +116,7 @@ async def login_user(
 @router.get("/google")
 async def google_login(request: Request):
     """Bắt đầu đăng nhập Google"""
-    redirect_uri = request.url_for("google_callback")
+    redirect_uri = f"{settings.BACKEND_URL.rstrip('/')}/api/auth/google/callback"
     return await oauth.google.authorize_redirect(request, redirect_uri)
 
 
@@ -149,10 +149,12 @@ async def google_callback(request: Request, db: AsyncSession = Depends(get_db)):
             db.add(user)
             await db.flush()
 
+            # Create profile with default values - user will be redirected to onboarding
             new_profile = UserProfile(
                 user_id=user.id,
-                native_language="vi",      # Có thể để None và bắt user update sau
-                target_language="en"
+                native_language="vi",  # Default, can be changed in onboarding
+                target_language="en",  # Default, can be changed in onboarding
+                onboarding_completed=False  # Flag to show onboarding
             )
             db.add(new_profile)
         else:
@@ -174,12 +176,25 @@ async def google_callback(request: Request, db: AsyncSession = Depends(get_db)):
 
         access_token = create_access_token(data={"user_id": str(user.id)})
 
-        # Redirect với token (tạm thời - sau có thể đổi sang cookie)
-        frontend_url = settings.FRONTEND_URLS[0] if settings.FRONTEND_URLS else "http://localhost:3000"
+        # Check if user needs onboarding
+        profile_result = await db.execute(select(UserProfile).where(UserProfile.user_id == user.id))
+        profile = profile_result.scalar_one_or_none()
         
-        return RedirectResponse(
-            url=f"{frontend_url.rstrip('/')}/auth/callback?token={access_token}"
-        )
+        needs_onboarding = profile and not profile.onboarding_completed
+
+        # Redirect về Streamlit frontend với token
+        streamlit_url = "http://localhost:8501"
+        
+        if needs_onboarding:
+            # Redirect to onboarding page
+            return RedirectResponse(
+                url=f"{streamlit_url}/?token={access_token}&onboarding=true"
+            )
+        else:
+            # Normal redirect
+            return RedirectResponse(
+                url=f"{streamlit_url}/?token={access_token}"
+            )
 
     except HTTPException:
         raise

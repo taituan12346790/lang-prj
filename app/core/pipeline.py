@@ -27,7 +27,9 @@ class Pipeline:
 
     def __init__(self):
         self.llm = LLMClient()
-        self.tool_registry = ToolRegistry()
+        # Phase 2: Use singleton tool_registry instead of creating new instance
+        from app.tools.tool_registry import tool_registry
+        self.tool_registry = tool_registry
         self.validator = ResponseValidator()
         self.graph = self._build_graph()
 
@@ -161,14 +163,51 @@ class Pipeline:
         user_input = state.get("user_input", "")
         strategy = state.get("strategy", {})
         plan = state.get("plan", {})
+        analytics_context = state.get("analytics_context", {})
+        quiz_context = state.get("quiz_context")
+        tool_results = state.get("tool_results", {})  # P3: Get tool results from state
+        
+        # Phase 0: Extract short_mem from state
+        short_mem_str = None
+        sm = state.get("short_mem")
+        if sm:
+            if isinstance(sm, str):
+                short_mem_str = sm
+            elif hasattr(sm, "get_context_for_prompt"):
+                short_mem_str = sm.get_context_for_prompt()
 
         # Build prompt WITHOUT RAG context (as per user requirement)
+        # P3: Pass tool_results to build_prompt
         system_prompt = build_prompt(
             user_input=user_input,
             strategy=strategy,
             plan=plan,
-            rag_context=""
+            rag_context="",
+            analytics_context=analytics_context,
+            quiz_context=quiz_context,  # A3: Include quiz review context
+            short_mem=short_mem_str,  # Phase 0: Include recent conversation
+            tool_results=tool_results  # P3: Include tool results
         )
+        
+        # DEBUG: Log if learning context is in prompt
+        if "ACTIVE LEARNING CONTEXT" in system_prompt:
+            logger.info("✅ Learning context IS included in prompt")
+            if analytics_context and "learning_context" in analytics_context:
+                lc = analytics_context["learning_context"]
+                logger.info(f"   Topic: {lc.get('topic_name_vi', 'N/A')}, Lesson: {lc.get('lesson_title', 'N/A')}")
+        else:
+            logger.warning("❌ Learning context NOT in prompt")
+            logger.warning(f"   Analytics context keys: {list(analytics_context.keys()) if analytics_context else 'None'}")
+            if analytics_context:
+                logger.warning(f"   Has learning_context key: {'learning_context' in analytics_context}")
+        
+        # P3: Log tool results
+        if tool_results:
+            logger.info(f"🔧 Tool results included in prompt: {list(tool_results.keys())}")
+        
+        # A3: Log quiz review mode
+        if quiz_context:
+            logger.info(f"🎯 Quiz review mode: {len(quiz_context.get('wrong_answers', []))} wrong answers")
 
         # Generate response
         final_response = await self._safe_llm_generate(
@@ -283,19 +322,24 @@ class Pipeline:
         user_input: str,
         user_id: str,
         strategy: Dict,
-        plan: Dict
+        plan: Dict,
+        analytics_context: Dict = None,
+        quiz_context: Dict = None,
+        short_mem: str = None
     ) -> Dict:
         """Execute pipeline via LangGraph"""
         start_time = time.time()
 
         try:
-            # Build initial state
+            # Build initial state - INCLUDE all context!
             state = AgentState(
                 user_input=user_input,
                 user_id=user_id,
                 db=None,
                 long_mem=None,
-                short_mem=None,
+                short_mem=short_mem,  # Phase 0: Add short_mem
+                analytics_context=analytics_context or {},
+                quiz_context=quiz_context,  # Phase 0: Add quiz_context
                 strategy=strategy,
                 plan=plan,
                 response=None,
