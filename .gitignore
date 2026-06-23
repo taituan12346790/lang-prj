@@ -93,7 +93,7 @@ final_*.py
 complete_*.py
 auto_*.py
 *_test.py
-test_*.py
+# test_*.py  # REMOVED - This was ignoring test_service.py and test_data.py!
 
 # Markdown documentation files (giữ README.md, bỏ còn lại)
 HUONG_DAN*.md
