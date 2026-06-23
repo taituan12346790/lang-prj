@@ -6,7 +6,7 @@ services:
     region: singapore  # Chọn Singapore (gần Việt Nam)
     plan: free
     buildCommand: |
-      pip install -r streamlit-requirements.txt
+      pip install -r requirements.txt
     startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
     envVars:
       - key: DATABASE_URL
