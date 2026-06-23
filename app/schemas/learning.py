@@ -13,6 +13,12 @@ class LessonType(str, Enum):
     PRACTICE = "practice"
     WRITING = "writing"
     QUIZ = "quiz"
+    # Vietnamese aliases (for backward compatibility with old data)
+    NGU_PHAP = "ngữ pháp"
+    TU_VUNG = "từ vựng"
+    THUC_HANH = "thực hành"
+    VIET = "viết"
+    KIEM_TRA = "kiểm tra"
 
 
 class TopicStatus(str, Enum):
