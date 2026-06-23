@@ -19,6 +19,16 @@ from typing import Any, Optional
 import httpx
 import streamlit as st
 
+# Hide Streamlit default footer and menu
+hide_streamlit_style = """
+<style>
+#MainMenu {visibility: hidden;}
+footer {visibility: hidden;}
+header {visibility: hidden;}
+</style>
+"""
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+
 # Setup logger
 logger = logging.getLogger(__name__)
 
