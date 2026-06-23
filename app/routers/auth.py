@@ -183,7 +183,11 @@ async def google_callback(request: Request, db: AsyncSession = Depends(get_db)):
         needs_onboarding = profile and not profile.onboarding_completed
 
         # Redirect về Streamlit frontend với token
-        streamlit_url = "http://localhost:8501"
+        # Auto-detect frontend URL based on environment
+        if settings.ENVIRONMENT == "production":
+            streamlit_url = "https://ai-language-tutor-frontend.onrender.com"
+        else:
+            streamlit_url = "http://localhost:8501"
         
         if needs_onboarding:
             # Redirect to onboarding page
