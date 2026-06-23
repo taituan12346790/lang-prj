@@ -35,7 +35,7 @@ logger = logging.getLogger(__name__)
 # ═══════════════════════════════════════════════════════════════
 # CONFIG
 # ═══════════════════════════════════════════════════════════════
-DEFAULT_API_BASE = os.getenv("API_BASE_URL", "https://ai-language-tutor-api-brqj.onrender.com")
+DEFAULT_API_BASE = os.getenv("API_BASE_URL", "https://ai-language-tutor-api-brqu.onrender.com")
 CEFR_LEVELS = ["A1", "A2", "B1", "B2", "C1", "C2"]
 LEVEL_COLORS = {
     "A1": "#6ee7b7", "A2": "#34d399",
