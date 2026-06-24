@@ -3987,17 +3987,27 @@ def main():
     qp = st.query_params
     # IMPORTANT: Don't auto-login if user just logged out
     if "token" in qp and not st.session_state.access_token and not st.session_state.get("just_logged_out", False):
-        st.session_state.access_token = qp["token"]
-        _fetch_profile()
-        
-        # Check if onboarding is needed
-        if "onboarding" in qp and qp["onboarding"] == "true":
-            st.session_state.page = "onboarding"
-        else:
-            st.session_state.page = "dashboard"
-        
-        st.success("Đăng nhập Google thành công!")
-        st.rerun()
+        try:
+            st.session_state.access_token = qp["token"]
+            _fetch_profile()
+            
+            # Check if onboarding is needed
+            if "onboarding" in qp and qp["onboarding"] == "true":
+                st.session_state.page = "onboarding"
+            else:
+                st.session_state.page = "dashboard"
+            
+            # Clear query params to clean URL
+            st.query_params.clear()
+            st.success("Đăng nhập Google thành công!")
+            st.rerun()
+        except Exception as e:
+            st.error(f"Lỗi khi xử lý đăng nhập Google: {str(e)}")
+            # Clear failed login attempt
+            st.session_state.access_token = None
+            st.query_params.clear()
+            time.sleep(2)
+            st.rerun()
 
     # ── CHECK LOGOUT FIRST ──────────────────────────────────────────
     # If access_token is None, always go to auth page (even if already logged in)
