@@ -48,6 +48,12 @@ LESSON_ICONS = {
     "practice": "",
     "writing": "",
     "quiz": "",
+    # Vietnamese aliases
+    "ngữ pháp": "",
+    "từ vựng": "",
+    "thực hành": "",
+    "viết": "",
+    "kiểm tra": "",
 }
 
 # ═══════════════════════════════════════════════════════════════
@@ -1921,7 +1927,7 @@ def page_topic():
                     # Activate context with lesson
                     api_activate_context(topic["id"], lesson_order=l_order, mode="lesson")
                     
-                    if l_type == "quiz":
+                    if l_type in ("quiz", "kiểm tra"):
                         with st.spinner("Đang tải quiz..."):
                             qdata = api_quiz_questions(topic["id"])
                         st.session_state.quiz_questions = qdata
@@ -1968,7 +1974,7 @@ def page_lesson():
     st.divider()
 
     # ── Grammar lesson ──────────────────────────────────────────
-    if l_type == "grammar":
+    if l_type in ("grammar", "ngữ pháp"):
         st.markdown("### 📚 Giải thích")
         # Prioritize Vietnamese explanation
         explanation_vi = content.get('explanation_vi', '')
@@ -2016,7 +2022,7 @@ def page_lesson():
             st.info(f"**💡 Lưu ý:** {notes_en}")
 
     # ── Vocabulary lesson ───────────────────────────────────────
-    elif l_type == "vocabulary":
+    elif l_type in ("vocabulary", "từ vựng"):
         words = content.get("words", [])
         st.markdown(f"### Danh sách từ vựng ({len(words)} từ)")
         for w in words:
@@ -2034,7 +2040,7 @@ def page_lesson():
             </div>""", unsafe_allow_html=True)
 
     # ── Practice lesson ─────────────────────────────────────────
-    elif l_type == "practice":
+    elif l_type in ("practice", "thực hành"):
         exercises = content.get("exercises", [])
         st.markdown(f"### Bài tập ({len(exercises)} câu)")
 
@@ -2216,7 +2222,7 @@ Bạn có thể giải thích rõ hơn và cho tôi vài ví dụ + bài tập �
             st.markdown("")
 
     # ── Writing lesson (NEW) ────────────────────────────────────
-    elif l_type == "writing":
+    elif l_type in ("writing", "viết"):
         st.markdown("### Viết đoạn văn ngắn")
         
         # Get writing prompt
@@ -2431,7 +2437,7 @@ Bạn có thể giải thích rõ hơn và cho tôi vài ví dụ + bài tập �
     
     # Calculate practice completion stats
     # Fix: exercises and session state might not be defined if lesson type is not "practice"
-    exercises = content.get("exercises", []) if l_type == "practice" else []
+    exercises = content.get("exercises", []) if l_type in ("practice", "thực hành") else []
     total_exercises = len(exercises)
     checked_count = len(st.session_state.get("practice_checked", {}))
     correct_count = sum(1 for (_, is_correct, _, _) in st.session_state.get("practice_checked", {}).values() if is_correct)
@@ -2458,11 +2464,11 @@ Bạn có thể giải thích rõ hơn và cho tôi vài ví dụ + bài tập �
         # - Practice lesson: Need 100% correct
         # - Writing lesson: Need to submit and get AI feedback
         # - Other lessons (grammar, vocabulary): Can complete immediately
-        if l_type == "practice":
+        if l_type in ("practice", "thực hành"):
             can_complete = (total_exercises > 0 and 
                            checked_count == total_exercises and 
                            correct_count == total_exercises)
-        elif l_type == "writing":
+        elif l_type in ("writing", "viết"):
             # Writing lesson: can complete if user has submitted and got feedback
             can_complete = st.session_state.get("writing_feedback") is not None
         else:
@@ -2484,7 +2490,7 @@ Bạn có thể giải thích rõ hơn và cho tôi vài ví dụ + bài tập �
                 st.rerun()
         else:
             # Show appropriate warning message based on lesson type
-            if l_type == "writing":
+            if l_type in ("writing", "viết"):
                 st.markdown(
                     '<div class="lp-notice">Bạn cần gửi bài viết và nhận phản hồi từ AI để hoàn thành!</div>',
                     unsafe_allow_html=True,
