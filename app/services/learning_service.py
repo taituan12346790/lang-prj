@@ -665,6 +665,7 @@ class LearningService:
             "analytics_context": None,
             "strategy": None,
             "plan": None,
+            "tool_results": None,
             "response": None,
             "tools_used": [],
             "error": None,

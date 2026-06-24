@@ -25,6 +25,7 @@ class AgentState(TypedDict):
     # Kết quả từ các node
     strategy: Optional[Dict[str, Any]]
     plan: Optional[Dict[str, Any]]          # LearningPlan dạng dict cho pipeline
+    tool_results: Optional[Dict[str, Any]]  # Results from tool execution
     response: Optional[str]
     tools_used: List[str]
     
