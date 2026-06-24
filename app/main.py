@@ -150,12 +150,54 @@ async def root():
 
 @app.get("/health")
 async def health_check():
-    """Health check endpoint"""
-    return {
+    """Health check endpoint - Enhanced for debugging"""
+    import os
+    
+    health_status = {
         "status": "ok",
         "environment": settings.ENVIRONMENT,
-        "timestamp": None  # Can add timestamp if needed
+        "checks": {}
     }
+    
+    # Check Groq API Key
+    groq_key = os.getenv("GROQ_API_KEY")
+    health_status["checks"]["groq_api_key"] = "configured" if groq_key else "missing"
+    
+    # Check Database URL
+    db_url = os.getenv("DATABASE_URL")
+    health_status["checks"]["database_url"] = "configured" if db_url else "missing"
+    
+    # Test database connection
+    try:
+        from app.core.database import get_db
+        from sqlalchemy import text
+        async for db in get_db():
+            await db.execute(text("SELECT 1"))
+            health_status["checks"]["database_connection"] = "connected"
+            break
+    except Exception as e:
+        health_status["checks"]["database_connection"] = f"failed: {str(e)}"
+        health_status["status"] = "degraded"
+    
+    # Test Groq API
+    if groq_key:
+        try:
+            from groq import Groq
+            client = Groq(api_key=groq_key)
+            # Quick test
+            response = client.chat.completions.create(
+                model="openai/gpt-oss-120b",
+                messages=[{"role": "user", "content": "Hi"}],
+                max_tokens=10
+            )
+            health_status["checks"]["groq_api"] = "working"
+        except Exception as e:
+            health_status["checks"]["groq_api"] = f"failed: {str(e)[:100]}"
+            health_status["status"] = "degraded"
+    else:
+        health_status["checks"]["groq_api"] = "not_configured"
+    
+    return health_status
 
 
 # ====================== GLOBAL EXCEPTION HANDLERS ======================
