@@ -80,6 +80,10 @@ class Settings(BaseSettings):
         "http://127.0.0.1:8000",
         description="Backend URL for OAuth redirect (must match Google Console)"
     )
+    FRONTEND_URL: str = Field(
+        "http://localhost:8501",
+        description="Primary frontend URL for OAuth redirects"
+    )
     FRONTEND_URLS: List[str] = Field(
         default=["http://localhost:3000"],
         description="Frontend URLs for CORS (independent from backend)"
