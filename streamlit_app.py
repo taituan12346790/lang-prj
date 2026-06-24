@@ -514,6 +514,12 @@ def _inject_css():
 }
 [data-testid="collapsedControl"] { display: none !important; }
 
+/* Hide sidebar on auth page - clean look for login/register */
+body[data-page="auth"] [data-testid="stSidebar"],
+body[data-page="auth"] [data-testid="collapsedControl"] {
+    display: none !important;
+}
+
 /* Profile popover trigger: hide only Material chevron, keep username visible */
 [data-testid="stPopover"] button .material-icons,
 [data-testid="stPopover"] button [data-testid="stIconMaterial"] {
@@ -1325,21 +1331,7 @@ def _card_close() -> str:
 # PAGE: AUTH
 # ═══════════════════════════════════════════════════════════════
 def page_auth():
-    # Show backend status in sidebar
-    with st.sidebar:
-        st.markdown("### AI Language Tutor")
-        st.markdown("Đăng nhập để bắt đầu học")
-        st.divider()
-        # Backend status
-        try:
-            with httpx.Client(timeout=3) as c:
-                r = c.get(_url("/health"))
-            if r.status_code == 200:
-                st.success("Backend online")
-            else:
-                st.error("Backend lỗi")
-        except Exception:
-            st.error("Không kết nối được backend")
+    # Sidebar is hidden on auth page (no need to show backend status to users)
     
     st.markdown("""
     <div style="text-align:center; padding: 2rem 0 1.5rem">
