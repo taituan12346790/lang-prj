@@ -107,19 +107,17 @@ class Pipeline:
         if not input_allowed:
             logger.warning(f"INPUT BLOCKED | Reason: {input_reason} | Input: {user_input[:120]}...")
             return {
-                "input_blocked": True,
-                "input_block_reason": input_reason,
                 "response": (
                     "Xin lỗi, mình không hỗ trợ trả lời về các chủ đề tình dục, "
                     "tranh chấp lãnh thổ, xung đột chính trị, tôn giáo nhạy cảm "
                     "hoặc nội dung cực đoan.\n\n"
                     "Bạn có câu hỏi nào về ngữ pháp, từ vựng hoặc kỹ năng ngôn ngữ không?"
                 ),
-                "success": False,
-                "blocked_by": "input_guardrail"
+                "error": "input_blocked"
             }
 
-        return {"input_blocked": False}
+        # Return empty dict when validation passes (no state update needed)
+        return {}
 
     async def _execute_tools_node(self, state: AgentState) -> Dict[str, Any]:
         """Node 2: Execute tools in parallel"""
