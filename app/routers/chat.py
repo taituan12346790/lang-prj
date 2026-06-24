@@ -58,10 +58,12 @@ async def chat_with_ai(
             success=result.get("success", False),
             error=result.get("error")
         )
-    except Exception:
+    except Exception as e:
+        logger.error(f"Chat error: {str(e)}")
+        logger.exception(e)  # Log full traceback
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Lỗi khi xử lý chat. Vui lòng thử lại sau."
+            detail=f"Lỗi khi xử lý chat: {str(e)}"
         )
 
 

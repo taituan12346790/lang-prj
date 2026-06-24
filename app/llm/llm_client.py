@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 class LLMClient:
-    def __init__(self, model="openai/gpt-oss-120b", temperature=0.7, max_tokens=1500):
+    def __init__(self, model="llama-3.3-70b-versatile", temperature=0.7, max_tokens=1500):
         api_key = os.getenv("GROQ_API_KEY")
         if not api_key:
             raise ValueError("GROQ_API_KEY not found")
@@ -25,6 +25,10 @@ class LLMClient:
         messages.append({"role": "user", "content": user_input})
         temperature = kwargs.get("temperature", self.temperature)
         max_tokens = kwargs.get("max_tokens", self.max_tokens)
+        
+        # DEBUG: Log model being used
+        print(f"🔍 DEBUG: Using model: {self.model}")
+        
         loop = asyncio.get_running_loop()
         try:
             response = await loop.run_in_executor(
@@ -38,8 +42,9 @@ class LLMClient:
             )
             return response.choices[0].message.content.strip()
         except Exception as e:
-            print("LLM error:", e)
-            return "Xin lỗi, tôi gặp sự cố kỹ thuật."
+            print(f"❌ LLM error: {e}")
+            print(f"❌ Model attempted: {self.model}")
+            raise  # Re-raise để error được catch ở router
 
     async def generate_structured_async(self, system_prompt, user_prompt, response_format, **kwargs):
         # Tạm thời bỏ qua structured, trả về None để fallback
