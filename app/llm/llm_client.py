@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 class LLMClient:
-    def __init__(self, model="llama-3.1-70b-versatile", temperature=0.7, max_tokens=1500):  # Updated to working model
+    def __init__(self, model="openai/gpt-oss-120b", temperature=0.7, max_tokens=1500):
         api_key = os.getenv("GROQ_API_KEY")
         if not api_key:
             raise ValueError("GROQ_API_KEY not found")
