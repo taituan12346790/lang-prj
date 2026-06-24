@@ -46,6 +46,39 @@ class LLMClient:
             print(f"❌ Model attempted: {self.model}")
             raise  # Re-raise để error được catch ở router
 
+    async def stream_async(self, user_input: str, system_prompt: str = "", **kwargs):
+        """Stream LLM response chunk by chunk (for better UX)"""
+        if not user_input and kwargs.get("user_prompt"):
+            user_input = kwargs["user_prompt"]
+        
+        messages = []
+        if system_prompt:
+            messages.append({"role": "system", "content": system_prompt})
+        messages.append({"role": "user", "content": user_input})
+        
+        temperature = kwargs.get("temperature", self.temperature)
+        max_tokens = kwargs.get("max_tokens", self.max_tokens)
+        
+        print(f"🔍 DEBUG: Streaming with model: {self.model}")
+        
+        try:
+            # Groq supports streaming
+            stream = self.client.chat.completions.create(
+                model=self.model,
+                messages=messages,
+                temperature=temperature,
+                max_tokens=max_tokens,
+                stream=True
+            )
+            
+            for chunk in stream:
+                if chunk.choices[0].delta.content:
+                    yield chunk.choices[0].delta.content
+                    
+        except Exception as e:
+            print(f"❌ LLM stream error: {e}")
+            raise
+
     async def generate_structured_async(self, system_prompt, user_prompt, response_format, **kwargs):
         # Tạm thời bỏ qua structured, trả về None để fallback
         return None
