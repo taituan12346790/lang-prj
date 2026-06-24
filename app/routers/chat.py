@@ -1,6 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException, status, BackgroundTasks
+from fastapi.responses import StreamingResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 from uuid import UUID
+import json
+import asyncio
 
 from app.core.database import get_db
 from app.core.deps import get_current_user
@@ -75,6 +78,80 @@ async def chat_with_ai(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Lỗi khi xử lý chat: {str(e)}"
         )
+
+
+@router.post("/stream")
+async def chat_with_ai_stream(
+    request: ChatRequest,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """Streaming endpoint for better UX - response appears word by word"""
+    
+    async def generate_stream():
+        try:
+            logger.info(f"🌊 STREAM REQUEST START: user={current_user.id}, input={request.user_input[:50]}...")
+            
+            # Import here to avoid circular dependency
+            from app.llm.prompts import build_prompt
+            
+            # Simple fast-path: Skip full LangGraph for streaming
+            # Just get essentials and stream LLM response
+            
+            # Load minimal context
+            from app.services.quiz_analytics_service import QuizAnalyticsService
+            try:
+                skill_breakdown = await QuizAnalyticsService.get_skill_breakdown(db, str(current_user.id))
+                analytics_context = {"skill_breakdown": skill_breakdown}
+            except:
+                analytics_context = {}
+            
+            # Build prompt
+            system_prompt = build_prompt(
+                user_input=request.user_input,
+                strategy={"mode": "tutor", "explain_in": request.explain_in or "Tiếng Việt"},
+                plan={"intent": "chat", "tools_to_use": []},
+                rag_context="",
+                analytics_context=analytics_context,
+                quiz_context=None,
+                short_mem=None,
+                tool_results=None
+            )
+            
+            # Stream LLM response
+            from app.llm.llm_client import get_llm_client
+            llm_client = get_llm_client()
+            
+            full_response = ""
+            async for chunk in llm_client.stream_async(
+                user_input=request.user_input,
+                system_prompt=system_prompt,
+                temperature=0.7,
+                max_tokens=1500
+            ):
+                full_response += chunk
+                # Send as Server-Sent Events format
+                yield f"data: {json.dumps({'chunk': chunk, 'done': False})}\n\n"
+            
+            # Send completion signal
+            yield f"data: {json.dumps({'chunk': '', 'done': True, 'full_response': full_response})}\n\n"
+            
+            logger.info(f"🌊 STREAM COMPLETE: response_length={len(full_response)}")
+            
+        except Exception as e:
+            logger.error(f"🔴 STREAM ERROR: {str(e)}")
+            error_data = json.dumps({'error': str(e), 'done': True})
+            yield f"data: {error_data}\n\n"
+    
+    return StreamingResponse(
+        generate_stream(),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "Connection": "keep-alive",
+            "X-Accel-Buffering": "no"  # Disable nginx buffering
+        }
+    )
 
 
 async def save_exercises_to_db(
