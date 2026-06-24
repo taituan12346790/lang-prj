@@ -3405,52 +3405,52 @@ Luôn trả lời tính toán cá nhân hóa theo tiến độ và điểm yếu
         # Backend auto-saves (A4)
 
         with st.chat_message("assistant", avatar="🤖"):
-            ok, reply, metadata = call_chat_api(user_prompt)
-                if ai_tutor_mode and error_ctx:
-                    # ✨ KEY FIX: Extract LATEST exercises from BEFORE the last user message
-                    # Get the last user message index
-                    last_user_idx = -1
-                    for i in range(len(msgs) - 1, -1, -1):
-                        if msgs[i].get("role") == "user":
-                            last_user_idx = i
-                            break
-                    
-                    # Search backwards from last user message to find latest assistant response with exercises
-                    prev_exercises = ""
-                    if last_user_idx > 0:
-                        for i in range(last_user_idx - 1, -1, -1):
-                            if msgs[i].get("role") == "assistant":
-                                content = msgs[i].get("content", "")
-                                if ("1️⃣" in content or "Bài tập" in content or "___" in content):
-                                    # Extract full exercises up to "Hướng dẫn" or similar cutoff
-                                    # Find the end of exercises section (usually before "Hướng dẫn", "Chấm", etc.)
-                                    cutoff_idx = content.find("Hướng dẫn")
-                                    if cutoff_idx == -1:
-                                        cutoff_idx = content.find("Chấm")
-                                    if cutoff_idx == -1:
-                                        cutoff_idx = len(content)
-                                    
-                                    # Extract exercises section
-                                    # Find the start of exercises (after "Bài tập")
-                                    start_idx = content.find("Bài tập")
-                                    if start_idx == -1:
-                                        start_idx = 0
-                                    
-                                    exercises_section = content[start_idx:cutoff_idx]
-                                    prev_exercises = exercises_section.strip()
-                                    break
-                    
-                    # Check if this is from quiz weak_skills
-                    weak_skills = error_ctx.get("quiz_weak_skills", [])
-                    is_quiz_review = error_ctx.get("is_from_quiz", False)
-                    
-                    if is_quiz_review and weak_skills:
-                        # Quiz review mode - focus on weak_skills
-                        quiz_errors = ""
-                        for i, item in enumerate(weak_skills, 1):
-                            quiz_errors += f"{i}. Câu: {item.get('question', '')}\n"
-                            quiz_errors += f"   Trả lời: {item.get('user_answer', '')}\n"
-                            quiz_errors += f"   Đúng: {item.get('correct_answer', '')}\n\n"
+            # If in AI Tutor mode, include full context to maintain conversation
+            if ai_tutor_mode and error_ctx:
+                # ✨ KEY FIX: Extract LATEST exercises from BEFORE the last user message
+                # Get the last user message index
+                last_user_idx = -1
+                for i in range(len(msgs) - 1, -1, -1):
+                    if msgs[i].get("role") == "user":
+                        last_user_idx = i
+                        break
+                
+                # Search backwards from last user message to find latest assistant response with exercises
+                prev_exercises = ""
+                if last_user_idx > 0:
+                    for i in range(last_user_idx - 1, -1, -1):
+                        if msgs[i].get("role") == "assistant":
+                            content = msgs[i].get("content", "")
+                            if ("1️⃣" in content or "Bài tập" in content or "___" in content):
+                                # Extract full exercises up to "Hướng dẫn" or similar cutoff
+                                # Find the end of exercises section (usually before "Hướng dẫn", "Chấm", etc.)
+                                cutoff_idx = content.find("Hướng dẫn")
+                                if cutoff_idx == -1:
+                                    cutoff_idx = content.find("Chấm")
+                                if cutoff_idx == -1:
+                                    cutoff_idx = len(content)
+                                
+                                # Extract exercises section
+                                # Find the start of exercises (after "Bài tập")
+                                start_idx = content.find("Bài tập")
+                                if start_idx == -1:
+                                    start_idx = 0
+                                
+                                exercises_section = content[start_idx:cutoff_idx]
+                                prev_exercises = exercises_section.strip()
+                                break
+                
+                # Check if this is from quiz weak_skills
+                weak_skills = error_ctx.get("quiz_weak_skills", [])
+                is_quiz_review = error_ctx.get("is_from_quiz", False)
+                
+                if is_quiz_review and weak_skills:
+                    # Quiz review mode - focus on weak_skills
+                    quiz_errors = ""
+                    for i, item in enumerate(weak_skills, 1):
+                        quiz_errors += f"{i}. Câu: {item.get('question', '')}\n"
+                        quiz_errors += f"   Trả lời: {item.get('user_answer', '')}\n"
+                        quiz_errors += f"   Đúng: {item.get('correct_answer', '')}\n\n"
                         
                         context_msg = f"""[QUIZ REVIEW MODE - TUTOR BEHAVIOR REQUIRED]
 
@@ -3481,8 +3481,9 @@ Luôn trả lời tính toán cá nhân hóa theo tiến độ và điểm yếu
 - Bold cho tiêu đề, bullet/số cho danh sách
 
 Bắt đầu ngay!"""
-                    else:
-                        # Regular AI tutor mode (non-quiz)
+                    ok, reply, metadata = call_chat_api(context_msg)
+                else:
+                    # Regular AI tutor mode (non-quiz)
                         context_msg = f"""[AI TUTOR MODE - GRADING STUDENT ANSWERS]
 
 **ORIGINAL ERROR CONTEXT:**
@@ -3538,11 +3539,11 @@ Bắt đầu ngay!"""
 📮 **Instructions:** Submit your answers to continue practice.
 
 Start grading now!"""
-                    
-                    ok, reply, metadata = call_chat_api(context_msg)
-                else:
-                    # Regular chat - include analytics context
-                    system_context = f"""Bạn là một giáo viên tiếng Anh chuyên nghiệp, am hiểu CEFR và các phương pháp dạy học hiệu quả.
+                
+                ok, reply, metadata = call_chat_api(context_msg)
+            else:
+                # Regular chat - include analytics context
+                system_context = f"""Bạn là một giáo viên tiếng Anh chuyên nghiệp, am hiểu CEFR và các phương pháp dạy học hiệu quả.
 
 {analytics_context}
 
@@ -3554,8 +3555,8 @@ HỖ TRỢ NGƯỜI HỌC CẢ VỀ:
 
 Luôn trả lời tính toán cá nhân hóa theo tiến độ và điểm yếu của người học.
 """
-                    user_prompt = f"{system_context}\n\nNgười học: {user_inp}"
-                    ok, reply, metadata = call_chat_api(user_prompt)
+                user_prompt = f"{system_context}\n\nNgười học: {user_inp}"
+                ok, reply, metadata = call_chat_api(user_prompt)
             
             if ok:
                 st.markdown(reply)
