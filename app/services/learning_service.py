@@ -408,6 +408,9 @@ class LearningService:
             from app.models.user_profile import UserProfile
             from uuid import UUID
             
+            # Rollback any existing failed transaction
+            await db.rollback()
+            
             result = await db.execute(select(UserProfile).where(UserProfile.user_id == UUID(user_id)))
             profile = result.scalar_one_or_none()
             
@@ -416,6 +419,11 @@ class LearningService:
             return None
         except Exception as e:
             logger.warning(f"Failed to get active_topic_id for {user_id}: {e}")
+            # Rollback để transaction không bị stuck
+            try:
+                await db.rollback()
+            except:
+                pass
             return None
 
     async def _build_learning_context_dict(self, db: AsyncSession, user_id: str) -> Optional[Dict[str, Any]]:
