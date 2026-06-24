@@ -374,6 +374,72 @@ def api_chat(
     return False, err, {}
 
 
+def api_chat_stream(
+    msg: str,
+    session_id: Optional[str] = None,
+    placeholder=None
+) -> tuple[bool, str, dict]:
+    """Streaming chat for better UX - response appears word by word"""
+    import requests
+    import json
+    
+    payload = {
+        "user_input": msg,
+        "explain_in": "vi",
+        "temperature": 0.7
+    }
+    if session_id:
+        payload["session_id"] = session_id
+    
+    token = st.session_state.get("access_token")
+    if not token:
+        return False, "Unauthorized", {}
+    
+    url = f"{BACKEND_URL}/api/chat/stream"
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Content-Type": "application/json"
+    }
+    
+    try:
+        full_response = ""
+        with requests.post(url, json=payload, headers=headers, stream=True, timeout=120) as response:
+            response.raise_for_status()
+            
+            for line in response.iter_lines():
+                if line:
+                    line_text = line.decode('utf-8')
+                    if line_text.startswith('data: '):
+                        try:
+                            data = json.loads(line_text[6:])  # Remove 'data: ' prefix
+                            
+                            if data.get('error'):
+                                return False, f"Lỗi: {data['error']}", {}
+                            
+                            chunk = data.get('chunk', '')
+                            if chunk and placeholder:
+                                full_response += chunk
+                                # Update display with cursor effect
+                                placeholder.markdown(full_response + "▌")
+                            
+                            if data.get('done'):
+                                # Remove cursor when done
+                                if placeholder:
+                                    placeholder.markdown(full_response)
+                                return True, full_response, {}
+                        except json.JSONDecodeError:
+                            continue
+        
+        return True, full_response, {}
+        
+    except requests.Timeout:
+        return False, "Timeout: Phản hồi quá lâu", {}
+    except requests.RequestException as e:
+        return False, f"Network error: {str(e)}", {}
+    except Exception as e:
+        return False, f"Lỗi: {str(e)}", {}
+
+
 def api_chat_save_message(
     session_id: str,
     role: str,
@@ -2771,7 +2837,23 @@ def page_chat():
     quiz_topic_id = st.session_state.get("quiz_topic_id")
     
     # Helper function to call API with quiz context
-    def call_chat_api(msg):
+    def call_chat_api(msg, use_streaming=True):
+        """Call chat API - with streaming support for better UX"""
+        if use_streaming:
+            # Try streaming first (faster perceived response)
+            try:
+                placeholder = st.empty()
+                ok, reply, metadata = api_chat_stream(
+                    msg,
+                    session_id=session_id,
+                    placeholder=placeholder
+                )
+                return ok, reply, metadata
+            except Exception as e:
+                # Fallback to non-streaming if streaming fails
+                st.warning("⚠️ Chuyển sang chế độ thường...")
+        
+        # Non-streaming fallback
         return api_chat(
             msg,
             session_id=session_id,
@@ -3038,8 +3120,7 @@ def page_chat():
                         st.markdown(proactive_msg)
                     
                     with st.chat_message("assistant", avatar="🤖"):
-                        with st.spinner("AI đang chuẩn bị bài học cho bạn..."):
-                            ok, reply, metadata = call_chat_api(proactive_msg)
+                        ok, reply, metadata = call_chat_api(proactive_msg)
                         
                         if ok:
                             st.markdown(reply)
@@ -3082,8 +3163,7 @@ def page_chat():
             st.markdown(preset_msg)
         
         with st.chat_message("assistant", avatar="🤖"):
-            with st.spinner("AI đang suy nghĩ..."):
-                ok, reply, metadata = call_chat_api(preset_msg)
+            ok, reply, metadata = call_chat_api(preset_msg)
             
             if ok:
                 st.markdown(reply)
@@ -3325,8 +3405,7 @@ Luôn trả lời tính toán cá nhân hóa theo tiến độ và điểm yếu
         # Backend auto-saves (A4)
 
         with st.chat_message("assistant", avatar="🤖"):
-            with st.spinner("AI đang suy nghĩ..."):
-                # If in AI Tutor mode, include full context to maintain conversation
+            ok, reply, metadata = call_chat_api(user_prompt)
                 if ai_tutor_mode and error_ctx:
                     # ✨ KEY FIX: Extract LATEST exercises from BEFORE the last user message
                     # Get the last user message index
