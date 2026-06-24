@@ -32,8 +32,14 @@ class Base(DeclarativeBase):
 async def get_db() -> AsyncGenerator[AsyncSession, None]:
     """FastAPI dependency để inject database session"""
     async with AsyncSessionLocal() as session:
-        yield session
-        # Không cần await session.close() vì async with đã tự động close
+        try:
+            yield session
+            await session.commit()  # Commit nếu không có lỗi
+        except Exception:
+            await session.rollback()  # Rollback nếu có lỗi
+            raise
+        finally:
+            await session.close()  # Đảm bảo session được đóng
 
 
 # Optional: Hàm dispose engine khi app shutdown
