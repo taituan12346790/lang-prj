@@ -2837,7 +2837,7 @@ def page_chat():
     quiz_topic_id = st.session_state.get("quiz_topic_id")
     
     # Helper function to call API with quiz context
-    def call_chat_api(msg, use_streaming=True):
+    def call_chat_api(msg, use_streaming=False):  # Tạm tắt streaming
         """Call chat API - with streaming support for better UX"""
         if use_streaming:
             # Try streaming first (faster perceived response)
