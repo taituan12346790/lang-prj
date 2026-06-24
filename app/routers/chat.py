@@ -21,9 +21,14 @@ async def chat_with_ai(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
+    logger.info(f"🔵 CHAT REQUEST START: user={current_user.id}, input={request.user_input[:50]}...")
+    
     try:
         # Lazy-load learning service on first use
+        logger.info("🔵 Loading learning service...")
         learning_service = get_learning_service()
+        
+        logger.info(f"🔵 Processing chat with learning service...")
         result = await learning_service.process(
             user_input=request.user_input,
             user_id=str(current_user.id),
@@ -34,6 +39,8 @@ async def chat_with_ai(
             target_lang=request.target_lang,
             explain_in=request.explain_in
         )
+        
+        logger.info(f"🔵 Learning service returned: success={result.get('success')}")
         
         response_text = result.get("response", "")
         
@@ -52,6 +59,8 @@ async def chat_with_ai(
             
             logger.info(f"Detected {len(exercises)} exercises in AI response, saving to DB")
         
+        logger.info(f"🟢 CHAT REQUEST SUCCESS: response_length={len(response_text)}")
+        
         return ChatResponse(
             response=response_text,
             metadata=result.get("metadata", {}),
@@ -59,7 +68,8 @@ async def chat_with_ai(
             error=result.get("error")
         )
     except Exception as e:
-        logger.error(f"Chat error: {str(e)}")
+        logger.error(f"🔴 CHAT ERROR: {str(e)}")
+        logger.error(f"🔴 Error type: {type(e).__name__}")
         logger.exception(e)  # Log full traceback
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,

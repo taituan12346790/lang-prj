@@ -620,7 +620,10 @@ class LearningService:
         explain_in: Optional[str] = None
     ) -> Dict[str, Any]:
         """Entry point chính cho AI Tutor"""
+        logger.info(f"🔵 PROCESS START: user={user_id[:8]}..., input_len={len(user_input)}")
+        
         if not user_input or not user_input.strip():
+            logger.warning(f"🟡 Empty input from user {user_id}")
             return {
                 "success": False,
                 "response": "Vui lòng nhập nội dung câu hỏi.",
@@ -631,9 +634,12 @@ class LearningService:
         if not session_id:
             import uuid
             session_id = str(uuid.uuid4())
+            logger.info(f"🔵 Generated new session_id: {session_id[:8]}...")
         
         # Get current topic_id for conversation context (B1: Keep as UUID)
+        logger.info(f"🔵 Getting active topic for user {user_id[:8]}...")
         current_topic_id = await self._get_active_topic_id(db, user_id)
+        logger.info(f"🔵 Active topic: {current_topic_id}")
         
         # A3: Determine learning mode based on quiz context
         learning_mode = "normal"
@@ -642,6 +648,7 @@ class LearningService:
             logger.info(f"🎯 Quiz review mode for {user_id}: {len(quiz_wrong_answers or [])} wrong answers")
 
         # State ban đầu (A4: include session tracking + A3: quiz context)
+        logger.info(f"🔵 Building initial state...")
         initial_state: AgentState = {
             "user_input": user_input,
             "user_id": user_id,
@@ -664,10 +671,12 @@ class LearningService:
         }
 
         try:
+            logger.info(f"🔵 Invoking LangGraph...")
             final_state = await self.graph.ainvoke(initial_state)
+            logger.info(f"🔵 LangGraph completed")
 
             if final_state.get("error"):
-                logger.error(f"Graph error for user {user_id}: {final_state['error']}")
+                logger.error(f"🔴 Graph error for user {user_id}: {final_state['error']}")
                 return {
                     "success": False,
                     "response": "Hệ thống gặp sự cố. Vui lòng thử lại sau.",
