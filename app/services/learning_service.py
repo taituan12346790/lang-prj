@@ -37,7 +37,7 @@ class LearningService:
 
         # Nodes
         graph.add_node("load_memory", self._load_memory_node)
-        graph.add_node("strategy", self._strategy_node)
+        graph.add_node("select_strategy", self._strategy_node)  # Renamed to avoid conflict with state attribute
         graph.add_node("planner", self._planner_node)
         graph.add_node("execute", self._execute_node)
         graph.add_node("reflect", self._reflect_node)
@@ -51,10 +51,10 @@ class LearningService:
         graph.add_conditional_edges(
             "load_memory",
             self._after_load_memory,
-            {"continue": "strategy", "error": END}
+            {"continue": "select_strategy", "error": END}
         )
         graph.add_conditional_edges(
-            "strategy",
+            "select_strategy",
             self._after_strategy,
             {"continue": "planner", "error": END}
         )
