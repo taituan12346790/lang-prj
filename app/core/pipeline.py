@@ -239,13 +239,11 @@ class Pipeline:
 
         if is_valid:
             logger.info("✅ Output validation passed")
+            return {}  # No state update needed when valid
         else:
             logger.warning(f"❌ Output validation failed: {reason}")
-
-        return {
-            "output_valid": is_valid,
-            "validation_reason": reason
-        }
+            # Set error to trigger repair flow
+            return {"error": f"output_validation_failed: {reason}"}
 
     async def _repair_node(self, state: AgentState) -> Dict[str, Any]:
         """Node 5: Repair invalid output"""
@@ -299,19 +297,9 @@ class Pipeline:
 
     async def _finalize_node(self, state: AgentState) -> Dict[str, Any]:
         """Node 6: Finalize and prepare response"""
-        if state.get("input_blocked"):
-            return {
-                "success": False,
-                "blocked_by": "input_guardrail"
-            }
-
-        return {
-            "success": True,
-            "tools_used": state.get("tools_used", []),
-            "strategy_mode": state.get("strategy", {}).get("mode"),
-            "validated": state.get("output_valid", False),
-            "used_fallback": state.get("used_fallback", False)
-        }
+        # No state updates needed - just pass through
+        # Success/failure is determined by presence of error in state
+        return {}
 
     # ===== HELPER METHODS =====
 
