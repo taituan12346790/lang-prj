@@ -925,6 +925,14 @@ hr { border-color: rgba(255,255,255,0.1) !important; }
     color: rgba(255,255,255,0.9) !important;
 }
 
+/* Force visibility of all text - prevent white text on white bg */
+[data-testid="stChatMessage"] span,
+[data-testid="stChatMessage"] p,
+[data-testid="stChatMessage"] div,
+[data-testid="stChatMessage"] code {
+    color: rgba(255,255,255,0.9) !important;
+}
+
 /* Chat input bar at bottom */
 [data-testid="stBottom"],
 [data-testid="stBottomBlockContainer"],
