@@ -187,7 +187,7 @@ async def google_callback(request: Request, db: AsyncSession = Depends(get_db)):
         if hasattr(settings, 'FRONTEND_URL') and settings.FRONTEND_URL:
             streamlit_url = settings.FRONTEND_URL
         elif settings.ENVIRONMENT == "production":
-            streamlit_url = "https://aitutorlang.onrender.com"
+            streamlit_url = "https://lang-prj.onrender.com"
         else:
             streamlit_url = "http://localhost:8501"
         
