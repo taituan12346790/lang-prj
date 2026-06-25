@@ -1,4 +1,4 @@
-﻿"""
+"""
 AI Language Tutor – Learning Path Edition
 ==========================================
 Backend : python -m uvicorn app.main:app --reload
