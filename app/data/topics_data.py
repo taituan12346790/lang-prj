@@ -609,7 +609,7 @@ A1_TOPICS: List[Dict[str, Any]] = [
              ]}},
             {"order": 4, "lesson_type": "quiz", "title": "Quiz: Food & Drinks", "title_vi": "Kiểm tra: Thực phẩm & Đồ uống",
              "content": {"questions": [
-                 {"id": "q1", "question": "How do you lịch sựly order food?", "options": ["I want rice.", "I'd like rice, please.", "Give me rice!", "Rice!"], "correct": "I'd like rice, please.", "explanation": "'I'd like' = lịch sự ordering."},
+                 {"id": "q1", "question": "How do you politely order food?", "options": ["I want rice.", "I'd like rice, please.", "Give me rice!", "Rice!"], "correct": "I'd like rice, please.", "explanation": "'I'd like' = lịch sự ordering."},
                  {"id": "q2", "question": "_____ you like some tea?", "options": ["Do", "Are", "Would", "Have"], "correct": "Would", "explanation": "'Would you like' = offer."},
                  {"id": "q3", "question": "What is 'thịt gà' in English?", "options": ["fish", "beef", "chicken", "pork"], "correct": "chicken", "explanation": "Chicken = thịt gà."},
                  {"id": "q4", "question": "What do you ask for at the end of a meal?", "options": ["menu", "water", "bill", "food"], "correct": "bill", "explanation": "Bill/check = hóa đơn."},
