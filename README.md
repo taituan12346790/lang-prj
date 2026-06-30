@@ -368,28 +368,6 @@ Mọi đóng góp đều được chào đón! Vui lòng:
 
 Dự án này được phát triển cho mục đích học tập và nghiên cứu.
 
-## 👥 Author
+## 👥 Contact
 
-**Nguyễn Tài Tuấn**
-- GitHub: [@taituan12346790](https://github.com/taituan12346790)
-- Email: tuan.nt204690@sis.hust.edu.vn
-- University: Hanoi University of Science and Technology (HUST)
-
-## 🙏 Acknowledgments
-
-- **LangChain & LangGraph** - Multi-agent AI framework
-- **Groq** - Ultra-fast LLM inference
-- **Streamlit** - Rapid UI development
-- **HUST** - Academic support and guidance
-
----
-
-## 📞 Support & Contact
-
-Nếu bạn gặp vấn đề hoặc có câu hỏi:
-- 🐛 [Tạo Issue trên GitHub](https://github.com/taituan12346790/lang-prj/issues)
-- 📧 Email: tuan.nt204690@sis.hust.edu.vn
-
----
-
-⭐ **Nếu project hữu ích, hãy cho một star trên GitHub!** ⭐
+GitHub: [@taituan12346790](https://github.com/taituan12346790)
