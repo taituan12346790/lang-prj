@@ -1,6 +1,6 @@
-# 🎓 Hệ Thống Học Tiếng Anh Thông Minh với Multi-Agent AI
+# 🎓 AI-Powered English Learning Platform
 
-Hệ thống học tiếng Anh tích hợp AI Multi-Agent, sử dụng LangGraph để cung cấp trải nghiệm học tập cá nhân hóa với các tính năng: học từ vựng theo chủ đề, luyện ngữ pháp, viết luận, và trò chuyện với AI Tutor thông minh.
+Hệ thống học tiếng Anh thông minh sử dụng Multi-Agent AI và LangGraph, cung cấp trải nghiệm học tập cá nhân hóa toàn diện: học từ vựng theo chủ đề, luyện ngữ pháp, viết luận, và trò chuyện với AI Tutor.
 
 ## 🌟 Tính Năng Chính
 
@@ -33,19 +33,24 @@ Hệ thống học tiếng Anh tích hợp AI Multi-Agent, sử dụng LangGraph
 ## 🏗️ Kiến Trúc Hệ Thống
 
 ```
-├── Backend (FastAPI)
-│   ├── Multi-Agent AI (LangGraph)
-│   ├── PostgreSQL Database
-│   └── RESTful API
-│
-├── Frontend (Streamlit)
-│   ├── Learning Dashboard
-│   ├── AI Chat Interface
-│   └── Analytics Dashboard
-│
-└── AI Integration
-    ├── Groq (Llama 3.1)
-    └── LangChain/LangGraph
+Backend (FastAPI)
+├── Multi-Agent AI (LangGraph)
+│   ├── Grammar Agent
+│   ├── Exercise Agent
+│   └── Translator Agent
+├── PostgreSQL Database
+└── RESTful API
+
+Frontend (Streamlit)
+├── Learning Dashboard
+├── AI Chat Interface
+├── Writing Practice
+└── Analytics Dashboard
+
+AI/LLM
+├── Groq API (Llama 3.1)
+├── LangChain/LangGraph
+└── Multi-Agent Orchestration
 ```
 
 ## 🚀 Cài Đặt & Chạy
@@ -53,7 +58,7 @@ Hệ thống học tiếng Anh tích hợp AI Multi-Agent, sử dụng LangGraph
 ### Yêu Cầu Hệ Thống
 - Python 3.10+
 - PostgreSQL 14+
-- Node.js 18+ (optional - cho Next.js frontend)
+- Git
 
 ### Bước 1: Clone Repository
 
@@ -78,17 +83,30 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### Bước 3: Cấu Hình Database
+### Bước 3: Cấu Hình Database PostgreSQL
 
+**Option 1: PostgreSQL Local**
 ```bash
-# Tạo database PostgreSQL
+# Tạo database
 createdb lang_learning_db
 
+# Hoặc dùng psql
+psql -U postgres
+CREATE DATABASE lang_learning_db;
+```
+
+**Option 2: Neon.tech (Cloud PostgreSQL - Khuyến nghị)**
+1. Đăng ký tại https://neon.tech (miễn phí)
+2. Tạo project mới
+3. Copy connection string
+4. Paste vào `.env` file
+
+```bash
 # Chạy migrations
 alembic upgrade head
 
-# Seed dữ liệu mẫu
-python seed_database.py
+# Seed dữ liệu mẫu (25 topics + lessons)
+python -c "from app.data.topics_data import TOPICS; print(f'Loaded {len(TOPICS)} topics')"
 ```
 
 ### Bước 4: Cấu Hình Environment Variables
@@ -96,22 +114,35 @@ python seed_database.py
 Tạo file `.env` từ `.env.example`:
 
 ```bash
-# Database
-DATABASE_URL=postgresql://user:password@localhost:5432/lang_learning_db
+cp .env.example .env
+```
 
-# API Keys
-GROQ_API_KEY=your_groq_api_key_here
+Cập nhật các giá trị sau:
 
-# Google OAuth (optional)
-GOOGLE_CLIENT_ID=your_client_id
+```env
+# Database (Neon.tech hoặc local PostgreSQL)
+DATABASE_URL=postgresql://user:password@host:5432/lang_learning_db
+
+# Groq API (https://console.groq.com - Free tier: 30 requests/min)
+GROQ_API_KEY=gsk_your_api_key_here
+
+# JWT Secret (generate random string)
+SECRET_KEY=your-secret-key-minimum-32-characters
+
+# Google OAuth (Optional - để enable Google login)
+GOOGLE_CLIENT_ID=your_client_id.apps.googleusercontent.com
 GOOGLE_CLIENT_SECRET=your_client_secret
 
-# JWT Secret
-SECRET_KEY=your_secret_key_here
-
-# Backend URL
+# URLs
 BACKEND_URL=http://localhost:8000
+FRONTEND_URL=http://localhost:8501
 ```
+
+**Lấy Groq API Key:**
+1. Truy cập https://console.groq.com/
+2. Đăng ký/Đăng nhập
+3. Tạo API key mới
+4. Free tier: 30 requests/phút (đủ cho development)
 
 ### Bước 5: Chạy Backend
 
@@ -226,60 +257,88 @@ Hệ thống sử dụng PostgreSQL với các bảng chính:
 - `learning_sessions` - Phiên học
 - `chat_learning_activities` - Hoạt động học trong chat
 
-## 🔧 Công Nghệ Sử Dụng
+## 🔧 Tech Stack
 
 ### Backend
-- **FastAPI** - Web framework
-- **SQLAlchemy** - ORM
+- **FastAPI** - Modern Python web framework
+- **SQLAlchemy** - ORM cho database
 - **Alembic** - Database migrations
-- **PostgreSQL** - Database
+- **PostgreSQL** - Relational database
 - **Pydantic** - Data validation
 
 ### AI/ML
-- **LangGraph** - Multi-agent orchestration
-- **LangChain** - LLM framework
-- **Groq** - LLM API (Llama 3.1)
+- **LangGraph** - Multi-agent orchestration framework
+- **LangChain** - LLM integration framework
+- **Groq** - Fast LLM API (Llama 3.1 70B)
+- **OpenAI-compatible API** - Flexible LLM integration
 
 ### Frontend
-- **Streamlit** - Web UI framework
-- **Plotly** - Interactive charts
-- **Pandas** - Data manipulation
+- **Streamlit** - Interactive web UI
+- **Plotly** - Data visualization
+- **Pandas** - Data analysis
 
 ### Authentication
-- **JWT** - Token-based auth
+- **JWT** - Stateless authentication
 - **Google OAuth 2.0** - Social login
-- **Passlib** - Password hashing
+- **Passlib + bcrypt** - Secure password hashing
 
 ## 🌐 Deployment
 
-### Render.com (Recommended)
+### Render.com (Recommended - Free tier available)
 
-1. **Backend Deployment**:
-   - Connect GitHub repository
-   - Environment: Python 3.10
-   - Build Command: `pip install -r requirements.txt`
-   - Start Command: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
+**1. Backend Deployment:**
+- Create new Web Service
+- Connect GitHub repository
+- Environment: Python 3.10
+- Build Command: `pip install -r requirements.txt`
+- Start Command: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
 
-2. **Database**:
-   - Create PostgreSQL instance on Render
-   - Update `DATABASE_URL` in environment variables
+**2. Database:**
+- Create PostgreSQL instance on Render (hoặc dùng Neon.tech)
+- Copy `Internal Database URL`
+- Add to backend environment variables
 
-3. **Frontend Deployment**:
-   - Create new Streamlit deployment
-   - Connect same GitHub repository
-   - Update `BACKEND_URL` to point to backend service
+**3. Frontend Deployment:**
+- Create new Web Service
+- Connect GitHub repository  
+- Build Command: `pip install -r requirements.txt`
+- Start Command: `streamlit run streamlit_app.py --server.port $PORT --server.address 0.0.0.0`
+- Environment Variable: `BACKEND_URL=<your-backend-url>`
+
+**4. Environment Variables trên Render:**
+```
+DATABASE_URL=<from-render-postgres>
+GROQ_API_KEY=<your-groq-key>
+SECRET_KEY=<random-32-chars>
+FRONTEND_URL=<your-frontend-url>
+BACKEND_URL=<your-backend-url>
+```
 
 ### Docker (Alternative)
 
 ```bash
-# Build and run với Docker Compose
+# Build và run với Docker Compose
 docker-compose up -d
 
 # Chạy migrations
 docker-compose exec backend alembic upgrade head
+```
 
-# Seed database
-docker-compose exec backend python seed_database.py
+### Heroku
+
+```bash
+# Login và tạo app
+heroku login
+heroku create your-app-name
+
+# Add PostgreSQL
+heroku addons:create heroku-postgresql:mini
+
+# Deploy
+git push heroku master
+
+# Chạy migrations
+heroku run alembic upgrade head
 ```
 
 ## 📝 Environment Variables
@@ -297,36 +356,40 @@ docker-compose exec backend python seed_database.py
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Mọi đóng góp đều được chào đón! Vui lòng:
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+1. Fork repository
+2. Tạo feature branch (`git checkout -b feature/TinhNangMoi`)
+3. Commit changes (`git commit -m 'Thêm tính năng XYZ'`)
+4. Push to branch (`git push origin feature/TinhNangMoi`)
+5. Tạo Pull Request
 
 ## 📄 License
 
-This project is licensed under the MIT License.
+Dự án này được phát triển cho mục đích học tập và nghiên cứu.
 
 ## 👥 Author
 
 **Nguyễn Tài Tuấn**
 - GitHub: [@taituan12346790](https://github.com/taituan12346790)
 - Email: tuan.nt204690@sis.hust.edu.vn
+- University: Hanoi University of Science and Technology (HUST)
 
 ## 🙏 Acknowledgments
 
-- LangChain & LangGraph for multi-agent framework
-- Groq for fast LLM inference
-- HUST for academic support
-
-## 📞 Support
-
-Nếu bạn gặp vấn đề hoặc có câu hỏi:
-- Mở [GitHub Issue](https://github.com/taituan12346790/lang-prj/issues)
-- Email: tuan.nt204690@sis.hust.edu.vn
+- **LangChain & LangGraph** - Multi-agent AI framework
+- **Groq** - Ultra-fast LLM inference
+- **Streamlit** - Rapid UI development
+- **HUST** - Academic support and guidance
 
 ---
 
-**⭐ Nếu project này hữu ích, hãy star trên GitHub!**
+## 📞 Support & Contact
+
+Nếu bạn gặp vấn đề hoặc có câu hỏi:
+- 🐛 [Tạo Issue trên GitHub](https://github.com/taituan12346790/lang-prj/issues)
+- 📧 Email: tuan.nt204690@sis.hust.edu.vn
+
+---
+
+⭐ **Nếu project hữu ích, hãy cho một star trên GitHub!** ⭐

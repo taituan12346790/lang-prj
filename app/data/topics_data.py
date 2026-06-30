@@ -434,10 +434,10 @@ A1_TOPICS: List[Dict[str, Any]] = [
                 "title_vi": "Luyện tập: Màu sắc & Tính từ",
                 "content": {
                     "exercises": [
-                        {"type": "multiple_choice", "question": "Which sentence is correct?", "options": ["I have a bag red.", "I have a red bag.", "I have bag a red.", "Red I have a bag."], "answer": "I have a red bag.", "explanation": "Trong tiếng Anh: tính từ + danh từ. 'Red bag' KHÔNG PHẢI 'bag red'."},
-                        {"type": "fill_blank", "question": "The sky is _____. (color)", "options": ["red", "blue", "green", "yellow"], "answer": "blue", "explanation": "Bầu trời thường được mô tả là màu xanh."},
-                        {"type": "multiple_choice", "question": "What is the opposite of 'big'?", "options": ["tall", "old", "small", "hot"], "answer": "small", "explanation": "Big ↔ Small."},
-                        {"type": "multiple_choice", "question": "She has a _____ car. (new, not old)", "options": ["old", "ugly", "new", "cold"], "answer": "new", "explanation": "New = mới (trái nghĩa với old)."},
+                        {"type": "multiple_choice", "question": "Câu nào dưới đây là đúng?", "options": ["I have a bag red.", "I have a red bag.", "I have bag a red.", "Red I have a bag."], "answer": "I have a red bag.", "explanation": "Trong tiếng Anh: tính từ + danh từ. 'Red bag' KHÔNG PHẢI 'bag red'."},
+                        {"type": "fill_blank", "question": "The sky is _____. (màu)", "options": ["red", "blue", "green", "yellow"], "answer": "blue", "explanation": "Bầu trời thường được mô tả là màu xanh."},
+                        {"type": "multiple_choice", "question": "Trái nghĩa của 'big'?", "options": ["tall", "old", "small", "hot"], "answer": "small", "explanation": "Big ↔ Small."},
+                        {"type": "multiple_choice", "question": "She has a _____ car. (trái nghĩa với 'cũ')", "options": ["old", "ugly", "new", "cold"], "answer": "new", "explanation": "New = mới (trái nghĩa với old)."},
                         {"type": "fill_blank", "question": "Snow is _____.", "options": ["black", "white", "blue", "red"], "answer": "white", "explanation": "Tuyết màu trắng."}
                     ]
                 }
@@ -449,15 +449,15 @@ A1_TOPICS: List[Dict[str, Any]] = [
                 "title_vi": "Kiểm tra: Màu sắc & Tính từ",
                 "content": {
                     "questions": [
-                        {"id": "q1", "question": "What color is a banana?", "options": ["Red", "Blue", "Yellow", "Green"], "correct": "Yellow", "explanation": "Chuối màu vàng."},
-                        {"id": "q2", "question": "Which sentence is grammatically đúng?", "options": ["A dog big", "Big a dog", "A big dog", "Dog a big"], "correct": "A big dog", "explanation": "Tính từ đứng TRƯỚC danh từ trong tiếng Anh."},
-                        {"id": "q3", "question": "The opposite of 'tall' is:", "options": ["big", "short", "old", "new"], "correct": "short", "explanation": "Tall ↔ Short."},
-                        {"id": "q4", "question": "What color is grass?", "options": ["Yellow", "Blue", "Red", "Green"], "correct": "Green", "explanation": "Cỏ màu xanh lá."},
+                        {"id": "q1", "question": "Chuối có màu gì?", "options": ["Red", "Blue", "Yellow", "Green"], "correct": "Yellow", "explanation": "Chuối màu vàng."},
+                        {"id": "q2", "question": "Câu nào dưới dây đúng ngữ pháp?", "options": ["A dog big", "Big a dog", "A big dog", "Dog a big"], "correct": "A big dog", "explanation": "Tính từ đứng TRƯỚC danh từ trong tiếng Anh."},
+                        {"id": "q3", "question": "Trái nghĩa với 'tall':", "options": ["big", "short", "old", "new"], "correct": "short", "explanation": "Tall ↔ Short."},
+                        {"id": "q4", "question": "Cỏ có màu gì?", "options": ["Black", "Blue", "Red", "Green"], "correct": "Green", "explanation": "Cỏ màu xanh lá."},
                         {"id": "q5", "question": "The room is very _____. (It has a heater on)", "options": ["cold", "hot", "small", "tall"], "correct": "hot", "explanation": "Hot = nóng."},
                         {"id": "q6", "question": "She has _____ hair. (màu đen)", "options": ["white", "red", "black", "blue"], "correct": "black", "explanation": "Black = đen."},
-                        {"id": "q7", "question": "I have a _____ house. (It was built last year)", "options": ["old", "big", "new", "ugly"], "correct": "new", "explanation": "New = mới (mới xây gần đây)."},
+                        {"id": "q7", "question": "I have a _____ house. (mới)", "options": ["old", "big", "new", "ugly"], "correct": "new", "explanation": "New = mới."},
                         {"id": "q8", "question": "The dress is _____. (màu hồng)", "options": ["purple", "orange", "pink", "blue"], "correct": "pink", "explanation": "Pink = hồng."},
-                        {"id": "q9", "question": "What is the Vietnamese meaning of 'beautiful'?", "options": ["xấu", "nhỏ", "đẹp", "nóng"], "correct": "đẹp", "explanation": "Beautiful = đẹp."},
+                        {"id": "q9", "question": "Nghĩa tiếng Việt của từ 'beautiful'?", "options": ["xấu", "nhỏ", "đẹp", "nóng"], "correct": "đẹp", "explanation": "Beautiful = đẹp."},
                         {"id": "q10", "question": "The water in the fridge is ___.", "options": ["hot", "cold", "tall", "new"], "correct": "cold", "explanation": "Nước trong tủ lạnh thì lạnh."}
                     ]
                 }
@@ -601,7 +601,7 @@ A1_TOPICS: List[Dict[str, Any]] = [
              ]}},
             {"order": 3, "lesson_type": "practice", "title": "Practice: Ordering Food", "title_vi": "Luyện tập: Gọi món",
              "content": {"exercises": [
-                 {"type": "multiple_choice", "question": "You are at a restaurant. How do you order lịch sựly?", "options": ["I want chicken.", "Give me chicken!", "I'd like chicken, please.", "Chicken now!"], "answer": "I'd like chicken, please.", "explanation": "'I'd like' là cách lịch sự để đặt món."},
+                 {"type": "multiple_choice", "question": "You are at a restaurant. How do you order politely?", "options": ["I want chicken.", "Give me chicken!", "I'd like chicken, please.", "Chicken now!"], "answer": "I'd like chicken, please.", "explanation": "'I'd like' là cách lịch sự để đặt món."},
                  {"type": "multiple_choice", "question": "_____ you like some coffee? (Offering)", "options": ["Do", "Would", "Are", "Have"], "answer": "Would", "explanation": "'Would you like' dùng để offer something."},
                  {"type": "fill_blank", "question": "Can I see the _____? (to see the food list)", "options": ["bill", "menu", "water", "food"], "answer": "menu", "explanation": "Menu = thực đơn."},
                  {"type": "multiple_choice", "question": "Which is a drink?", "options": ["rice", "chicken", "juice", "bread"], "answer": "juice", "explanation": "Juice = nước ép (a drink)."},
@@ -609,7 +609,7 @@ A1_TOPICS: List[Dict[str, Any]] = [
              ]}},
             {"order": 4, "lesson_type": "quiz", "title": "Quiz: Food & Drinks", "title_vi": "Kiểm tra: Thực phẩm & Đồ uống",
              "content": {"questions": [
-                 {"id": "q1", "question": "How do you lịch sựly order food?", "options": ["I want rice.", "I'd like rice, please.", "Give me rice!", "Rice!"], "correct": "I'd like rice, please.", "explanation": "'I'd like' = lịch sự ordering."},
+                 {"id": "q1", "question": "How do you politely order food?", "options": ["I want rice.", "I'd like rice, please.", "Give me rice!", "Rice!"], "correct": "I'd like rice, please.", "explanation": "'I'd like' = lịch sự ordering."},
                  {"id": "q2", "question": "_____ you like some tea?", "options": ["Do", "Are", "Would", "Have"], "correct": "Would", "explanation": "'Would you like' = offer."},
                  {"id": "q3", "question": "What is 'thịt gà' in English?", "options": ["fish", "beef", "chicken", "pork"], "correct": "chicken", "explanation": "Chicken = thịt gà."},
                  {"id": "q4", "question": "What do you ask for at the end of a meal?", "options": ["menu", "water", "bill", "food"], "correct": "bill", "explanation": "Bill/check = hóa đơn."},
