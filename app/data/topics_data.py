@@ -601,7 +601,7 @@ A1_TOPICS: List[Dict[str, Any]] = [
              ]}},
             {"order": 3, "lesson_type": "practice", "title": "Practice: Ordering Food", "title_vi": "Luyện tập: Gọi món",
              "content": {"exercises": [
-                 {"type": "multiple_choice", "question": "You are at a restaurant. How do you order lịch sựly?", "options": ["I want chicken.", "Give me chicken!", "I'd like chicken, please.", "Chicken now!"], "answer": "I'd like chicken, please.", "explanation": "'I'd like' là cách lịch sự để đặt món."},
+                 {"type": "multiple_choice", "question": "You are at a restaurant. How do you order politely?", "options": ["I want chicken.", "Give me chicken!", "I'd like chicken, please.", "Chicken now!"], "answer": "I'd like chicken, please.", "explanation": "'I'd like' là cách lịch sự để đặt món."},
                  {"type": "multiple_choice", "question": "_____ you like some coffee? (Offering)", "options": ["Do", "Would", "Are", "Have"], "answer": "Would", "explanation": "'Would you like' dùng để offer something."},
                  {"type": "fill_blank", "question": "Can I see the _____? (to see the food list)", "options": ["bill", "menu", "water", "food"], "answer": "menu", "explanation": "Menu = thực đơn."},
                  {"type": "multiple_choice", "question": "Which is a drink?", "options": ["rice", "chicken", "juice", "bread"], "answer": "juice", "explanation": "Juice = nước ép (a drink)."},
