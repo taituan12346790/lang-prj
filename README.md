@@ -58,7 +58,7 @@ Frontend: http://localhost:8501
 ## Tech Stack
 
 **Backend:** FastAPI, SQLAlchemy, PostgreSQL, Alembic  
-**AI/ML:** LangGraph, LangChain, Groq (Llama 3.1)  
+**AI/ML:** LangGraph, LangChain, Groq
 **Frontend:** Streamlit, Plotly  
 **Auth:** JWT, Google OAuth 2.0
 
