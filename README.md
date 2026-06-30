@@ -2,6 +2,8 @@
 
 Hệ thống học tiếng Anh với Multi-Agent AI (LangGraph + Groq Llama 3.1)
 
+🔗 **Demo:** [lang-prj.onrender.com](https://lang-prj.onrender.com)
+
 ## Tính năng
 
 - 🤖 Multi-Agent AI: Grammar, Exercise, Translator agents
@@ -10,7 +12,7 @@ Hệ thống học tiếng Anh với Multi-Agent AI (LangGraph + Groq Llama 3.1)
 - 💬 Chat với AI Tutor thông minh
 - 📊 Theo dõi tiến độ học tập
 
-## Cài đặt
+## Cài đặt Local (Development)
 
 ### Yêu cầu
 - Python 3.10+
@@ -27,14 +29,14 @@ cd lang-prj
 2. Cài dependencies:
 ```bash
 python -m venv venv
-venv\Scripts\activate  # Windows
+venv\Scripts\activate  # Windows: venv\Scripts\activate | Linux/Mac: source venv/bin/activate
 pip install -r requirements.txt
 ```
 
 3. Tạo file `.env`:
 ```env
 DATABASE_URL=postgresql://user:password@host/db
-GROQ_API_KEY=your_groq_key  # Lấy tại https://console.groq.com
+GROQ_API_KEY=your_groq_key  # Lấy miễn phí tại https://console.groq.com
 SECRET_KEY=your_secret_key
 ```
 
@@ -45,15 +47,16 @@ alembic upgrade head
 
 5. Chạy ứng dụng:
 ```bash
-# Backend
+# Backend (terminal 1)
 uvicorn app.main:app --reload
 
-# Frontend (terminal mới)
+# Frontend (terminal 2)
 streamlit run streamlit_app.py
 ```
 
-Backend: http://localhost:8000  
-Frontend: http://localhost:8501
+- Backend: http://localhost:8000  
+- Frontend: http://localhost:8501
+- API Docs: http://localhost:8000/docs
 
 ## Tech Stack
 
