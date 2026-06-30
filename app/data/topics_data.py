@@ -434,10 +434,10 @@ A1_TOPICS: List[Dict[str, Any]] = [
                 "title_vi": "Luyện tập: Màu sắc & Tính từ",
                 "content": {
                     "exercises": [
-                        {"type": "multiple_choice", "question": "Which sentence is correct?", "options": ["I have a bag red.", "I have a red bag.", "I have bag a red.", "Red I have a bag."], "answer": "I have a red bag.", "explanation": "Trong tiếng Anh: tính từ + danh từ. 'Red bag' KHÔNG PHẢI 'bag red'."},
-                        {"type": "fill_blank", "question": "The sky is _____. (color)", "options": ["red", "blue", "green", "yellow"], "answer": "blue", "explanation": "Bầu trời thường được mô tả là màu xanh."},
-                        {"type": "multiple_choice", "question": "What is the opposite of 'big'?", "options": ["tall", "old", "small", "hot"], "answer": "small", "explanation": "Big ↔ Small."},
-                        {"type": "multiple_choice", "question": "She has a _____ car. (new, not old)", "options": ["old", "ugly", "new", "cold"], "answer": "new", "explanation": "New = mới (trái nghĩa với old)."},
+                        {"type": "multiple_choice", "question": "Câu nào dưới đây là đúng?", "options": ["I have a bag red.", "I have a red bag.", "I have bag a red.", "Red I have a bag."], "answer": "I have a red bag.", "explanation": "Trong tiếng Anh: tính từ + danh từ. 'Red bag' KHÔNG PHẢI 'bag red'."},
+                        {"type": "fill_blank", "question": "The sky is _____. (màu)", "options": ["red", "blue", "green", "yellow"], "answer": "blue", "explanation": "Bầu trời thường được mô tả là màu xanh."},
+                        {"type": "multiple_choice", "question": "Trái nghĩa của 'big'?", "options": ["tall", "old", "small", "hot"], "answer": "small", "explanation": "Big ↔ Small."},
+                        {"type": "multiple_choice", "question": "She has a _____ car. (trái nghĩa với 'cũ')", "options": ["old", "ugly", "new", "cold"], "answer": "new", "explanation": "New = mới (trái nghĩa với old)."},
                         {"type": "fill_blank", "question": "Snow is _____.", "options": ["black", "white", "blue", "red"], "answer": "white", "explanation": "Tuyết màu trắng."}
                     ]
                 }
@@ -449,15 +449,15 @@ A1_TOPICS: List[Dict[str, Any]] = [
                 "title_vi": "Kiểm tra: Màu sắc & Tính từ",
                 "content": {
                     "questions": [
-                        {"id": "q1", "question": "What color is a banana?", "options": ["Red", "Blue", "Yellow", "Green"], "correct": "Yellow", "explanation": "Chuối màu vàng."},
-                        {"id": "q2", "question": "Which sentence is grammatically đúng?", "options": ["A dog big", "Big a dog", "A big dog", "Dog a big"], "correct": "A big dog", "explanation": "Tính từ đứng TRƯỚC danh từ trong tiếng Anh."},
-                        {"id": "q3", "question": "The opposite of 'tall' is:", "options": ["big", "short", "old", "new"], "correct": "short", "explanation": "Tall ↔ Short."},
-                        {"id": "q4", "question": "What color is grass?", "options": ["Yellow", "Blue", "Red", "Green"], "correct": "Green", "explanation": "Cỏ màu xanh lá."},
+                        {"id": "q1", "question": "Chuối có màu gì?", "options": ["Red", "Blue", "Yellow", "Green"], "correct": "Yellow", "explanation": "Chuối màu vàng."},
+                        {"id": "q2", "question": "Câu nào dưới dây đúng ngữ pháp?", "options": ["A dog big", "Big a dog", "A big dog", "Dog a big"], "correct": "A big dog", "explanation": "Tính từ đứng TRƯỚC danh từ trong tiếng Anh."},
+                        {"id": "q3", "question": "Trái nghĩa với 'tall':", "options": ["big", "short", "old", "new"], "correct": "short", "explanation": "Tall ↔ Short."},
+                        {"id": "q4", "question": "Cỏ có màu gì?", "options": ["Black", "Blue", "Red", "Green"], "correct": "Green", "explanation": "Cỏ màu xanh lá."},
                         {"id": "q5", "question": "The room is very _____. (It has a heater on)", "options": ["cold", "hot", "small", "tall"], "correct": "hot", "explanation": "Hot = nóng."},
                         {"id": "q6", "question": "She has _____ hair. (màu đen)", "options": ["white", "red", "black", "blue"], "correct": "black", "explanation": "Black = đen."},
-                        {"id": "q7", "question": "I have a _____ house. (It was built last year)", "options": ["old", "big", "new", "ugly"], "correct": "new", "explanation": "New = mới (mới xây gần đây)."},
+                        {"id": "q7", "question": "I have a _____ house. (mới)", "options": ["old", "big", "new", "ugly"], "correct": "new", "explanation": "New = mới."},
                         {"id": "q8", "question": "The dress is _____. (màu hồng)", "options": ["purple", "orange", "pink", "blue"], "correct": "pink", "explanation": "Pink = hồng."},
-                        {"id": "q9", "question": "What is the Vietnamese meaning of 'beautiful'?", "options": ["xấu", "nhỏ", "đẹp", "nóng"], "correct": "đẹp", "explanation": "Beautiful = đẹp."},
+                        {"id": "q9", "question": "Nghĩa tiếng Việt của từ 'beautiful'?", "options": ["xấu", "nhỏ", "đẹp", "nóng"], "correct": "đẹp", "explanation": "Beautiful = đẹp."},
                         {"id": "q10", "question": "The water in the fridge is ___.", "options": ["hot", "cold", "tall", "new"], "correct": "cold", "explanation": "Nước trong tủ lạnh thì lạnh."}
                     ]
                 }
