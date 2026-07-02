@@ -16,6 +16,7 @@ from app.core.deps import get_current_user
 from app.models.user import User
 from app.services.quiz_analytics_service import QuizAnalyticsService
 from app.services.ai_context_service import AIContextService
+from app.services.error_analytics_service import ErrorAnalyticsService
 from pydantic import BaseModel
 
 
@@ -235,5 +236,84 @@ async def get_chat_activities(
         "total": len(activities),
         "summary": summary,
         "activities": formatted_activities,
+    }
+
+
+@router.get("/error-stats")
+async def get_error_stats(
+    days: int = 30,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> Dict[str, Any]:
+    """
+    Lấy thống kê lỗi tổng quan từ error logs
+    
+    Query params:
+    - days: Số ngày gần đây (default 30)
+    
+    Returns:
+    {
+        "total_errors": 87,
+        "by_type": {"GRAMMAR_ERROR": 60, "VOCABULARY_ERROR": 27},
+        "by_severity": {"HIGH": 30, "MEDIUM": 50},
+        "period_days": 30
+    }
+    """
+    return await ErrorAnalyticsService.get_error_stats(
+        db=db,
+        user_id=str(current_user.id),
+        days=days
+    )
+
+
+@router.get("/skill-tags")
+async def get_skill_tag_analysis(
+    limit: int = 10,
+    days: int = 30,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> Dict[str, Any]:
+    """
+    Phân tích chi tiết theo skill_tag (CẤP ĐỘ 2)
+    
+    Query params:
+    - limit: Số lượng skill_tags hiển thị (default 10)
+    - days: Số ngày gần đây (default 30)
+    
+    Returns:
+    {
+        "top_skills": [
+            {"skill_tag": "present_simple", "count": 15, "error_type": "GRAMMAR_ERROR"},
+            {"skill_tag": "articles", "count": 10, "error_type": "GRAMMAR_ERROR"}
+        ],
+        "breakdown": {
+            "present_simple": {"total_errors": 15, "error_type": "GRAMMAR_ERROR", ...}
+        },
+        "recent_errors": [...]
+    }
+    """
+    top_skills = await ErrorAnalyticsService.get_top_skill_tags(
+        db=db,
+        user_id=str(current_user.id),
+        limit=limit,
+        days=days
+    )
+    
+    breakdown = await ErrorAnalyticsService.get_skill_tag_breakdown(
+        db=db,
+        user_id=str(current_user.id),
+        days=days
+    )
+    
+    recent_errors = await ErrorAnalyticsService.get_recent_errors(
+        db=db,
+        user_id=str(current_user.id),
+        limit=5
+    )
+    
+    return {
+        "top_skills": top_skills,
+        "breakdown": breakdown,
+        "recent_errors": recent_errors
     }
 

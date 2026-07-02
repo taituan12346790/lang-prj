@@ -542,6 +542,18 @@ def api_chat_activities(days: int = 30, activity_type: Optional[str] = None) -> 
     return data if ok else None
 
 
+def api_analytics_error_stats(days: int = 30) -> Optional[dict]:
+    """Lấy thống kê error logs"""
+    ok, data, err = _get(f"/api/analytics/error-stats?days={days}")
+    return data if ok else None
+
+
+def api_analytics_skill_tags(limit: int = 10, days: int = 30) -> Optional[dict]:
+    """Lấy phân tích skill tags từ error logs"""
+    ok, data, err = _get(f"/api/analytics/skill-tags?limit={limit}&days={days}")
+    return data if ok else None
+
+
 # ═══════════════════════════════════════════════════════════════
 # CUSTOM CSS
 # ═══════════════════════════════════════════════════════════════
@@ -2173,11 +2185,14 @@ def page_lesson():
                         suggestion = error_analysis.get("suggestion", "")
                         rec_type = error_analysis.get("recommendation_type", "EXPLAIN")
                         
-                        # Error type badge
+                        # Error type badge + Skill tag (2-LEVEL CLASSIFICATION)
                         error_type = error.get("error_type", "GENERAL_ERROR").replace("_", " ")
+                        skill_tag = error.get("skill_tag", "general").replace("_", " ").title()
+                        
                         col_a, col_b = st.columns([3, 1])
                         with col_a:
                             st.markdown(f"**Loại lỗi:** {error_type}")
+                            st.markdown(f"**Kỹ năng cụ thể:** {skill_tag}")
                         with col_b:
                             if freq == 1:
                                 st.info(f"Lần {freq}")
@@ -2705,11 +2720,15 @@ def page_quiz_result():
         for r in results:
             ok = r["is_correct"]
             explanation = (r.get("explanation") or "").strip()
+            skill_tag = r.get("skill_tag", "").replace("_", " ").title()
             icon = "" if ok else ""
+            
             st.markdown(f"**{icon} {r['question']}**")
             st.caption(f"Bạn chọn: **{r['your_answer']}**")
             if not ok:
                 st.caption(f"Đáp án đúng: **{r['correct_answer']}**")
+                if skill_tag and skill_tag != "General":
+                    st.caption(f"🎯 Kỹ năng: **{skill_tag}**")
             if explanation:
                 st.markdown(
                     f'<div class="lp-hint">{html.escape(explanation)}</div>',
@@ -3708,6 +3727,9 @@ def page_analytics():
         skill_breakdown = api_analytics_skills()
         due_reviews = api_analytics_reviews()
         timeline = api_analytics_timeline(30)
+        # NEW: Load error logs analytics
+        error_stats = api_analytics_error_stats(30)
+        skill_tags_data = api_analytics_skill_tags(10, 30)
     
     if not dashboard_analytics:
         st.error("Không tải được dữ liệu analytics")
@@ -3745,6 +3767,69 @@ def page_analytics():
         st.markdown('</div>', unsafe_allow_html=True)
     else:
         st.success("🎉 Không có kỹ năng yếu! Bạn làm rất tốt!")
+    
+    st.markdown("")
+    
+    # ERROR LOGS ANALYSIS SECTION (NEW!)
+    st.markdown('<div class="lp-card" style="border-color:#f87171;">', unsafe_allow_html=True)
+    st.markdown("### 🐛 Phân tích lỗi chi tiết (Error Logs)")
+    
+    if error_stats and error_stats.get("total_errors", 0) > 0:
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            st.metric("📊 Tổng lỗi", error_stats.get("total_errors", 0))
+        with col2:
+            by_type = error_stats.get("by_type", {})
+            grammar_count = by_type.get("GRAMMAR_ERROR", 0) + by_type.get("GENERAL_ERROR", 0)
+            st.metric("📝 Lỗi ngữ pháp", grammar_count)
+        with col3:
+            vocab_count = by_type.get("VOCABULARY_ERROR", 0)
+            st.metric("📚 Lỗi từ vựng", vocab_count)
+        
+        st.markdown("")
+        
+        # Top skill tags (CẤP ĐỘ 2 - CHI TIẾT!)
+        if skill_tags_data and skill_tags_data.get("top_skills"):
+            st.markdown("**🎯 Top kỹ năng cần cải thiện (phân loại chi tiết):**")
+            st.markdown("_Đây là phân tích từ error logs - không phải chỉ đếm lỗi tổng quát_")
+            
+            for i, skill_data in enumerate(skill_tags_data["top_skills"][:7], 1):
+                skill_name = skill_data["skill_tag"].replace("_", " ").title()
+                count = skill_data["count"]
+                error_type = skill_data.get("error_type", "")
+                
+                # Color based on count
+                if count >= 5:
+                    color = "#f87171"  # Red - nhiều lỗi
+                    emoji = "🔴"
+                elif count >= 3:
+                    color = "#fbbf24"  # Yellow - trung bình
+                    emoji = "🟡"
+                else:
+                    color = "#60a5fa"  # Blue - ít lỗi
+                    emoji = "🔵"
+                
+                st.markdown(f"{emoji} **{i}. {skill_name}**: {count} lỗi ({error_type})")
+            
+            # Recent errors
+            recent_errors = skill_tags_data.get("recent_errors", [])
+            if recent_errors:
+                st.markdown("")
+                st.markdown("**🕐 Lỗi gần đây:**")
+                with st.expander("Xem chi tiết 5 lỗi gần nhất"):
+                    for error in recent_errors[:5]:
+                        st.markdown(f"**[{error['error_type']}] {error['skill_tag'].replace('_', ' ').title()}**")
+                        st.markdown(f"- Bạn viết: `{error['user_input']}`")
+                        st.markdown(f"- Đúng là: `{error['correct_form']}`")
+                        st.markdown(f"- Mức độ: {error['severity']}")
+                        st.divider()
+        
+        st.markdown("")
+        st.info("💡 **Giải thích:** Error logs ghi nhận mọi lỗi bạn mắc phải, phân loại thành 2 cấp độ (error_type + skill_tag) để có thể phân tích chi tiết và đề xuất bài tập phù hợp.")
+    else:
+        st.success("👍 Chưa có lỗi nào được ghi nhận! Tiếp tục học tập tốt nhé!")
+    
+    st.markdown('</div>', unsafe_allow_html=True)
     
     st.markdown("")
     
