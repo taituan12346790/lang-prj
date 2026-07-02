@@ -1,6 +1,6 @@
 # 🎓 AI English Learning Platform
 
-Hệ thống học tiếng Anh với Multi-Agent AI (LangGraph + Groq Llama 3.1)
+Hệ thống học tiếng Anh với Multi-Agent AI (LangGraph + Groq GPT-OSS-120B)
 
 🔗 **Demo:** [lang-prj.onrender.com](https://lang-prj.onrender.com)
 

@@ -37,50 +37,47 @@ class ErrorAnalyzer:
             }
         """
         try:
-            # Use AI to classify error type
+            # Use AI to classify error type AND detect skill_tag
+            skill_hint = f"(Testing: {skill_tag})" if skill_tag and skill_tag != "general" else "(Detect from question)"
+            
             prompt = f"""Analyze this language learning error and classify it:
 
-Question: {question}
+Question: {question} {skill_hint}
 Student's Answer: {user_answer}
 Correct Answer: {correct_answer}
 
 YOUR TASK:
 1. Classify the error type (ONLY ONE):
-   - GRAMMAR_ERROR: Grammar mistakes (tense, verb form, sentence structure, preposition, article, word order, PRONOUN CHOICE, subject-verb agreement)
+   - GRAMMAR_ERROR: Grammar mistakes (tense, verb form, sentence structure, preposition, article, word order, PRONOUN CHOICE, subject-verb agreement, there_is_are)
    - VOCABULARY_ERROR: Vocabulary mistakes (using a completely different word with different meaning)
 
-2. Assess severity: LOW, MEDIUM, HIGH
+2. Detect SPECIFIC SKILL TAG (be precise!):
+   Examples: past_tense, present_simple, subject_verb_agreement, there_is_are, articles, prepositions, pronouns, modal_verbs, conditionals, passive_voice, vocabulary, etc.
 
-3. Provide brief explanation (1-2 sentences in Vietnamese for the student)
+3. Assess severity: LOW, MEDIUM, HIGH
+
+4. Provide brief explanation (1-2 sentences in Vietnamese for the student)
 
 CLASSIFICATION RULES:
-- If student chose WRONG PRONOUN (e.g., "She" instead of "I", "They" instead of "He") → GRAMMAR_ERROR
-- If student chose WRONG VERB FORM with grammatical implications (e.g., "She" requires "is", "I" requires "am") → GRAMMAR_ERROR
-- If student used WRONG TENSE (e.g., "go" instead of "went", "go" instead of "goes") → GRAMMAR_ERROR  
-- If student used WRONG GRAMMATICAL STRUCTURE (e.g., "there are much" instead of "there is much") → GRAMMAR_ERROR
-- If student used COMPLETELY DIFFERENT WORD with unrelated meaning (e.g., "color" instead of "size", "big" instead of "small") → VOCABULARY_ERROR
+- If student chose WRONG PRONOUN (e.g., "She" instead of "I") → GRAMMAR_ERROR, skill: pronouns
+- If student chose WRONG VERB FORM (e.g., "go" instead of "goes") → GRAMMAR_ERROR, skill: subject_verb_agreement
+- If student used WRONG TENSE (e.g., "went" instead of "go") → GRAMMAR_ERROR, skill: past_tense or present_simple
+- If question about "There is/are" → GRAMMAR_ERROR, skill: there_is_are
+- If student used COMPLETELY DIFFERENT WORD → VOCABULARY_ERROR, skill: vocabulary
 
 CRITICAL EXAMPLES:
-Q: "I ___ am a student. (I/She/They)" → Student: "She", Correct: "I"
-→ GRAMMAR_ERROR (wrong pronoun choice - grammatical error)
-
-Q: "___ am a student" → Student: "She", Correct: "I"  
-→ GRAMMAR_ERROR (pronoun must agree with verb "am")
-
-Q: "What ___ do you wear?" → Student: "color", Correct: "size"
-→ VOCABULARY_ERROR (chose wrong word, different concept)
+Q: "There ___ three chairs" → Student: "is", Correct: "are"
+→ ERROR_TYPE: GRAMMAR_ERROR, SKILL: there_is_are
 
 Q: "She ___ to school" → Student: "go", Correct: "goes"
-→ GRAMMAR_ERROR (missing -s for third person)
+→ ERROR_TYPE: GRAMMAR_ERROR, SKILL: subject_verb_agreement
 
 Q: "I ___ yesterday" → Student: "go", Correct: "went"
-→ GRAMMAR_ERROR (wrong tense form)
-
-Q: "What ___ is the shirt?" → Student: "number", Correct: "size"  
-→ VOCABULARY_ERROR (wrong word choice, different meaning)
+→ ERROR_TYPE: GRAMMAR_ERROR, SKILL: past_tense
 
 Respond in this format:
 ERROR_TYPE: [GRAMMAR_ERROR or VOCABULARY_ERROR]
+SKILL: [specific skill like there_is_are, past_tense, etc.]
 SEVERITY: [LOW/MEDIUM/HIGH]
 EXPLANATION: [Brief explanation in Vietnamese]"""
 
@@ -102,6 +99,7 @@ EXPLANATION: [Brief explanation in Vietnamese]"""
     def _parse_llm_response_simple(self, llm_response: str, skill_tag: Optional[str]) -> Dict[str, Any]:
         """Parse LLM response - simple format"""
         error_type = "GRAMMAR_ERROR"  # Default
+        detected_skill = skill_tag if skill_tag and skill_tag != "general" else "general"
         severity = "MEDIUM"
         explanation = llm_response.strip()
         
@@ -116,6 +114,21 @@ EXPLANATION: [Brief explanation in Vietnamese]"""
             # Fallback: check keywords
             if "VOCABULARY" in response_upper or "TỪ VỰNG" in response_upper or "SAI TỪ" in response_upper:
                 error_type = "VOCABULARY_ERROR"
+        
+        # Extract skill_tag (NEW!)
+        if "SKILL:" in response_upper:
+            lines = llm_response.split("\n")
+            for line in lines:
+                if "SKILL:" in line.upper():
+                    parts = line.split(":", 1)
+                    if len(parts) > 1:
+                        extracted = parts[1].strip().lower()
+                        # Clean up
+                        extracted = extracted.replace("[", "").replace("]", "")
+                        extracted = extracted.split(",")[0].split(".")[0].strip()
+                        if extracted and len(extracted) > 2 and extracted != "general":
+                            detected_skill = extracted
+                    break
         
         # Extract severity
         if "SEVERITY:" in response_upper:
@@ -132,7 +145,7 @@ EXPLANATION: [Brief explanation in Vietnamese]"""
         
         return {
             "error_type": error_type,
-            "skill_tag": skill_tag or error_type.lower(),
+            "skill_tag": detected_skill,
             "severity": severity,
             "explanation": explanation[:500],
             "analysis_method": "AI_CLASSIFICATION"
