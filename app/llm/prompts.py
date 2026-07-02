@@ -764,7 +764,8 @@ def build_prompt(
     analytics_context: dict = None,
     quiz_context: dict = None,
     short_mem: str = None,
-    tool_results: dict = None  # P3: Add tool results
+    tool_results: dict = None,  # P3: Add tool results
+    memory_insights: dict = None  # CÁCH 2: Add memory insights
 ) -> str:
     """
     Build prompt for agent pipeline
@@ -772,6 +773,7 @@ def build_prompt(
     FIX P2: Map plan fields correctly
     FIX P3: Add tool results section
     FIX P6: Add weak skills section
+    CÁCH 2: Add memory-driven personalization
     """
 
     # FIX P1: Map strategy fields correctly
@@ -895,6 +897,44 @@ The student has shown weakness in these areas:
 When relevant to the current conversation, gently reinforce these weak areas.
 Provide extra examples and practice for concepts the student struggles with.
 Don't overwhelm them, but look for natural opportunities to review weak points.
+"""
+    
+    # CÁCH 2: Add memory insights section (repeated errors + user style)
+    memory_section = ""
+    if memory_insights:
+        repeated_errors = memory_insights.get("repeated_errors", [])
+        user_style = memory_insights.get("user_style", "detailed")
+        
+        if repeated_errors:
+            memory_section = f"""
+===================================
+🧠 MEMORY INSIGHTS (Agent Learning)
+===================================
+
+CRITICAL - REPEATED ERRORS DETECTED:
+The student has made MULTIPLE mistakes in: {', '.join(repeated_errors)}
+
+⚠️⚠️⚠️ TEACHING STRATEGY ADJUSTMENT:
+For topics related to {', '.join(repeated_errors)}:
+- Explain EXTREMELY DETAILED with step-by-step breakdown
+- Provide MANY examples (at least 3-5)
+- Break down into smaller sub-concepts
+- Add practice exercises to reinforce
+- Use simple language and analogies
+- Check understanding frequently
+
+This shows the student REALLY struggles with these concepts!
+"""
+        
+        if user_style == "concise":
+            memory_section += """
+💡 USER PREFERENCE: Student prefers SHORT, CONCISE answers.
+→ Be brief, use bullet points, avoid long explanations unless asked.
+"""
+        elif user_style == "very_detailed":
+            memory_section += """
+💡 USER PREFERENCE: Student needs VERY DETAILED explanations.
+→ Be thorough, provide many examples, explain step-by-step, use analogies.
 """
     
     # Phase 0: Build recent conversation section from short_mem
@@ -1078,6 +1118,7 @@ Additional Rules:
 {strategy.get("additional_rules", "")}
 {learning_context_section}
 {weak_skills_section}
+{memory_section}
 {tool_results_section}
 {recent_conversation_section}
 {quiz_review_section}

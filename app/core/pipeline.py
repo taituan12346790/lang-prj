@@ -7,6 +7,7 @@ from langgraph.graph import StateGraph, END
 
 from app.core.graph_state import AgentState
 from app.core.validator import ResponseValidator
+from app.core.reflector_enhanced import ReflectorEnhanced  # CÁCH 3: Import reflector
 from app.llm.prompts import build_prompt, build_repair_prompt
 from app.llm.llm_client import LLMClient
 from app.tools.tool_registry import ToolRegistry
@@ -31,6 +32,7 @@ class Pipeline:
         from app.tools.tool_registry import tool_registry
         self.tool_registry = tool_registry
         self.validator = ResponseValidator()
+        self.reflector = ReflectorEnhanced()  # CÁCH 3: Initialize reflector
         self.graph = self._build_graph()
 
     def _build_graph(self) -> StateGraph:
@@ -39,8 +41,10 @@ class Pipeline:
 
         # Add nodes
         graph.add_node("validate_input", self._validate_input_node)
+        graph.add_node("analyze_memory", self._analyze_memory_node)  # CÁCH 2: Memory-driven
         graph.add_node("execute_tools", self._execute_tools_node)
         graph.add_node("generate_response", self._generate_response_node)
+        graph.add_node("reflect", self._reflect_node)  # CÁCH 3: Self-reflection
         graph.add_node("validate_output", self._validate_output_node)
         #graph.add_node("repair", self._repair_node)
         graph.add_node("finalize", self._finalize_node)
@@ -52,28 +56,31 @@ class Pipeline:
         graph.add_conditional_edges(
             "validate_input",
             self._after_validate_input,
-            {"blocked": "finalize", "continue": "execute_tools"}
+            {"blocked": "finalize", "continue": "analyze_memory"}  # → Memory first
         )
+        
+        graph.add_edge("analyze_memory", "execute_tools")  # Memory → Tools
 
         graph.add_edge("execute_tools", "generate_response")
-        graph.add_edge("generate_response", "validate_output")
+        graph.add_edge("generate_response", "reflect")  # CÁCH 3: Reflect before validate
+        graph.add_edge("reflect", "validate_output")
+        # CÁCH 1: Self-Correction - Repair invalid responses
+        graph.add_node("repair", self._repair_node)
 
 
+        # Route to repair if validation fails
+        graph.add_conditional_edges(
+            "validate_output",
+            self._after_validate_output,
+            {"valid": "finalize", "invalid": "repair"}
+        )
 
-
-        graph.add_edge("validate_output", "finalize")
-
-        #graph.add_conditional_edges(
-        #    "validate_output",
-        #    self._after_validate_output,
-        #    {"valid": "finalize", "invalid": "repair"}
-        #)
-
-        #graph.add_conditional_edges(
-        #    "repair",
-        #    self._after_repair,
-        #    {"valid": "finalize", "invalid": "finalize"}
-        #)
+        # Retry once after repair
+        graph.add_conditional_edges(
+            "repair",
+            self._after_repair,
+            {"valid": "finalize", "invalid": "finalize"}
+        )
 
         graph.add_edge("finalize", END)
 
@@ -118,6 +125,36 @@ class Pipeline:
 
         # Return empty dict when validation passes (no state update needed)
         return {}
+    
+    async def _analyze_memory_node(self, state: AgentState) -> Dict[str, Any]:
+        """Node 1.5: Analyze memory to detect weak areas and preferences (CÁCH 2)"""
+        analytics_context = state.get("analytics_context", {})
+        short_mem = state.get("short_mem", "")
+        
+        memory_insights = {
+            "repeated_errors": [],
+            "weak_topics": [],
+            "user_style": "detailed"
+        }
+        
+        # Detect weak skills from analytics
+        if analytics_context and "weak_skills" in analytics_context:
+            weak = analytics_context.get("weak_skills", [])
+            if weak:
+                memory_insights["repeated_errors"] = [w.get("skill", "") for w in weak[:3]]
+                logger.info(f"💡 Detected weak skills: {memory_insights['repeated_errors']}")
+        
+        # Detect user preference from conversation history
+        if short_mem and isinstance(short_mem, str):
+            short_lower = short_mem.lower()
+            if any(word in short_lower for word in ["ngắn gọn", "tóm tắt", "brief", "short"]):
+                memory_insights["user_style"] = "concise"
+                logger.info("💡 User prefers concise answers")
+            elif any(word in short_lower for word in ["chi tiết", "kỹ hơn", "không hiểu", "explain more"]):
+                memory_insights["user_style"] = "very_detailed"
+                logger.info("💡 User needs very detailed explanations")
+        
+        return {"memory_insights": memory_insights}
 
     async def _execute_tools_node(self, state: AgentState) -> Dict[str, Any]:
         """Node 2: Execute tools in parallel"""
@@ -163,7 +200,8 @@ class Pipeline:
         plan = state.get("plan", {})
         analytics_context = state.get("analytics_context", {})
         quiz_context = state.get("quiz_context")
-        tool_results = state.get("tool_results", {})  # P3: Get tool results from state
+        tool_results = state.get("tool_results", {})
+        memory_insights = state.get("memory_insights", {})  # CÁCH 2: Get memory insights
         
         # Phase 0: Extract short_mem from state
         short_mem_str = None
@@ -174,17 +212,17 @@ class Pipeline:
             elif hasattr(sm, "get_context_for_prompt"):
                 short_mem_str = sm.get_context_for_prompt()
 
-        # Build prompt WITHOUT RAG context (as per user requirement)
-        # P3: Pass tool_results to build_prompt
+        # Build prompt WITH memory insights (CÁCH 2)
         system_prompt = build_prompt(
             user_input=user_input,
             strategy=strategy,
             plan=plan,
             rag_context="",
             analytics_context=analytics_context,
-            quiz_context=quiz_context,  # A3: Include quiz review context
-            short_mem=short_mem_str,  # Phase 0: Include recent conversation
-            tool_results=tool_results  # P3: Include tool results
+            quiz_context=quiz_context,
+            short_mem=short_mem_str,
+            tool_results=tool_results,
+            memory_insights=memory_insights  # CÁCH 2: Pass memory insights!
         )
         
         # DEBUG: Log if learning context is in prompt
@@ -218,6 +256,104 @@ class Pipeline:
         logger.info(f"Response generated | Length: {len(final_response)}")
 
         return {"response": final_response}
+    
+    async def _reflect_node(self, state: AgentState) -> Dict[str, Any]:
+        """Node 3.5: Self-Reflection - Agent reviews its own response (CÁCH 3)"""
+        response = state.get("response", "")
+        user_input = state.get("user_input", "")
+        strategy = state.get("strategy", {})
+        
+        # Quick reflection prompt
+        reflection_prompt = f"""Review this AI tutor response for quality:
+
+User asked: {user_input}
+AI response: {response}
+
+Evaluate:
+1. Does it answer the user's question completely?
+2. Is the language appropriate (Vietnamese for teaching)?
+3. Are examples sufficient (if user asked for examples)?
+4. Is explanation clear and well-structured?
+
+Rate quality: 1-10
+If score < 6, suggest improvements.
+
+Response format:
+SCORE: [number]
+ISSUES: [list issues if any]
+IMPROVEMENTS: [list 1-3 specific improvements]
+"""
+        
+        try:
+            reflection_text = await asyncio.wait_for(
+                self.llm.generate_async(
+                    user_input=reflection_prompt,
+                    system_prompt="You are a quality reviewer for AI tutor responses. Be critical but constructive.",
+                    temperature=0.3,
+                    max_tokens=300
+                ),
+                timeout=10
+            )
+            
+            # Parse score
+            score = 7.0  # default
+            issues = []
+            improvements = []
+            
+            for line in reflection_text.split('\n'):
+                if 'SCORE:' in line.upper():
+                    try:
+                        score = float(line.split(':')[1].strip())
+                    except:
+                        pass
+                elif 'ISSUES:' in line.upper():
+                    issues_text = line.split(':', 1)[1].strip()
+                    if issues_text and issues_text != 'None':
+                        issues.append(issues_text)
+                elif 'IMPROVEMENTS:' in line.upper():
+                    improvements_text = line.split(':', 1)[1].strip()
+                    if improvements_text and improvements_text != 'None':
+                        improvements.append(improvements_text)
+            
+            logger.info(f"🤔 Reflection score: {score}/10")
+            
+            # If quality is low, try to improve
+            if score < 6.0 and improvements:
+                logger.warning(f"⚠️ Response quality low ({score}/10), improving...")
+                
+                improve_prompt = f"""Improve this response based on feedback:
+
+Original response:
+{response}
+
+Issues: {', '.join(issues) if issues else 'Quality too low'}
+Improvements needed:
+{chr(10).join(f'- {imp}' for imp in improvements[:3])}
+
+Generate improved version (keep same language):"""
+                
+                improved_response = await asyncio.wait_for(
+                    self.llm.generate_async(
+                        user_input=improve_prompt,
+                        system_prompt="You are improving an AI tutor response. Keep it clear and helpful.",
+                        temperature=0.4,
+                        max_tokens=1500
+                    ),
+                    timeout=15
+                )
+                
+                logger.success(f"✅ Response improved (score was {score}/10)")
+                return {
+                    "response": improved_response,
+                    "reflection_score": score,
+                    "was_improved": True
+                }
+            
+            return {"reflection_score": score, "was_improved": False}
+            
+        except Exception as e:
+            logger.warning(f"Reflection failed: {e}, continuing without improvement")
+            return {"reflection_score": 7.0, "was_improved": False}
 
     async def _validate_output_node(self, state: AgentState) -> Dict[str, Any]:
         """Node 4: Validate LLM output"""
