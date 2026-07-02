@@ -3775,41 +3775,41 @@ def page_analytics():
     st.markdown("### 🐛 Phân tích lỗi chi tiết (Error Logs)")
     
     if error_stats and error_stats.get("total_errors", 0) > 0:
-        col1, col2, col3 = st.columns(3)
-        with col1:
-            st.metric("📊 Tổng lỗi", error_stats.get("total_errors", 0))
-        with col2:
-            by_type = error_stats.get("by_type", {})
-            grammar_count = by_type.get("GRAMMAR_ERROR", 0) + by_type.get("GENERAL_ERROR", 0)
-            st.metric("📝 Lỗi ngữ pháp", grammar_count)
-        with col3:
-            vocab_count = by_type.get("VOCABULARY_ERROR", 0)
-            st.metric("📚 Lỗi từ vựng", vocab_count)
+        # Display total errors và top skills count
+        st.metric("📊 Tổng lỗi", error_stats.get("total_errors", 0))
         
         st.markdown("")
         
-        # Top skill tags (CẤP ĐỘ 2 - CHI TIẾT!)
+        # Top skill tags (ĐẾM THEO SKILL, KHÔNG PHẢI ERROR_TYPE!)
         if skill_tags_data and skill_tags_data.get("top_skills"):
-            st.markdown("**🎯 Top kỹ năng cần cải thiện (phân loại chi tiết):**")
-            st.markdown("_Đây là phân tích từ error logs - không phải chỉ đếm lỗi tổng quát_")
+            st.markdown("**🎯 Kỹ năng cần cải thiện nhất (theo số lần sai):**")
+            st.markdown("_Phân tích chi tiết từ error logs - đếm theo skill cụ thể_")
             
-            for i, skill_data in enumerate(skill_tags_data["top_skills"][:7], 1):
-                skill_name = skill_data["skill_tag"].replace("_", " ").title()
+            # Count unique skills (not error_type!)
+            unique_skills = {}
+            for skill_data in skill_tags_data["top_skills"]:
+                skill_tag = skill_data["skill_tag"]
                 count = skill_data["count"]
-                error_type = skill_data.get("error_type", "")
+                if skill_tag not in unique_skills:
+                    unique_skills[skill_tag] = 0
+                unique_skills[skill_tag] += count
+            
+            # Sort by count
+            sorted_skills = sorted(unique_skills.items(), key=lambda x: x[1], reverse=True)
+            
+            # Display top 7 skills
+            for i, (skill_tag, count) in enumerate(sorted_skills[:7], 1):
+                skill_name = skill_tag.replace("_", " ").title()
                 
                 # Color based on count
                 if count >= 5:
-                    color = "#f87171"  # Red - nhiều lỗi
                     emoji = "🔴"
                 elif count >= 3:
-                    color = "#fbbf24"  # Yellow - trung bình
                     emoji = "🟡"
                 else:
-                    color = "#60a5fa"  # Blue - ít lỗi
                     emoji = "🔵"
                 
-                st.markdown(f"{emoji} **{i}. {skill_name}**: {count} lỗi ({error_type})")
+                st.markdown(f"{emoji} **{i}. {skill_name}**: {count} lần sai")
             
             # Recent errors
             recent_errors = skill_tags_data.get("recent_errors", [])
