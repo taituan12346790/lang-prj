@@ -56,12 +56,20 @@ async def get_analytics_dashboard(
     db: AsyncSession = Depends(get_db),
 ) -> DashboardAnalytics:
     """Lấy analytics tổng quan cho dashboard"""
-    skill_breakdown = await QuizAnalyticsService.get_skill_breakdown(db, str(current_user.id))
+    # Use same logic as /api/learning/dashboard
+    from app.models.user_topic_progress import UserTopicProgress
+    from app.services.topic_service import TopicService
     
-    # Calculate total and correct
-    total_exercises = sum(s["total"] for s in skill_breakdown.values())
-    total_correct = sum(s["correct"] for s in skill_breakdown.values())
-    correct_rate = total_correct / total_exercises if total_exercises > 0 else 0
+    topic_service = TopicService()
+    dashboard_data = await topic_service.get_dashboard(current_user.id, db)
+    
+    # Extract stats from level_progress
+    lp = dashboard_data.level_progress
+    total_exercises = lp.completed_topics  # Topics completed
+    correct_rate = (lp.average_quiz_score / 100) if lp.average_quiz_score else 0
+    
+    # Get skill breakdown from ExerciseResult (if any)
+    skill_breakdown = await QuizAnalyticsService.get_skill_breakdown(db, str(current_user.id))
     
     # Find weak skills
     weak_skills = {
