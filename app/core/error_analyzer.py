@@ -38,6 +38,14 @@ class ErrorAnalyzer:
         if re.search(r'there\s+(_+|\.+|\*+)', q_lower, re.IGNORECASE):
             return "there_is_are"
         
+        # Check if answer is "There" (fill-in-the-blank)
+        if correct_lower.strip() == "there" or user_lower.strip() == "there":
+            return "there_is_are"
+        
+        # Check pattern: "_____ is/are ... " with answer "There"
+        if re.search(r'^(_+|\.+|\*+)\s+(is|are)', q_lower) and "there" in correct_lower:
+            return "there_is_are"
+        
         # ===== 2. PAST TENSE =====
         # Keywords: yesterday, last, ago, was, were, did
         past_keywords = ['yesterday', 'last night', 'last week', 'last year', 'ago', 'did you']
