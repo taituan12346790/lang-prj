@@ -108,6 +108,14 @@ class ErrorAnalyzer:
         if any(keyword in q_lower for keyword in present_keywords):
             return "present_simple"
         
+        # ===== 9. VOCABULARY - TELLING TIME =====
+        # Questions about clock/time (vocabulary, not grammar)
+        if "o'clock" in q_lower or ":" in question:  # Has time format like 2:30, 3:45
+            if "how do you say" in q_lower or "what time" in q_lower:
+                return "vocabulary"
+        if "both are correct" in correct_lower and ":" in question:
+            return "vocabulary"
+        
         # ===== USE PROVIDED SKILL TAG =====
         if skill_tag and skill_tag != "general":
             return skill_tag
