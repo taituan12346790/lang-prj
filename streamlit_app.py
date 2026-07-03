@@ -3740,13 +3740,13 @@ def page_analytics():
     with col1:
         _stat(dashboard_analytics.get("study_streak", 0), "Streak (ngày)")
     with col2:
-        _stat(dashboard_analytics.get("total_exercises", 0), "Bài tập")
+        _stat(dashboard_analytics.get("total_exercises", 0), "Chủ đề hoàn thành")
     with col3:
         correct_rate = dashboard_analytics.get("correct_rate", 0)
-        _stat(f"{correct_rate*100:.0f}%", "Tỷ lệ đúng")
+        _stat(f"{correct_rate*100:.0f}%", "Điểm quiz TB")
     with col4:
         weak_count = len(dashboard_analytics.get("weak_skills", {}))
-        _stat(weak_count, "Cần cải thiện")
+        _stat(weak_count, "Skill yếu (quiz)")
     
     st.markdown("")
     
