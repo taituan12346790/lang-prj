@@ -3798,8 +3798,35 @@ def page_analytics():
             sorted_skills = sorted(unique_skills.items(), key=lambda x: x[1], reverse=True)
             
             # Display top 7 skills
+            # Mapping tiếng Việt (giống phần recent errors)
+            skill_tag_vn = {
+                "general": None,  # Ẩn không hiển thị
+                "past_tense": "Thì quá khứ",
+                "present_simple": "Thì hiện tại đơn",
+                "present_perfect": "Thì hiện tại hoàn thành",
+                "present_continuous": "Thì hiện tại tiếp diễn",
+                "future_simple": "Thì tương lai đơn",
+                "subject_verb_agreement": "Sự hòa hợp chủ - động",
+                "there_is_are": "There is/are",  # Giữ tiếng Anh - cấu trúc cụ thể
+                "articles": "Mạo từ",
+                "pronouns": "Đại từ",
+                "prepositions": "Giới từ",
+                "prepositions_time": "Giới từ thời gian",
+                "prepositions_place": "Giới từ nơi chốn",
+                "modal_verbs": "Động từ khuyết thiếu",
+                "conditionals": "Câu điều kiện",
+                "passive_voice": "Câu bị động",
+                "vocabulary": "Từ vựng",
+                "word_choice": "Chọn từ"
+            }
+            
             for i, (skill_tag, count) in enumerate(sorted_skills[:7], 1):
-                skill_name = skill_tag.replace("_", " ").title()
+                # Dịch skill name
+                skill_name = skill_tag_vn.get(skill_tag, skill_tag.replace("_", " ").title())
+                
+                # Bỏ qua "general" - không hiển thị
+                if skill_name is None:
+                    continue
                 
                 # Color based on count
                 if count >= 5:
@@ -3831,18 +3858,18 @@ def page_analytics():
                         "present_perfect": "Thì hiện tại hoàn thành",
                         "present_continuous": "Thì hiện tại tiếp diễn",
                         "future_simple": "Thì tương lai đơn",
-                        "subject_verb_agreement": "Chủ ngữ - động từ",
-                        "there_is_are": "There is/are",  # Giữ tiếng Anh
+                        "subject_verb_agreement": "Sự hòa hợp chủ - động",
+                        "there_is_are": "There is/are",  # Giữ tiếng Anh - cấu trúc cụ thể
                         "articles": "Mạo từ",
                         "pronouns": "Đại từ",
                         "prepositions": "Giới từ",
-                        "prepositions_time": "Giới từ chỉ thời gian",
-                        "prepositions_place": "Giới từ chỉ nơi chốn",
+                        "prepositions_time": "Giới từ thời gian",
+                        "prepositions_place": "Giới từ nơi chốn",
                         "modal_verbs": "Động từ khuyết thiếu",
                         "conditionals": "Câu điều kiện",
                         "passive_voice": "Câu bị động",
                         "vocabulary": "Từ vựng",
-                        "word_choice": "Lựa chọn từ"
+                        "word_choice": "Chọn từ"
                     }
                     
                     for error in recent_errors[:5]:
