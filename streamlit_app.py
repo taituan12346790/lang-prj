@@ -3817,15 +3817,46 @@ def page_analytics():
                 st.markdown("")
                 st.markdown("**🕐 Lỗi gần đây:**")
                 with st.expander("Xem chi tiết 5 lỗi gần nhất"):
+                    # Mapping tiếng Việt
+                    error_type_vn = {
+                        "GRAMMAR_ERROR": "Lỗi ngữ pháp",
+                        "VOCABULARY_ERROR": "Lỗi từ vựng",
+                        "GENERAL_ERROR": "Lỗi ngữ pháp"  # Map to grammar
+                    }
+                    
+                    skill_tag_vn = {
+                        "general": None,  # Ẩn không hiển thị
+                        "past_tense": "Thì quá khứ",
+                        "present_simple": "Thì hiện tại đơn",
+                        "subject_verb_agreement": "Chủ ngữ - động từ",
+                        "there_is_are": "There is/are",
+                        "articles": "Mạo từ (a/an/the)",
+                        "pronouns": "Đại từ",
+                        "prepositions": "Giới từ",
+                        "vocabulary": "Từ vựng"
+                    }
+                    
                     for error in recent_errors[:5]:
-                        st.markdown(f"**[{error['error_type']}] {error['skill_tag'].replace('_', ' ').title()}**")
+                        # Dịch error_type
+                        error_type_display = error_type_vn.get(error['error_type'], error['error_type'])
+                        
+                        # Dịch skill_tag
+                        skill_raw = error['skill_tag']
+                        skill_display = skill_tag_vn.get(skill_raw, skill_raw.replace('_', ' ').title())
+                        
+                        # Nếu skill = None (general) → Chỉ hiển thị error_type
+                        if skill_display is None:
+                            st.markdown(f"**{error_type_display}**")
+                        else:
+                            st.markdown(f"**{error_type_display}: {skill_display}**")
+                        
                         st.markdown(f"- Bạn viết: `{error['user_input']}`")
                         st.markdown(f"- Đúng là: `{error['correct_form']}`")
                         st.markdown(f"- Mức độ: {error['severity']}")
                         st.divider()
         
         st.markdown("")
-        st.info("💡 **Giải thích:** Error logs ghi nhận mọi lỗi bạn mắc phải, phân loại thành 2 cấp độ (error_type + skill_tag) để có thể phân tích chi tiết và đề xuất bài tập phù hợp.")
+        st.info("💡 **Giải thích:** Hệ thống phân tích lỗi sai của bạn thành 2 cấp độ (loại lỗi chung + kỹ năng cụ thể) để đề xuất bài tập phù hợp và giúp bạn cải thiện hiệu quả hơn.")
     else:
         st.success("👍 Chưa có lỗi nào được ghi nhận! Tiếp tục học tập tốt nhé!")
     
