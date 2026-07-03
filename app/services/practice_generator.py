@@ -11,92 +11,108 @@ class PracticeGenerator:
     # Question templates by error type
     TEMPLATES = {
         "TENSE_MISMATCH": {
+            "skill": "past_tense",  # Skill tag for this template
             "questions": [
                 {
                     "text": "Yesterday, I ___ to the market.",
                     "options": ["go", "went", "going"],
                     "answer": "went",
-                    "explanation": "Yesterday = quá khứ, nên dùng 'went' (V2)"
+                    "explanation": "Yesterday = quá khứ, nên dùng 'went' (V2)",
+                    "skill": "past_tense"
                 },
                 {
                     "text": "Last week, she ___ a new car.",
                     "options": ["buy", "bought", "buying"],
                     "answer": "bought",
-                    "explanation": "Last week = quá khứ, 'buy' → 'bought' (irregular)"
+                    "explanation": "Last week = quá khứ, 'buy' → 'bought' (irregular)",
+                    "skill": "past_tense"
                 },
                 {
                     "text": "Two days ago, they ___ home early.",
                     "options": ["come", "came", "coming"],
                     "answer": "came",
-                    "explanation": "Two days ago = quá khứ, 'come' → 'came'"
+                    "explanation": "Two days ago = quá khứ, 'come' → 'came'",
+                    "skill": "past_tense"
                 },
                 {
                     "text": "I ___ coffee every morning.",
                     "options": ["drank", "drink", "drinking"],
                     "answer": "drink",
-                    "explanation": "Every morning = hiện tại đơn, nên dùng 'drink'"
+                    "explanation": "Every morning = hiện tại đơn, nên dùng 'drink'",
+                    "skill": "present_simple"
                 },
                 {
                     "text": "Last month, we ___ in London.",
                     "options": ["are", "were", "being"],
                     "answer": "were",
-                    "explanation": "Last month = quá khứ, 'be' → 'were' (plural)"
+                    "explanation": "Last month = quá khứ, 'be' → 'were' (plural)",
+                    "skill": "past_tense"
                 }
             ]
         },
         "SUBJECT_VERB_AGREEMENT": {
+            "skill": "subject_verb_agreement",  # Skill tag for this template
             "questions": [
                 {
                     "text": "She ___ to school every day.",
                     "options": ["go", "goes", "going"],
                     "answer": "goes",
-                    "explanation": "She = 3rd person singular, động từ thêm 's'"
+                    "explanation": "She = 3rd person singular, động từ thêm 's'",
+                    "skill": "subject_verb_agreement"
                 },
                 {
                     "text": "They ___ very happy.",
                     "options": ["is", "are", "am"],
                     "answer": "are",
-                    "explanation": "They = plural, dùng 'are'"
+                    "explanation": "They = plural, dùng 'are'",
+                    "skill": "subject_verb_agreement"
                 },
                 {
                     "text": "It ___ cold today.",
                     "options": ["are", "is", "am"],
                     "answer": "is",
-                    "explanation": "It = 3rd person singular, dùng 'is'"
+                    "explanation": "It = 3rd person singular, dùng 'is'",
+                    "skill": "subject_verb_agreement"
                 },
                 {
                     "text": "The dog ___ in the garden.",
                     "options": ["run", "runs", "running"],
                     "answer": "runs",
-                    "explanation": "The dog = singular, động từ thêm 's'"
+                    "explanation": "The dog = singular, động từ thêm 's'",
+                    "skill": "subject_verb_agreement"
                 },
                 {
                     "text": "He ___ me a book.",
                     "options": ["give", "gives", "giving"],
                     "answer": "gives",
-                    "explanation": "He = 3rd person singular, động từ thêm 's'"
+                    "explanation": "He = 3rd person singular, động từ thêm 's'",
+                    "skill": "subject_verb_agreement"
                 }
             ]
         },
         "VOCABULARY_CHOICE": {
+            "skill": "vocabulary",  # Skill tag for this template
             "questions": [
                 {
                     "text": "I ___ in a comfortable bed.",
                     "options": ["sleep", "dream", "rest"],
                     "answer": "sleep",
-                    "explanation": "'Sleep in a bed' = ngủ trên giường (đúng)"
+                    "explanation": "'Sleep in a bed' = ngủ trên giường (đúng)",
+                    "skill": "vocabulary"
                 },
                 {
                     "text": "She ___ a cup of tea.",
                     "options": ["drink", "eat", "taste"],
                     "answer": "drink",
-                    "explanation": "'Drink tea' = uống trà (đúng)"
+                    "explanation": "'Drink tea' = uống trà (đúng)",
+                    "skill": "vocabulary"
                 },
                 {
                     "text": "They ___ the meeting yesterday.",
                     "options": ["join", "attend", "participate"],
                     "answer": "attend",
-                    "explanation": "'Attend a meeting' = tham dự cuộc họp"
+                    "explanation": "'Attend a meeting' = tham dự cuộc họp",
+                    "skill": "vocabulary"
                 },
                 {
                     "text": "I ___ my homework every day.",

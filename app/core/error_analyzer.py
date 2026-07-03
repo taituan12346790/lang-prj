@@ -26,28 +26,85 @@ class ErrorAnalyzer:
         Detect skill using rule-based patterns (fast, accurate for common cases)
         """
         q_lower = question.lower()
+        user_lower = user_answer.lower()
+        correct_lower = correct_answer.lower()
         
-        # There is/are detection
+        # ===== 1. THERE IS/ARE =====
         if "there" in q_lower and ("is" in q_lower or "are" in q_lower):
-            if "there" in user_answer.lower() or "there" in correct_answer.lower():
+            if "there" in user_lower or "there" in correct_lower:
                 return "there_is_are"
         
         # Check for "There ___" fill-in-the-blank
         if re.search(r'there\s+(_+|\.+|\*+)', q_lower, re.IGNORECASE):
             return "there_is_are"
         
-        # Subject-verb agreement patterns
+        # ===== 2. PAST TENSE =====
+        # Keywords: yesterday, last, ago, was, were, did
+        past_keywords = ['yesterday', 'last night', 'last week', 'last year', 'ago', 'did you']
+        if any(keyword in q_lower for keyword in past_keywords):
+            # Check if correct answer is past tense form
+            common_past = ['went', 'did', 'was', 'were', 'had', 'came', 'saw', 'got', 'made', 
+                          'took', 'gave', 'said', 'played', 'watched', 'studied', 'worked']
+            if any(past in correct_lower for past in common_past):
+                return "past_tense"
+        
+        # ===== 3. SUBJECT-VERB AGREEMENT =====
+        # He/She/It + verb patterns
         if re.search(r'(he|she|it)\s+(_+|\.+|\*+)', q_lower, re.IGNORECASE):
-            # If answer has verb without 's', likely subject-verb agreement
-            if user_answer.lower() in ['go', 'have', 'do', 'play', 'work', 'live', 'like', 'want']:
-                if correct_answer.lower() in ['goes', 'has', 'does', 'plays', 'works', 'lives', 'likes', 'wants']:
+            # Check if answer needs 's/es' ending
+            base_verbs = ['go', 'have', 'do', 'play', 'work', 'live', 'like', 'want', 'watch', 'study']
+            if user_lower in base_verbs:
+                # Check if correct has 's/es'
+                if correct_lower in ['goes', 'has', 'does', 'plays', 'works', 'lives', 'likes', 'wants', 'watches', 'studies']:
                     return "subject_verb_agreement"
         
-        # Use provided skill_tag if available and not general
+        # ===== 4. PRONOUNS =====
+        # Questions asking to choose pronoun
+        if '(' in question and ')' in question:
+            # Extract choices
+            choices_match = re.findall(r'\(([^)]+)\)', question)
+            if choices_match:
+                choices = choices_match[0].lower()
+                pronouns = ['i', 'you', 'he', 'she', 'it', 'we', 'they', 'my', 'your', 'his', 'her', 'our', 'their']
+                if any(pronoun in choices for pronoun in pronouns):
+                    return "pronouns"
+        
+        # ===== 5. MODAL VERBS =====
+        # can, could, should, would, must, may, might
+        modals = ['can', 'could', 'should', 'would', 'must', 'may', 'might', "can't", "couldn't", "shouldn't"]
+        if any(modal in q_lower for modal in modals):
+            if any(modal in correct_lower for modal in modals):
+                return "modal_verbs"
+        
+        # ===== 6. ARTICLES =====
+        # a, an, the
+        if re.search(r'(_+|\.+|\*+)\s+(cat|dog|apple|orange|book|house|car)', q_lower):
+            if correct_lower in ['a', 'an', 'the']:
+                return "articles"
+        
+        # ===== 7. PREPOSITIONS =====
+        # at, in, on, to, from, with, by, for
+        common_preps = ['at', 'in', 'on', 'to', 'from', 'with', 'by', 'for', 'of', 'about']
+        if correct_lower in common_preps:
+            # Check if question has time/place context
+            if any(word in q_lower for word in ['time', 'o\'clock', 'morning', 'afternoon', 'evening', 'night', 'monday', 'january']):
+                return "prepositions_time"
+            elif any(word in q_lower for word in ['city', 'street', 'room', 'house', 'school', 'office', 'table', 'wall']):
+                return "prepositions_place"
+            else:
+                return "prepositions"
+        
+        # ===== 8. PRESENT SIMPLE =====
+        # General habits, facts, routines
+        present_keywords = ['every day', 'every week', 'always', 'usually', 'often', 'sometimes', 'never']
+        if any(keyword in q_lower for keyword in present_keywords):
+            return "present_simple"
+        
+        # ===== USE PROVIDED SKILL TAG =====
         if skill_tag and skill_tag != "general":
             return skill_tag
         
-        # Default
+        # ===== DEFAULT =====
         return "general"
     
     async def analyze(
