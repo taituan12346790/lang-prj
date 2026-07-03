@@ -3826,18 +3826,23 @@ def page_analytics():
                     
                     skill_tag_vn = {
                         "general": None,  # Ẩn không hiển thị
-                        "past_tense": "Past Tense",
-                        "present_simple": "Present Simple",
-                        "present_perfect": "Present Perfect",
-                        "subject_verb_agreement": "Subject-Verb Agreement",
-                        "there_is_are": "There is/are",
-                        "articles": "Articles (a/an/the)",
-                        "pronouns": "Pronouns",
-                        "prepositions": "Prepositions",
-                        "prepositions_time": "Prepositions of Time",
-                        "prepositions_place": "Prepositions of Place",
-                        "modal_verbs": "Modal Verbs",
-                        "vocabulary": "Vocabulary"
+                        "past_tense": "Thì quá khứ",
+                        "present_simple": "Thì hiện tại đơn",
+                        "present_perfect": "Thì hiện tại hoàn thành",
+                        "present_continuous": "Thì hiện tại tiếp diễn",
+                        "future_simple": "Thì tương lai đơn",
+                        "subject_verb_agreement": "Chủ ngữ - động từ",
+                        "there_is_are": "There is/are",  # Giữ tiếng Anh
+                        "articles": "Mạo từ",
+                        "pronouns": "Đại từ",
+                        "prepositions": "Giới từ",
+                        "prepositions_time": "Giới từ chỉ thời gian",
+                        "prepositions_place": "Giới từ chỉ nơi chốn",
+                        "modal_verbs": "Động từ khuyết thiếu",
+                        "conditionals": "Câu điều kiện",
+                        "passive_voice": "Câu bị động",
+                        "vocabulary": "Từ vựng",
+                        "word_choice": "Lựa chọn từ"
                     }
                     
                     for error in recent_errors[:5]:
