@@ -15,6 +15,41 @@ class ErrorAnalyzer:
     def __init__(self):
         self.llm = LLMClient()
     
+    def _detect_skill_by_rules(
+        self, 
+        question: str, 
+        user_answer: str, 
+        correct_answer: str,
+        skill_tag: Optional[str] = None
+    ) -> str:
+        """
+        Detect skill using rule-based patterns (fast, accurate for common cases)
+        """
+        q_lower = question.lower()
+        
+        # There is/are detection
+        if "there" in q_lower and ("is" in q_lower or "are" in q_lower):
+            if "there" in user_answer.lower() or "there" in correct_answer.lower():
+                return "there_is_are"
+        
+        # Check for "There ___" fill-in-the-blank
+        if re.search(r'there\s+(_+|\.+|\*+)', q_lower, re.IGNORECASE):
+            return "there_is_are"
+        
+        # Subject-verb agreement patterns
+        if re.search(r'(he|she|it)\s+(_+|\.+|\*+)', q_lower, re.IGNORECASE):
+            # If answer has verb without 's', likely subject-verb agreement
+            if user_answer.lower() in ['go', 'have', 'do', 'play', 'work', 'live', 'like', 'want']:
+                if correct_answer.lower() in ['goes', 'has', 'does', 'plays', 'works', 'lives', 'likes', 'wants']:
+                    return "subject_verb_agreement"
+        
+        # Use provided skill_tag if available and not general
+        if skill_tag and skill_tag != "general":
+            return skill_tag
+        
+        # Default
+        return "general"
+    
     async def analyze(
         self,
         question: str,
@@ -37,8 +72,11 @@ class ErrorAnalyzer:
             }
         """
         try:
+            # RULE-BASED DETECTION (Priority for common patterns)
+            detected_skill = self._detect_skill_by_rules(question, user_answer, correct_answer, skill_tag)
+            
             # Use AI to classify error type AND detect skill_tag
-            skill_hint = f"(Testing: {skill_tag})" if skill_tag and skill_tag != "general" else "(Detect from question)"
+            skill_hint = f"(Testing: {detected_skill})" if detected_skill and detected_skill != "general" else "(Detect from question)"
             
             prompt = f"""Analyze this language learning error and classify it:
 
@@ -88,7 +126,7 @@ EXPLANATION: [Brief explanation in Vietnamese]"""
             )
             
             # Parse LLM response
-            error_data = self._parse_llm_response_simple(llm_response, skill_tag)
+            error_data = self._parse_llm_response_simple(llm_response, detected_skill)
             
             return error_data
             
