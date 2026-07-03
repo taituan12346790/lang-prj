@@ -15,6 +15,18 @@ class ErrorAnalyticsService:
     """Service để phân tích error logs cho dashboard analytics"""
     
     @staticmethod
+    def normalize_error_type(error_type: str) -> str:
+        """
+        Normalize GENERAL_ERROR to GRAMMAR_ERROR for display
+        
+        GENERAL_ERROR là fallback khi AI analysis fail,
+        nhưng về bản chất vẫn là lỗi grammar, nên hiển thị thống nhất
+        """
+        if error_type == "GENERAL_ERROR":
+            return "GRAMMAR_ERROR"
+        return error_type
+    
+    @staticmethod
     async def get_error_stats(
         db: AsyncSession,
         user_id: str,
@@ -52,7 +64,13 @@ class ErrorAnalyticsService:
             ).group_by(UserErrorLog.error_type)
             
             type_result = await db.execute(type_stmt)
-            by_type = {row.error_type: row.count for row in type_result.all()}
+            raw_by_type = {row.error_type: row.count for row in type_result.all()}
+            
+            # Normalize GENERAL_ERROR → GRAMMAR_ERROR for display
+            by_type = {}
+            for error_type, count in raw_by_type.items():
+                normalized = ErrorAnalyticsService.normalize_error_type(error_type)
+                by_type[normalized] = by_type.get(normalized, 0) + count
             
             # By severity
             severity_stmt = select(
@@ -130,7 +148,7 @@ class ErrorAnalyticsService:
                 {
                     "skill_tag": row.skill_tag,
                     "count": row.count,
-                    "error_type": row.error_type
+                    "error_type": ErrorAnalyticsService.normalize_error_type(row.error_type)
                 }
                 for row in rows
             ]
@@ -199,7 +217,7 @@ class ErrorAnalyticsService:
                 skill = row.skill_tag
                 breakdown[skill] = {
                     "total_errors": row.count,
-                    "error_type": row.error_type,
+                    "error_type": ErrorAnalyticsService.normalize_error_type(row.error_type),
                     "severity_avg": float(row.avg_severity) if row.avg_severity else 2.0,
                     "recent_count": row.count
                 }
@@ -243,7 +261,7 @@ class ErrorAnalyticsService:
             return [
                 {
                     "id": str(error.id),
-                    "error_type": error.error_type,
+                    "error_type": ErrorAnalyticsService.normalize_error_type(error.error_type),
                     "skill_tag": error.skill_tag,
                     "user_input": error.user_input,
                     "correct_form": error.correct_form,
