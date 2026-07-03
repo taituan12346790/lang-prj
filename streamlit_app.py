@@ -3826,14 +3826,18 @@ def page_analytics():
                     
                     skill_tag_vn = {
                         "general": None,  # Ẩn không hiển thị
-                        "past_tense": "Thì quá khứ",
-                        "present_simple": "Thì hiện tại đơn",
-                        "subject_verb_agreement": "Chủ ngữ - động từ",
+                        "past_tense": "Past Tense",
+                        "present_simple": "Present Simple",
+                        "present_perfect": "Present Perfect",
+                        "subject_verb_agreement": "Subject-Verb Agreement",
                         "there_is_are": "There is/are",
-                        "articles": "Mạo từ (a/an/the)",
-                        "pronouns": "Đại từ",
-                        "prepositions": "Giới từ",
-                        "vocabulary": "Từ vựng"
+                        "articles": "Articles (a/an/the)",
+                        "pronouns": "Pronouns",
+                        "prepositions": "Prepositions",
+                        "prepositions_time": "Prepositions of Time",
+                        "prepositions_place": "Prepositions of Place",
+                        "modal_verbs": "Modal Verbs",
+                        "vocabulary": "Vocabulary"
                     }
                     
                     for error in recent_errors[:5]:
