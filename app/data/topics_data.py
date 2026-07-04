@@ -101,21 +101,21 @@ A1_TOPICS: List[Dict[str, Any]] = [
                     "exercises": [
                         {
                             "type": "fill_blank",
-                            "question": "_____ am a student. (I / She / They)",
+                            "question": "_____ am a student.",
                             "options": ["I", "She", "They"],
                             "answer": "I",
                             "explanation": "'I am' là đúng. Dùng 'She is' / 'They are' cho ngôi thứ 3."
                         },
                         {
                             "type": "fill_blank",
-                            "question": "My name _____ Anna. (am / is / are)",
+                            "question": "My name _____ Anna.",
                             "options": ["am", "is", "are"],
                             "answer": "is",
                             "explanation": "Dùng 'is' với he/she/it và danh từ số ít."
                         },
                         {
                             "type": "fill_blank",
-                            "question": "They _____ teachers. (am / is / are)",
+                            "question": "They _____ teachers.",
                             "options": ["am", "is", "are"],
                             "answer": "are",
                             "explanation": "Dùng 'are' với you/we/they và danh từ số nhiều."
@@ -123,6 +123,7 @@ A1_TOPICS: List[Dict[str, Any]] = [
                         {
                             "type": "multiple_choice",
                             "question": "How do you greet someone in the morning?",
+                            "question_vi": "Bạn chào người khác vào buổi sáng như thế nào?",
                             "options": ["Good evening", "Good morning", "Good night", "Goodbye"],
                             "answer": "Good morning",
                             "explanation": "'Good morning' dùng từ khoảng 6 giờ sáng đến 12 giờ trưa."
@@ -130,13 +131,14 @@ A1_TOPICS: List[Dict[str, Any]] = [
                         {
                             "type": "multiple_choice",
                             "question": "What do you say when you first meet someone?",
+                            "question_vi": "Bạn nói gì khi gặp ai đó lần đầu tiên?",
                             "options": ["Goodbye!", "How are you?", "Nice to meet you!", "Good night!"],
                             "answer": "Nice to meet you!",
                             "explanation": "'Nice to meet you' là lời chào lịch sự khi gặp ai đó lần đầu tiên."
                         },
                         {
                             "type": "fill_blank",
-                            "question": "Hi! _____ name is Tom. (My / Your / His)",
+                            "question": "Hi! _____ name is Tom. (tôi)",
                             "options": ["My", "Your", "His"],
                             "answer": "My",
                             "explanation": "Khi nói về bản thân, dùng 'My'."
@@ -154,13 +156,13 @@ A1_TOPICS: List[Dict[str, Any]] = [
                         {"id": "q1", "question": "I _____ a student.", "options": ["am", "is", "are", "be"], "correct": "am", "explanation": "Dùng 'am' với đại từ 'I'."},
                         {"id": "q2", "question": "She _____ a doctor.", "options": ["am", "is", "are", "be"], "correct": "is", "explanation": "Dùng 'is' với he/she/it."},
                         {"id": "q3", "question": "They _____ from Vietnam.", "options": ["am", "is", "are", "be"], "correct": "are", "explanation": "Dùng 'are' với they/we/you."},
-                        {"id": "q4", "question": "What do you say in the morning?", "options": ["Good night", "Good evening", "Good morning", "Goodbye"], "correct": "Good morning", "explanation": "'Good morning' dùng cho buổi sáng."},
-                        {"id": "q5", "question": "My _____ is Anna. (what am I telling you?)", "options": ["age", "name", "job", "nationality"], "correct": "name", "explanation": "'My name is Anna' cho biết tên của một người."},
-                        {"id": "q6", "question": "Which is correct?", "options": ["I are happy.", "She am sad.", "We are students.", "He are nice."], "correct": "We are students.", "explanation": "'We are' là dạng đúng."},
-                        {"id": "q7", "question": "What do you say when meeting someone for the first time?", "options": ["See you later!", "Nice to meet you!", "Good night!", "Goodbye!"], "correct": "Nice to meet you!", "explanation": "'Nice to meet you' dùng khi gặp ai đó lần đầu."},
-                        {"id": "q8", "question": "_____ are teachers. (He / I / We / She)", "options": ["He", "I", "We", "She"], "correct": "We", "explanation": "'We are' = chủ ngữ 'we' + động từ 'are'."},
+                        {"id": "q4", "question": "What do you say in the morning?", "question_vi": "Bạn nói gì vào buổi sáng?", "options": ["Good night", "Good evening", "Good morning", "Goodbye"], "correct": "Good morning", "explanation": "'Good morning' dùng cho buổi sáng."},
+                        {"id": "q5", "question": "My _____ is Anna.", "question_vi": "Tên tôi là Anna. (Từ cần điền là gì?)", "options": ["age", "name", "job", "nationality"], "correct": "name", "explanation": "'My name is Anna' cho biết tên của một người."},
+                        {"id": "q6", "question": "Which is correct?", "question_vi": "Câu nào đúng?", "options": ["I are happy.", "She am sad.", "We are students.", "He are nice."], "correct": "We are students.", "explanation": "'We are' là dạng đúng."},
+                        {"id": "q7", "question": "What do you say when meeting someone for the first time?", "question_vi": "Bạn nói gì khi gặp ai đó lần đầu tiên?", "options": ["See you later!", "Nice to meet you!", "Good night!", "Goodbye!"], "correct": "Nice to meet you!", "explanation": "'Nice to meet you' dùng khi gặp ai đó lần đầu."},
+                        {"id": "q8", "question": "_____ are teachers.", "options": ["He", "I", "We", "She"], "correct": "We", "explanation": "'We are' = chủ ngữ 'we' + động từ 'are'."},
                         {"id": "q9", "question": "How _____ you? – I'm fine!", "options": ["am", "is", "are", "be"], "correct": "are", "explanation": "'How are you?' là câu hỏi chào hỏi phổ biến."},
-                        {"id": "q10", "question": "My _____ is Vietnamese. (I am from Vietnam)", "options": ["job", "name", "nationality", "age"], "correct": "nationality", "explanation": "Nationality (quốc tịch) cho biết bạn đến từ đâu."}
+                        {"id": "q10", "question": "My nationality is Vietnamese.", "question_vi": "Quốc tịch của tôi là người Việt. (Từ cần điền là gì?)", "options": ["job", "name", "nationality", "age"], "correct": "nationality", "explanation": "Nationality (quốc tịch) cho biết bạn đến từ đâu."}
                     ]
                 }
             }
@@ -234,10 +236,10 @@ A1_TOPICS: List[Dict[str, Any]] = [
                 "title_vi": "Luyện tập: Số đếm & Thời gian",
                 "content": {
                     "exercises": [
-                        {"type": "multiple_choice", "question": "How do you say '35' in English?", "options": ["thirteen five", "thirty-five", "fifty-three", "three five"], "answer": "thirty-five", "explanation": "35 = thirty + five = thirty-five (dùng dấu gạch ngang)."},
-                        {"type": "multiple_choice", "question": "It's 2:30. How do you say this?", "options": ["Two thirty", "Half past two", "Both are correct", "Quarter past two"], "answer": "Both are correct", "explanation": "2:30 có thể nói là 'two thirty' hoặc 'half past two'."},
+                        {"type": "multiple_choice", "question": "How do you say '35' in English?", "question_vi": "Cách nói số 35 trong tiếng Anh?", "options": ["thirteen five", "thirty-five", "fifty-three", "three five"], "answer": "thirty-five", "explanation": "35 = thirty + five = thirty-five (dùng dấu gạch ngang)."},
+                        {"type": "multiple_choice", "question": "It's 2:30. How do you say this?", "question_vi": "Cách nói giờ 2:30 trong tiếng Anh?", "options": ["Two thirty", "Half past two", "Both are correct"], "answer": "Both are correct", "explanation": "2:30 có thể nói là 'two thirty' hoặc 'half past two'."},
                         {"type": "fill_blank", "question": "How old _____ you? – I _____ 18 years old.", "options": ["are / am", "is / am", "are / is", "am / are"], "answer": "are / am", "explanation": "How old 'are' you? – I 'am' 18 years old."},
-                        {"type": "multiple_choice", "question": "School starts at 7 _____.", "options": ["p.m.", "a.m.", "o'clock", "minute"], "answer": "a.m.", "explanation": "7 a.m. = 7 giờ sáng. p.m. là buổi chiều/tối."},
+                        {"type": "multiple_choice", "question": "School starts at 7 _____ in the morning.", "options": ["p.m.", "a.m.", "o'clock", "minute"], "answer": "a.m.", "explanation": "7 a.m. = 7 giờ sáng. 'In the morning' cần dùng 'a.m.'."},
                         {"type": "multiple_choice", "question": "What is 'twenty + seven'?", "options": ["27", "72", "207", "270"], "answer": "27", "explanation": "twenty (20) + seven (7) = twenty-seven (27)."}
                     ]
                 }
@@ -249,16 +251,16 @@ A1_TOPICS: List[Dict[str, Any]] = [
                 "title_vi": "Kiểm tra: Số đếm, Tuổi & Thời gian",
                 "content": {
                     "questions": [
-                        {"id": "q1", "question": "How old _____ she?", "options": ["am", "is", "are", "be"], "correct": "is", "explanation": "She is → dùng 'is'."},
-                        {"id": "q2", "question": "It is 4:00. How do you say it?", "options": ["Four o'clock", "Half past four", "Quarter past four", "Four past"], "correct": "Four o'clock", "explanation": "4:00 = four o'clock (giờ đúng)."},
-                        {"id": "q3", "question": "How do you spell 15?", "options": ["fifty", "fifteen", "fifth", "fivteen"], "correct": "fifteen", "explanation": "15 = fifteen."},
+                        {"id": "q1", "question": "How old _____ she?", "options": ["am", "is", "are", "be"], "correct": "is", "explanation": "She dùng 'is'."},
+                        {"id": "q2", "question": "It is 4:00. How do you say it?", "question_vi": "Cách nói 4:00 giờ trong tiếng Anh?", "options": ["Four o'clock", "Half past four", "Quarter past four", "Four past"], "correct": "Four o'clock", "explanation": "4:00 = four o'clock (giờ đúng)."},
+                        {"id": "q3", "question": "How do you spell 15?", "question_vi": "Cách đánh vần số 15 trong tiếng Anh?", "options": ["fifty", "fifteen", "fifth", "fivteen"], "correct": "fifteen", "explanation": "15 = fifteen."},
                         {"id": "q4", "question": "She is _____ years old. (23)", "options": ["twenty third", "twenty-three", "thirteen-two", "two-thirty"], "correct": "twenty-three", "explanation": "23 = twenty-three."},
-                        {"id": "q5", "question": "What time is 7:30 a.m.?", "options": ["Half past seven in the morning", "Seven o'clock in the evening", "Half past seven in the evening", "Quarter past seven"], "correct": "Half past seven in the morning", "explanation": "7:30 a.m. = 7 rưỡi buổi sáng."},
-                        {"id": "q6", "question": "100 in English is:", "options": ["ten", "thousand", "hundred", "ninety"], "correct": "hundred", "explanation": "100 = one hundred."},
+                        {"id": "q5", "question": "What time is 7:30 a.m.?", "question_vi": "Cách nói 7:30 a.m. trong tiếng Anh?", "options": ["Half past seven in the morning", "Seven o'clock in the evening", "Half past seven in the evening", "Quarter past seven"], "correct": "Half past seven in the morning", "explanation": "7:30 a.m. = 7 rưỡi buổi sáng."},
+                        {"id": "q6", "question": "100 in English is:", "question_vi": "Số 100 trong tiếng Anh là:", "options": ["ten", "thousand", "hundred", "ninety"], "correct": "hundred", "explanation": "100 = one hundred."},
                         {"id": "q7", "question": "I _____ 30 years old.", "options": ["am", "is", "are", "be"], "correct": "am", "explanation": "I am → dùng 'am'."},
                         {"id": "q8", "question": "School finishes at 5 _____ (afternoon).", "options": ["a.m.", "p.m.", "o'clock", "hours"], "correct": "p.m.", "explanation": "Afternoon/evening = p.m."},
-                        {"id": "q9", "question": "How many minutes in one hour?", "options": ["30", "50", "60", "100"], "correct": "60", "explanation": "One hour = 60 minutes."},
-                        {"id": "q10", "question": "Which number comes after nineteen?", "options": ["Ninety", "Twenty", "Eleven", "Eighteen"], "correct": "Twenty", "explanation": "19 → 20 = twenty."}
+                        {"id": "q9", "question": "What does 'a.m.' mean?", "question_vi": "'a.m.' có nghĩa là gì?", "options": ["Afternoon", "Morning", "Evening", "Night"], "correct": "Morning", "explanation": "a.m. = ante meridiem = buổi sáng (từ 12:00 đêm đến 12:00 trưa)."},
+                        {"id": "q10", "question": "Which number comes after nineteen?", "question_vi": "Số nào đứng sau số nineteen?", "options": ["Ninety", "Twenty", "Eleven", "Eighteen"], "correct": "Twenty", "explanation": "19 → 20 = twenty."}
                     ]
                 }
             }
@@ -332,11 +334,11 @@ A1_TOPICS: List[Dict[str, Any]] = [
                 "title_vi": "Luyện tập: Mô tả gia đình",
                 "content": {
                     "exercises": [
-                        {"type": "fill_blank", "question": "_____ mother is a teacher. (Talking about yourself)", "options": ["My", "His", "Her", "Your"], "answer": "My", "explanation": "When describing yourself → My."},
-                        {"type": "fill_blank", "question": "She _____ two brothers.", "options": ["have", "has", "is", "are"], "answer": "has", "explanation": "She → has (ngôi thứ 3 singular)."},
-                        {"type": "multiple_choice", "question": "Your father's mother is your:", "options": ["aunt", "grandmother", "sister", "cousin"], "answer": "grandmother", "explanation": "Father's mother = grandmother (bà)."},
-                        {"type": "fill_blank", "question": "We _____ a big family. (have/has)", "options": ["have", "has", "is", "are"], "answer": "have", "explanation": "We → have."},
-                        {"type": "multiple_choice", "question": "Which word means 'con gái'?", "options": ["son", "sister", "daughter", "aunt"], "answer": "daughter", "explanation": "Daughter = con gái. Son = con trai."}
+                        {"type": "fill_blank", "question": "_____ mother is a teacher. (tôi)", "options": ["My", "His", "Her", "Your"], "answer": "My", "explanation": "Khi nói về bản thân → My."},
+                        {"type": "fill_blank", "question": "She _____ two brothers.", "options": ["have", "has", "is", "are"], "answer": "has", "explanation": "She → has (ngôi thứ 3 số ít)."},
+                        {"type": "multiple_choice", "question": "Your father's mother is your:", "question_vi": "Mẹ của bố bạn trong tiếng Anh là gì?", "options": ["aunt", "grandmother", "sister", "cousin"], "answer": "grandmother", "explanation": "Father's mother = grandmother (bà)."},
+                        {"type": "fill_blank", "question": "We _____ a big family.", "options": ["have", "has"], "answer": "have", "explanation": "We → have."},
+                        {"type": "multiple_choice", "question": "Which word means 'con gái'?", "question_vi": "Từ nào có nghĩa là 'con gái'?", "options": ["son", "sister", "daughter", "aunt"], "answer": "daughter", "explanation": "Daughter = con gái. Son = con trai."}
                     ]
                 }
             },
@@ -347,14 +349,14 @@ A1_TOPICS: List[Dict[str, Any]] = [
                 "title_vi": "Kiểm tra: Gia đình & Các mối quan hệ",
                 "content": {
                     "questions": [
-                        {"id": "q1", "question": "_____ father is a doctor. (He is talking about his father)", "options": ["My", "His", "Her", "Their"], "correct": "His", "explanation": "He → his."},
+                        {"id": "q1", "question": "_____ father is a doctor. (anh ấy)", "options": ["My", "His", "Her", "Their"], "correct": "His", "explanation": "He → his."},
                         {"id": "q2", "question": "I _____ three brothers.", "options": ["has", "have", "is", "am"], "correct": "have", "explanation": "I → have."},
-                        {"id": "q3", "question": "Which is the female version of 'uncle'?", "options": ["grandmother", "sister", "aunt", "cousin"], "correct": "aunt", "explanation": "Uncle (nam) ↔ Aunt (nữ)."},
-                        {"id": "q4", "question": "She _____ a daughter named Anna.", "options": ["have", "has", "is", "are"], "correct": "has", "explanation": "She → has."},
-                        {"id": "q5", "question": "My parents' parents are my:", "options": ["cousins", "uncles", "grandparents", "brothers"], "correct": "grandparents", "explanation": "Parents' parents = grandparents (ông bà)."},
-                        {"id": "q6", "question": "_____ have two children: a son and a daughter. (The family)", "options": ["She", "He", "They", "It"], "correct": "They", "explanation": "A family = they → have."},
-                        {"id": "q7", "question": "What is the opposite of 'brother'?", "options": ["son", "father", "uncle", "sister"], "correct": "sister", "explanation": "Brother (anh/em trai) ↔ Sister (chị/em gái)."},
-                        {"id": "q8", "question": "His _____ is 40 years old. (Talking about his wife)", "options": ["husband", "wife", "daughter", "sister"], "correct": "wife", "explanation": "His wife = vợ anh ấy."},
+                        {"id": "q3", "question": "Which is the female version of 'uncle'?", "question_vi": "Từ nào là dạng nữ của 'uncle' (chú/bác)?", "options": ["grandmother", "sister", "aunt", "cousin"], "correct": "aunt", "explanation": "Uncle (nam) ↔ Aunt (nữ)."},
+                        {"id": "q4", "question": "She _____ a daughter named Anna.", "options": ["have", "has"], "correct": "has", "explanation": "She → has."},
+                        {"id": "q5", "question": "My parents' parents are my:", "question_vi": "Bố mẹ của bố mẹ tôi là ai?", "options": ["cousins", "uncles", "grandparents", "brothers"], "correct": "grandparents", "explanation": "Parents' parents = grandparents (ông bà)."},
+                        {"id": "q6", "question": "_____ have two children: a son and a daughter.", "options": ["She", "He", "They", "It"], "correct": "They", "explanation": "A family = they → have."},
+                        {"id": "q7", "question": "What is the opposite of 'brother'?", "question_vi": "Từ trái nghĩa với 'brother' (anh/em trai) là gì?", "options": ["son", "father", "uncle", "sister"], "correct": "sister", "explanation": "Brother (anh/em trai) ↔ Sister (chị/em gái)."},
+                        {"id": "q8", "question": "His _____ is 40 years old. (vợ)", "options": ["husband", "wife", "daughter", "sister"], "correct": "wife", "explanation": "His wife = vợ anh ấy."},
                         {"id": "q9", "question": "Our _____ live with us. (ông bà)", "options": ["cousins", "grandparents", "uncles", "parents"], "correct": "grandparents", "explanation": "Grandparents = ông bà."},
                         {"id": "q10", "question": "They _____ an only child.", "options": ["has", "have", "is", "are"], "correct": "have", "explanation": "They → have."}
                     ]
@@ -434,10 +436,10 @@ A1_TOPICS: List[Dict[str, Any]] = [
                 "title_vi": "Luyện tập: Màu sắc & Tính từ",
                 "content": {
                     "exercises": [
-                        {"type": "multiple_choice", "question": "Câu nào dưới đây là đúng?", "options": ["I have a bag red.", "I have a red bag.", "I have bag a red.", "Red I have a bag."], "answer": "I have a red bag.", "explanation": "Trong tiếng Anh: tính từ + danh từ. 'Red bag' KHÔNG PHẢI 'bag red'."},
-                        {"type": "fill_blank", "question": "The sky is _____. (màu)", "options": ["red", "blue", "green", "yellow"], "answer": "blue", "explanation": "Bầu trời thường được mô tả là màu xanh."},
-                        {"type": "multiple_choice", "question": "Trái nghĩa của 'big'?", "options": ["tall", "old", "small", "hot"], "answer": "small", "explanation": "Big ↔ Small."},
-                        {"type": "multiple_choice", "question": "She has a _____ car. (trái nghĩa với 'cũ')", "options": ["old", "ugly", "new", "cold"], "answer": "new", "explanation": "New = mới (trái nghĩa với old)."},
+                        {"type": "multiple_choice", "question": "Câu nào dưới đây là đúng?", "question_vi": "Câu nào dưới đây là đúng?", "options": ["I have a bag red.", "I have a red bag.", "I have bag a red.", "Red I have a bag."], "answer": "I have a red bag.", "explanation": "Trong tiếng Anh: tính từ + danh từ. 'Red bag' KHÔNG PHẢI 'bag red'."},
+                        {"type": "fill_blank", "question": "The sky is _____.", "options": ["red", "blue", "green", "yellow"], "answer": "blue", "explanation": "Bầu trời thường được mô tả là màu xanh."},
+                        {"type": "multiple_choice", "question": "What is the opposite of 'big'?", "question_vi": "Từ trái nghĩa với 'big' là gì?", "options": ["tall", "old", "small", "hot"], "answer": "small", "explanation": "Big ↔ Small."},
+                        {"type": "multiple_choice", "question": "She has a _____ car. (opposite of 'old')", "question_vi": "Cô ấy có một chiếc xe _____. (trái nghĩa với 'cũ')", "options": ["old", "ugly", "new", "cold"], "answer": "new", "explanation": "New = mới (trái nghĩa với old)."},
                         {"type": "fill_blank", "question": "Snow is _____.", "options": ["black", "white", "blue", "red"], "answer": "white", "explanation": "Tuyết màu trắng."}
                     ]
                 }
@@ -449,15 +451,15 @@ A1_TOPICS: List[Dict[str, Any]] = [
                 "title_vi": "Kiểm tra: Màu sắc & Tính từ",
                 "content": {
                     "questions": [
-                        {"id": "q1", "question": "Chuối có màu gì?", "options": ["Red", "Blue", "Yellow", "Green"], "correct": "Yellow", "explanation": "Chuối màu vàng."},
-                        {"id": "q2", "question": "Câu nào dưới dây đúng ngữ pháp?", "options": ["A dog big", "Big a dog", "A big dog", "Dog a big"], "correct": "A big dog", "explanation": "Tính từ đứng TRƯỚC danh từ trong tiếng Anh."},
-                        {"id": "q3", "question": "Trái nghĩa với 'tall':", "options": ["big", "short", "old", "new"], "correct": "short", "explanation": "Tall ↔ Short."},
-                        {"id": "q4", "question": "Cỏ có màu gì?", "options": ["Black", "Blue", "Red", "Green"], "correct": "Green", "explanation": "Cỏ màu xanh lá."},
-                        {"id": "q5", "question": "The room is very _____. (It has a heater on)", "options": ["cold", "hot", "small", "tall"], "correct": "hot", "explanation": "Hot = nóng."},
+                        {"id": "q1", "question": "What color is a banana?", "question_vi": "Chuối có màu gì?", "options": ["Red", "Blue", "Yellow", "Green"], "correct": "Yellow", "explanation": "Chuối màu vàng."},
+                        {"id": "q2", "question": "Which sentence is correct?", "question_vi": "Câu nào đúng?", "options": ["A dog big", "Big a dog", "A big dog", "Dog a big"], "correct": "A big dog", "explanation": "Tính từ đứng TRƯỚC danh từ trong tiếng Anh."},
+                        {"id": "q3", "question": "What is the opposite of 'tall'?", "question_vi": "Từ trái nghĩa với 'tall' là gì?", "options": ["big", "short", "old", "new"], "correct": "short", "explanation": "Tall ↔ Short."},
+                        {"id": "q4", "question": "What color is grass?", "question_vi": "Cỏ có màu gì?", "options": ["Black", "Blue", "Red", "Green"], "correct": "Green", "explanation": "Cỏ màu xanh lá."},
+                        {"id": "q5", "question": "The room is very _____. (nóng)", "options": ["cold", "hot", "small", "tall"], "correct": "hot", "explanation": "Hot = nóng."},
                         {"id": "q6", "question": "She has _____ hair. (màu đen)", "options": ["white", "red", "black", "blue"], "correct": "black", "explanation": "Black = đen."},
                         {"id": "q7", "question": "I have a _____ house. (mới)", "options": ["old", "big", "new", "ugly"], "correct": "new", "explanation": "New = mới."},
                         {"id": "q8", "question": "The dress is _____. (màu hồng)", "options": ["purple", "orange", "pink", "blue"], "correct": "pink", "explanation": "Pink = hồng."},
-                        {"id": "q9", "question": "Nghĩa tiếng Việt của từ 'beautiful'?", "options": ["xấu", "nhỏ", "đẹp", "nóng"], "correct": "đẹp", "explanation": "Beautiful = đẹp."},
+                        {"id": "q9", "question": "What does 'beautiful' mean in Vietnamese?", "question_vi": "'Beautiful' có nghĩa tiếng Việt là gì?", "options": ["xấu", "nhỏ", "đẹp", "nóng"], "correct": "đẹp", "explanation": "Beautiful = đẹp."},
                         {"id": "q10", "question": "The water in the fridge is ___.", "options": ["hot", "cold", "tall", "new"], "correct": "cold", "explanation": "Nước trong tủ lạnh thì lạnh."}
                     ]
                 }
@@ -535,12 +537,12 @@ A1_TOPICS: List[Dict[str, Any]] = [
                 "title_vi": "Luyện tập: Thì Hiện tại Đơn",
                 "content": {
                     "exercises": [
-                        {"type": "fill_blank", "question": "She _____ to school every day. (go)", "options": ["go", "goes", "going", "gone"], "answer": "goes", "explanation": "She (ngôi thứ 3) → goes (go + es)."},
-                        {"type": "fill_blank", "question": "They _____ eat meat. (negative – don't/doesn't)", "options": ["don't", "doesn't", "isn't", "aren't"], "answer": "don't", "explanation": "They → don't (do not)."},
-                        {"type": "multiple_choice", "question": "_____ he go to the gym? (Question form)", "options": ["Is", "Do", "Does", "Are"], "answer": "Does", "explanation": "He → Does (dạng câu hỏi với he/she/it)."},
-                        {"type": "fill_blank", "question": "I _____ breakfast at 7 a.m. (have)", "options": ["has", "have", "having", "had"], "answer": "have", "explanation": "I → have (base form)."},
-                        {"type": "multiple_choice", "question": "She _____ TV every evening.", "options": ["watch", "watches", "watching", "watched"], "answer": "watches", "explanation": "She → watches (watch + es)."},
-                        {"type": "multiple_choice", "question": "I _____ eat junk food. (= 0% – never)", "options": ["always", "usually", "sometimes", "never"], "answer": "never", "explanation": "Never = không bao giờ (0% frequency)."}
+                        {"type": "fill_blank", "question": "She _____ to school every day.", "options": ["go", "goes", "going", "gone"], "answer": "goes", "explanation": "She (ngôi thứ 3) → goes (go + es)."},
+                        {"type": "fill_blank", "question": "They _____ eat meat.", "options": ["don't", "doesn't", "isn't", "aren't"], "answer": "don't", "explanation": "They → don't (do not)."},
+                        {"type": "multiple_choice", "question": "_____ he go to the gym?", "question_vi": "Anh ấy có đi phòng tập không? (Chọn từ để tạo câu hỏi)", "options": ["Is", "Do", "Does", "Are"], "answer": "Does", "explanation": "He → Does (dạng câu hỏi với he/she/it)."},
+                        {"type": "fill_blank", "question": "I _____ breakfast at 7 a.m.", "options": ["has", "have", "having", "had"], "answer": "have", "explanation": "I → have (base form)."},
+                        {"type": "fill_blank", "question": "She _____ TV every evening.", "options": ["watch", "watches", "watching", "watched"], "answer": "watches", "explanation": "She → watches (watch + es)."},
+                        {"type": "multiple_choice", "question": "I _____ eat junk food. (= 0%)", "question_vi": "Tôi _____ ăn đồ ăn nhanh. (= 0% - không bao giờ)", "options": ["always", "usually", "sometimes", "never"], "answer": "never", "explanation": "Never = không bao giờ (0% frequency)."}
                     ]
                 }
             },
@@ -551,16 +553,16 @@ A1_TOPICS: List[Dict[str, Any]] = [
                 "title_vi": "Kiểm tra: Thì Hiện tại Đơn",
                 "content": {
                     "questions": [
-                        {"id": "q1", "question": "He _____ to bed at 10 p.m. (go)", "options": ["go", "goes", "going", "gone"], "correct": "goes", "explanation": "He/she/it → verb+s: goes."},
-                        {"id": "q2", "question": "They _____ eat breakfast. (negative)", "options": ["doesn't", "don't", "isn't", "aren't"], "correct": "don't", "explanation": "They → don't."},
+                        {"id": "q1", "question": "He _____ to bed at 10 p.m.", "options": ["go", "goes", "going", "gone"], "correct": "goes", "explanation": "He/she/it → verb+s: goes."},
+                        {"id": "q2", "question": "They _____ eat breakfast.", "options": ["doesn't", "don't", "isn't", "aren't"], "correct": "don't", "explanation": "They → don't."},
                         {"id": "q3", "question": "_____ she work on Saturday?", "options": ["Do", "Is", "Does", "Are"], "correct": "Does", "explanation": "She → Does (question)."},
-                        {"id": "q4", "question": "I _____ up at 6 a.m. every day. (wake)", "options": ["wakes", "wake", "waking", "waked"], "correct": "wake", "explanation": "I → wake (base form, no -s)."},
-                        {"id": "q5", "question": "Which adverb means 100% frequency?", "options": ["never", "sometimes", "always", "rarely"], "correct": "always", "explanation": "Always = luôn luôn (100%)."},
-                        {"id": "q6", "question": "She _____ lunch at school. (have)", "options": ["have", "has", "having", "had"], "correct": "has", "explanation": "She → has."},
+                        {"id": "q4", "question": "I _____ up at 6 a.m. every day.", "options": ["wakes", "wake", "waking", "waked"], "correct": "wake", "explanation": "I → wake (base form, no -s)."},
+                        {"id": "q5", "question": "Which adverb means 100% frequency?", "question_vi": "Trạng từ nào có nghĩa là 100% (luôn luôn)?", "options": ["never", "sometimes", "always", "rarely"], "correct": "always", "explanation": "Always = luôn luôn (100%)."},
+                        {"id": "q6", "question": "She _____ lunch at school.", "options": ["have", "has", "having", "had"], "correct": "has", "explanation": "She → has."},
                         {"id": "q7", "question": "I _____ go to the gym. (= 0%)", "options": ["always", "usually", "sometimes", "never"], "correct": "never", "explanation": "Never = 0%."},
-                        {"id": "q8", "question": "Which is correct?", "options": ["She eat rice.", "She eats rice.", "She eating rice.", "She is eat rice."], "correct": "She eats rice.", "explanation": "She + eats (động từ + s cho ngôi thứ 3 số ít)."},
+                        {"id": "q8", "question": "Which is correct?", "question_vi": "Câu nào đúng?", "options": ["She eat rice.", "She eats rice.", "She eating rice.", "She is eat rice."], "correct": "She eats rice.", "explanation": "She + eats (động từ + s cho ngôi thứ 3 số ít)."},
                         {"id": "q9", "question": "_____ you like coffee?", "options": ["Is", "Do", "Does", "Are"], "correct": "Do", "explanation": "You → Do (dạng câu hỏi)."},
-                        {"id": "q10", "question": "He _____ drink alcohol. (negative, single)", "options": ["don't", "doesn't", "isn't", "aren't"], "correct": "doesn't", "explanation": "He → doesn't (does not)."}
+                        {"id": "q10", "question": "He _____ drink alcohol.", "options": ["don't", "doesn't", "isn't", "aren't"], "correct": "doesn't", "explanation": "He → doesn't (does not)."}
                     ]
                 }
             }
@@ -601,20 +603,20 @@ A1_TOPICS: List[Dict[str, Any]] = [
              ]}},
             {"order": 3, "lesson_type": "practice", "title": "Practice: Ordering Food", "title_vi": "Luyện tập: Gọi món",
              "content": {"exercises": [
-                 {"type": "multiple_choice", "question": "You are at a restaurant. How do you order politely?", "options": ["I want chicken.", "Give me chicken!", "I'd like chicken, please.", "Chicken now!"], "answer": "I'd like chicken, please.", "explanation": "'I'd like' là cách lịch sự để đặt món."},
-                 {"type": "multiple_choice", "question": "_____ you like some coffee? (Offering)", "options": ["Do", "Would", "Are", "Have"], "answer": "Would", "explanation": "'Would you like' dùng để offer something."},
-                 {"type": "fill_blank", "question": "Can I see the _____? (to see the food list)", "options": ["bill", "menu", "water", "food"], "answer": "menu", "explanation": "Menu = thực đơn."},
-                 {"type": "multiple_choice", "question": "Which is a drink?", "options": ["rice", "chicken", "juice", "bread"], "answer": "juice", "explanation": "Juice = nước ép (a drink)."},
+                 {"type": "multiple_choice", "question": "You are at a restaurant. How do you order politely?", "question_vi": "Bạn đang ở nhà hàng. Cách đặt món lịch sự là gì?", "options": ["I want chicken.", "Give me chicken!", "I'd like chicken, please.", "Chicken now!"], "answer": "I'd like chicken, please.", "explanation": "'I'd like' là cách lịch sự để đặt món."},
+                 {"type": "fill_blank", "question": "_____ you like some coffee?", "options": ["Do", "Would", "Are", "Have"], "answer": "Would", "explanation": "'Would you like' dùng để offer something."},
+                 {"type": "fill_blank", "question": "Can I see the _____?", "options": ["bill", "menu", "water", "food"], "answer": "menu", "explanation": "Menu = thực đơn."},
+                 {"type": "multiple_choice", "question": "Which is a drink?", "question_vi": "Từ nào là đồ uống?", "options": ["rice", "chicken", "juice", "bread"], "answer": "juice", "explanation": "Juice = nước ép (a drink)."},
                  {"type": "fill_blank", "question": "I'd like a glass of _____, please. (nước)", "options": ["milk", "tea", "water", "coffee"], "answer": "water", "explanation": "Water = nước."}
              ]}},
             {"order": 4, "lesson_type": "quiz", "title": "Quiz: Food & Drinks", "title_vi": "Kiểm tra: Thực phẩm & Đồ uống",
              "content": {"questions": [
-                 {"id": "q1", "question": "How do you politely order food?", "options": ["I want rice.", "I'd like rice, please.", "Give me rice!", "Rice!"], "correct": "I'd like rice, please.", "explanation": "'I'd like' = lịch sự ordering."},
+                 {"id": "q1", "question": "How do you politely order food?", "question_vi": "Cách đặt món lịch sự là gì?", "options": ["I want rice.", "I'd like rice, please.", "Give me rice!", "Rice!"], "correct": "I'd like rice, please.", "explanation": "'I'd like' = lịch sự ordering."},
                  {"id": "q2", "question": "_____ you like some tea?", "options": ["Do", "Are", "Would", "Have"], "correct": "Would", "explanation": "'Would you like' = offer."},
-                 {"id": "q3", "question": "What is 'thịt gà' in English?", "options": ["fish", "beef", "chicken", "pork"], "correct": "chicken", "explanation": "Chicken = thịt gà."},
-                 {"id": "q4", "question": "What do you ask for at the end of a meal?", "options": ["menu", "water", "bill", "food"], "correct": "bill", "explanation": "Bill/check = hóa đơn."},
-                 {"id": "q5", "question": "Vegetables are:", "options": ["drinks", "food (plants)", "desserts", "meats"], "correct": "food (plants)", "explanation": "Vegetables = rau củ (plants we eat)."},
-                 {"id": "q6", "question": "Which is NOT a drink?", "options": ["water", "milk", "juice", "bread"], "correct": "bread", "explanation": "Bread (bánh mì) là đồ ăn, không phải đồ uống."},
+                 {"id": "q3", "question": "What is 'thịt gà' in English?", "question_vi": "'Thịt gà' trong tiếng Anh là gì?", "options": ["fish", "beef", "chicken", "pork"], "correct": "chicken", "explanation": "Chicken = thịt gà."},
+                 {"id": "q4", "question": "What do you ask for at the end of a meal?", "question_vi": "Bạn hỏi xin gì ở cuối bữa ăn?", "options": ["menu", "water", "bill", "food"], "correct": "bill", "explanation": "Bill/check = hóa đơn."},
+                 {"id": "q5", "question": "What are vegetables?", "question_vi": "Vegetables (rau củ) là loại thực phẩm gì?", "options": ["drinks", "food (plants)", "desserts", "meats"], "correct": "food (plants)", "explanation": "Vegetables = rau củ (plants we eat)."},
+                 {"id": "q6", "question": "Which is NOT a drink?", "question_vi": "Từ nào KHÔNG phải đồ uống?", "options": ["water", "milk", "juice", "bread"], "correct": "bread", "explanation": "Bread (bánh mì) là đồ ăn, không phải đồ uống."},
                  {"id": "q7", "question": "I drink _____ every morning. (cà phê)", "options": ["tea", "coffee", "juice", "milk"], "correct": "coffee", "explanation": "Coffee = cà phê."},
                  {"id": "q8", "question": "She doesn't eat _____. (cá)", "options": ["rice", "fish", "chicken", "beef"], "correct": "fish", "explanation": "Fish = cá."},
                  {"id": "q9", "question": "I have _____ for breakfast. (bánh mì)", "options": ["noodles", "rice", "bread", "fruit"], "correct": "bread", "explanation": "Bread = bánh mì."},
@@ -655,23 +657,23 @@ A1_TOPICS: List[Dict[str, Any]] = [
              ]}},
             {"order": 3, "lesson_type": "practice", "title": "Practice: There is/are & Prepositions", "title_vi": "Luyện tập: There is/are & Giới từ",
              "content": {"exercises": [
-                 {"type": "fill_blank", "question": "_____ is a bed in my room. (số ít)", "options": ["There", "It", "This", "Here"], "answer": "There", "explanation": "'There is' describes existence of something."},
-                 {"type": "multiple_choice", "question": "There _____ three chairs in the kitchen.", "options": ["is", "are", "am", "be"], "answer": "are", "explanation": "Three chairs = plural → 'there are'."},
-                 {"type": "multiple_choice", "question": "The book is _____ the table. (on the surface)", "options": ["in", "on", "under", "next"], "answer": "on", "explanation": "On = trên bề mặt."},
-                 {"type": "fill_blank", "question": "The cat is _____ the bed. (below it)", "options": ["on", "in", "under", "next to"], "answer": "under", "explanation": "Under = bên dưới."},
-                 {"type": "multiple_choice", "question": "_____ there a sofa in the living room?", "options": ["Is", "Are", "Do", "Does"], "answer": "Is", "explanation": "'Is there a...' = câu hỏi cho sự vật số ít."}
+                 {"type": "fill_blank", "question": "_____ is a bed in my room.", "options": ["There", "It", "This", "Here"], "answer": "There", "explanation": "'There is' describes existence of something."},
+                 {"type": "fill_blank", "question": "There _____ three chairs in the kitchen.", "options": ["is", "are", "am", "be"], "answer": "are", "explanation": "Three chairs = plural → 'there are'."},
+                 {"type": "fill_blank", "question": "The book is _____ the table.", "options": ["in", "on", "under", "next"], "answer": "on", "explanation": "On = trên bề mặt."},
+                 {"type": "fill_blank", "question": "The cat is _____ the bed. (dưới)", "options": ["on", "in", "under", "next to"], "answer": "under", "explanation": "Under = bên dưới."},
+                 {"type": "fill_blank", "question": "_____ there a sofa in the living room?", "options": ["Is", "Are", "Do", "Does"], "answer": "Is", "explanation": "'Is there a...' = câu hỏi cho sự vật số ít."}
              ]}},
             {"order": 4, "lesson_type": "quiz", "title": "Quiz: Home & Furniture", "title_vi": "Kiểm tra: Nhà & Đồ đạc",
              "content": {"questions": [
                  {"id": "q1", "question": "There _____ a table in the kitchen.", "options": ["are", "is", "am", "be"], "correct": "is", "explanation": "A table = singular → there is."},
                  {"id": "q2", "question": "There _____ two windows in my bedroom.", "options": ["is", "are", "am", "be"], "correct": "are", "explanation": "Two windows = plural → there are."},
-                 {"id": "q3", "question": "The book is _____ the table. (below)", "options": ["on", "in", "next to", "under"], "correct": "under", "explanation": "Under = bên dưới."},
-                 {"id": "q4", "question": "Where do you cook?", "options": ["bedroom", "bathroom", "kitchen", "living room"], "correct": "kitchen", "explanation": "Kitchen = nhà bếp (where you cook)."},
-                 {"id": "q5", "question": "The lamp is _____ the bed. (beside it)", "options": ["on", "in", "under", "next to"], "correct": "next to", "explanation": "Next to = bên cạnh."},
-                 {"id": "q6", "question": "Where do you sleep?", "options": ["living room", "kitchen", "bathroom", "bedroom"], "correct": "bedroom", "explanation": "Bedroom = phòng ngủ."},
+                 {"id": "q3", "question": "The book is _____ the table. (dưới)", "options": ["on", "in", "next to", "under"], "correct": "under", "explanation": "Under = bên dưới."},
+                 {"id": "q4", "question": "Where do you cook?", "question_vi": "Bạn nấu ăn ở đâu?", "options": ["bedroom", "bathroom", "kitchen", "living room"], "correct": "kitchen", "explanation": "Kitchen = nhà bếp (where you cook)."},
+                 {"id": "q5", "question": "The lamp is _____ the bed. (bên cạnh)", "options": ["on", "in", "under", "next to"], "correct": "next to", "explanation": "Next to = bên cạnh."},
+                 {"id": "q6", "question": "Where do you sleep?", "question_vi": "Bạn ngủ ở đâu?", "options": ["living room", "kitchen", "bathroom", "bedroom"], "correct": "bedroom", "explanation": "Bedroom = phòng ngủ."},
                  {"id": "q7", "question": "_____ there any chairs in the room?", "options": ["Is", "Are", "Do", "Does"], "correct": "Are", "explanation": "Chairs = plural → Are there any...?"},
-                 {"id": "q8", "question": "The cat is _____ the box. (inside)", "options": ["on", "in", "under", "next to"], "correct": "in", "explanation": "In = bên trong."},
-                 {"id": "q9", "question": "A 'sofa' is:", "options": ["a type of bed", "a type of chair for sitting", "a type of table", "a type of door"], "correct": "a type of chair for sitting", "explanation": "Sofa = ghế sofa để ngồi."},
+                 {"id": "q8", "question": "The cat is _____ the box. (trong)", "options": ["on", "in", "under", "next to"], "correct": "in", "explanation": "In = bên trong."},
+                 {"id": "q9", "question": "What is a 'sofa'?", "question_vi": "'Sofa' là gì?", "options": ["a type of bed", "a type of chair for sitting", "a type of table", "a type of door"], "correct": "a type of chair for sitting", "explanation": "Sofa = ghế sofa để ngồi."},
                  {"id": "q10", "question": "There _____ no furniture in the room.", "options": ["are", "is", "am", "be"], "correct": "is", "explanation": "'Furniture' (đồ đạc) là danh từ không đếm được → dùng there is."}
              ]}}
         ]
@@ -697,22 +699,22 @@ A1_TOPICS: List[Dict[str, Any]] = [
              {"word": "card", "meaning": "thẻ (thanh toán)", "example": "Can I pay by card?", "pronunciation": "/kɑːrd/"}
          ]}},
          {"order": 3, "lesson_type": "practice", "title": "Practice: Shopping Dialogues", "title_vi": "Luyện tập: Hội thoại mua sắm", "content": {"exercises": [
-             {"type": "multiple_choice", "question": "How _____ is this bag?", "options": ["many", "much", "old", "big"], "answer": "much", "explanation": "'How much' = hỏi giá / số lượng không đếm được."},
-             {"type": "fill_blank", "question": "I'd like _____ apple. (one apple)", "options": ["a", "an", "the", "some"], "answer": "an", "explanation": "Apple bắt đầu bằng nguyên âm → dùng 'an'."},
-             {"type": "multiple_choice", "question": "This shirt costs $5. That shirt costs $50. Which is expensive?", "options": ["the $5 shirt", "the $50 shirt", "both", "neither"], "answer": "the $50 shirt", "explanation": "Expensive = đắt tiền."},
-             {"type": "multiple_choice", "question": "Can I pay by _____? (not cash)", "options": ["price", "discount", "card", "size"], "answer": "card", "explanation": "Pay by card = thanh toán bằng thẻ."},
-             {"type": "fill_blank", "question": "What _____ do you wear? (small, medium or large?)", "options": ["price", "color", "size", "number"], "answer": "size", "explanation": "Size = kích cỡ (S/M/L)."}
+             {"type": "fill_blank", "question": "How _____ is this bag?", "options": ["many", "much", "old", "big"], "answer": "much", "explanation": "'How much' = hỏi giá / số lượng không đếm được."},
+             {"type": "fill_blank", "question": "I'd like _____ apple.", "options": ["a", "an", "the", "some"], "answer": "an", "explanation": "Apple bắt đầu bằng nguyên âm → dùng 'an'."},
+             {"type": "multiple_choice", "question": "This shirt costs $5. That shirt costs $50. Which is expensive?", "question_vi": "Áo này giá $5. Áo kia giá $50. Cái nào đắt?", "options": ["the $5 shirt", "the $50 shirt", "both", "neither"], "answer": "the $50 shirt", "explanation": "Expensive = đắt tiền."},
+             {"type": "multiple_choice", "question": "Can I pay by _____? (not cash)", "question_vi": "Tôi có thể thanh toán bằng _____? (không phải tiền mặt)", "options": ["price", "discount", "card", "size"], "answer": "card", "explanation": "Pay by card = thanh toán bằng thẻ."},
+             {"type": "fill_blank", "question": "What _____ do you wear? (S/M/L)", "options": ["price", "color", "size", "number"], "answer": "size", "explanation": "Size = kích cỡ (S/M/L)."}
          ]}},
          {"order": 4, "lesson_type": "quiz", "title": "Quiz: Shopping & Prices", "title_vi": "Kiểm tra: Mua sắm & Giá cả", "content": {"questions": [
-             {"id": "q1", "question": "How _____ is this dress?", "options": ["many", "much", "old", "long"], "correct": "much", "explanation": "How much = hỏi giá."},
-             {"id": "q2", "question": "I'd like _____ orange. (one)", "options": ["a", "an", "the", "some"], "correct": "an", "explanation": "Orange bắt đầu bằng nguyên âm → dùng an."},
-             {"id": "q3", "question": "This costs $200. It is:", "options": ["cheap", "free", "expensive", "small"], "correct": "expensive", "explanation": "High price = expensive."},
-             {"id": "q4", "question": "Which means 'mua'?", "options": ["sell", "buy", "pay", "give"], "correct": "buy", "explanation": "Buy = mua."},
-             {"id": "q5", "question": "A _____ means the price is lower than normal.", "options": ["price", "discount", "size", "card"], "correct": "discount", "explanation": "Discount = giảm giá."},
-             {"id": "q6", "question": "I wear size _____. (vừa – medium)", "options": ["small", "medium", "large", "extra-large"], "correct": "medium", "explanation": "Medium = vừa."},
-             {"id": "q7", "question": "Can I pay by _____?", "options": ["price", "card", "size", "shop"], "correct": "card", "explanation": "Pay by card = thanh toán thẻ."},
-             {"id": "q8", "question": "I'd like _____ umbrella. (starts with âm nguyên âm)", "options": ["a", "an", "the", "–"], "correct": "an", "explanation": "Umbrella bắt đầu bằng nguyên âm u → dùng an."},
-             {"id": "q9", "question": "This book costs $3. It is very:", "options": ["expensive", "cheap", "big", "small"], "correct": "cheap", "explanation": "Cheap = rẻ."},
+             {"id": "q1", "question": "How _____ is this dress?", "question_vi": "Chiếc váy này giá bao nhiêu? (Chọn từ để hỏi)", "options": ["many", "much", "old", "long"], "correct": "much", "explanation": "How much = hỏi giá."},
+             {"id": "q2", "question": "I'd like _____ orange.", "options": ["a", "an", "the", "some"], "correct": "an", "explanation": "Orange bắt đầu bằng nguyên âm → dùng an."},
+             {"id": "q3", "question": "This shirt costs $5. That shirt costs $50. Which one is cheap?", "question_vi": "Áo này giá $5. Áo kia giá $50. Cái nào rẻ?", "options": ["the $5 shirt", "the $50 shirt", "both", "neither"], "correct": "the $5 shirt", "explanation": "Cheap = rẻ. $5 rẻ hơn $50."},
+             {"id": "q4", "question": "What does 'buy' mean in Vietnamese?", "question_vi": "'Buy' có nghĩa tiếng Việt là gì?", "options": ["bán", "mua", "trả tiền", "cho"], "correct": "mua", "explanation": "Buy = mua."},
+             {"id": "q5", "question": "A _____ means the price is lower than normal.", "question_vi": "_____ có nghĩa là giá thấp hơn bình thường.", "options": ["price", "discount", "size", "card"], "correct": "discount", "explanation": "Discount = giảm giá."},
+             {"id": "q6", "question": "I wear size M. What does M stand for?", "question_vi": "Tôi mặc size M. M là viết tắt của gì?", "options": ["small", "medium", "large", "extra-large"], "correct": "medium", "explanation": "M = Medium = vừa."},
+             {"id": "q7", "question": "Can I pay by _____? (thẻ)", "options": ["price", "card", "size", "shop"], "correct": "card", "explanation": "Pay by card = thanh toán thẻ."},
+             {"id": "q8", "question": "I'd like _____ umbrella.", "options": ["a", "an", "the", "–"], "correct": "an", "explanation": "Umbrella bắt đầu bằng nguyên âm u → dùng an."},
+             {"id": "q9", "question": "This book costs $3. It is very:", "options": ["expensive", "cheap", "big", "small"], "correct": "cheap", "explanation": "Cheap = rẻ. $3 là giá rẻ cho một cuốn sách."},
              {"id": "q10", "question": "Do you have this in a small _____?", "options": ["price", "color", "size", "shop"], "correct": "size", "explanation": "Size = kích cỡ."}
          ]}}
      ]},
@@ -741,23 +743,23 @@ A1_TOPICS: List[Dict[str, Any]] = [
              {"word": "traffic light", "meaning": "đèn giao thông", "example": "Stop at the traffic light.", "pronunciation": "/ˈtræfɪk laɪt/"}
          ]}},
          {"order": 3, "lesson_type": "practice", "title": "Practice: Transport & Directions", "title_vi": "Luyện tập: Phương tiện & Chỉ đường", "content": {"exercises": [
-             {"type": "multiple_choice", "question": "How do you get to school?", "options": ["I go by foot.", "I go by walk.", "I walk.", "Both A and C are đúng"], "answer": "Both A and C are đúng", "explanation": "'Go by foot' hoặc 'walk/I walk' đều đúng."},
+             {"type": "multiple_choice", "question": "How do you get to school?", "question_vi": "Bạn đi học bằng gì?", "options": ["I go by foot.", "I go by walk.", "I walk.", "I walk hoặc I go by foot."], "answer": "I walk hoặc I go by foot.", "explanation": "'Walk' hoặc 'go by foot / on foot' đều đúng."},
              {"type": "fill_blank", "question": "She goes to work _____ bus.", "options": ["in", "by", "with", "on"], "answer": "by", "explanation": "'Go by bus' = đi bằng xe buýt."},
-             {"type": "multiple_choice", "question": "Turn _____ at the traffic light. (not right)", "options": ["right", "straight", "left", "up"], "answer": "left", "explanation": "Left = trái."},
-             {"type": "multiple_choice", "question": "Which is the slowest transport?", "options": ["train", "car", "walking", "bus"], "answer": "walking", "explanation": "Walking = đi bộ (slowest)."},
+             {"type": "fill_blank", "question": "Turn _____ at the traffic light. (trái)", "options": ["right", "straight", "left", "up"], "answer": "left", "explanation": "Left = trái."},
+             {"type": "multiple_choice", "question": "Which is the slowest transport?", "question_vi": "Phương tiện nào chậm nhất?", "options": ["train", "car", "walking", "bus"], "answer": "walking", "explanation": "Walking = đi bộ (slowest)."},
              {"type": "fill_blank", "question": "_____ the train to the airport.", "options": ["Go", "Take", "Drive", "Walk"], "answer": "Take", "explanation": "'Take the train' = đi tàu."}
          ]}},
          {"order": 4, "lesson_type": "quiz", "title": "Quiz: Transportation", "title_vi": "Kiểm tra: Phương tiện di chuyển", "content": {"questions": [
              {"id": "q1", "question": "She goes to school _____ motorbike.", "options": ["in", "by", "with", "on"], "correct": "by", "explanation": "Go by + transport."},
-             {"id": "q2", "question": "What does 'turn right' mean?", "options": ["Rẽ trái", "Đi thẳng", "Rẽ phải", "Quay lại"], "correct": "Rẽ phải", "explanation": "Turn right = rẽ phải."},
+             {"id": "q2", "question": "What does 'turn right' mean?", "question_vi": "'Turn right' có nghĩa là gì?", "options": ["Rẽ trái", "Đi thẳng", "Rẽ phải", "Quay lại"], "correct": "Rẽ phải", "explanation": "Turn right = rẽ phải."},
              {"id": "q3", "question": "_____ the bus to the market.", "options": ["Go", "Drive", "Take", "Walk"], "correct": "Take", "explanation": "Take the bus = đi xe buýt."},
-             {"id": "q4", "question": "Which transport uses tracks?", "options": ["bus", "car", "train", "taxi"], "correct": "train", "explanation": "Train = tàu hỏa (chạy trên đường ray)."},
+             {"id": "q4", "question": "Which transport uses tracks?", "question_vi": "Phương tiện nào chạy trên đường ray?", "options": ["bus", "car", "train", "taxi"], "correct": "train", "explanation": "Train = tàu hỏa (chạy trên đường ray)."},
              {"id": "q5", "question": "Go _____ for 500 meters, then turn left.", "options": ["left", "right", "straight", "back"], "correct": "straight", "explanation": "Go straight = đi thẳng."},
-             {"id": "q6", "question": "I don't have a car. I go _____.", "options": ["by foot", "by car", "by train", "by taxi"], "correct": "by foot", "explanation": "On foot / by foot = đi bộ."},
+             {"id": "q6", "question": "I don't have a car. I go _____. (đi bộ)", "options": ["by foot", "by car", "by train", "by taxi"], "correct": "by foot", "explanation": "On foot / by foot = đi bộ."},
              {"id": "q7", "question": "Stop at the _____ light.", "options": ["traffic", "red", "green", "signal"], "correct": "traffic", "explanation": "Traffic light = đèn giao thông."},
-             {"id": "q8", "question": "Is the school far from here?", "options": ["Hỏi giờ (What time is it?)", "No, it's near.", "I like school.", "Go right."], "correct": "No, it's near.", "explanation": "Near = gần (trái nghĩa với far)."},
-             {"id": "q9", "question": "A bicycle is powered by:", "options": ["electricity", "gasoline", "pedaling", "wind"], "correct": "pedaling", "explanation": "Bicycle = xe đạp, powered by pedaling."},
-             {"id": "q10", "question": "How do you ask for directions?", "options": ["I go by bus.", "Excuse me, where is the station?", "Turn right.", "It's far."], "correct": "Excuse me, where is the station?", "explanation": "Hỏi đường = lịch sự hỏi 'where is...'"}
+             {"id": "q8", "question": "Is the school far from here?", "question_vi": "Trường học có xa đây không?", "options": ["What time is it?", "No, it's near.", "I like school.", "Go right."], "correct": "No, it's near.", "explanation": "Near = gần (trái nghĩa với far)."},
+             {"id": "q9", "question": "A bicycle is powered by:", "question_vi": "Xe đạp chạy bằng:", "options": ["electricity", "gasoline", "pedaling", "wind"], "correct": "pedaling", "explanation": "Bicycle = xe đạp, powered by pedaling (đạp)."},
+             {"id": "q10", "question": "How do you ask for directions?", "question_vi": "Cách hỏi đường lịch sự là gì?", "options": ["I go by bus.", "Excuse me, where is the station?", "Turn right.", "It's far."], "correct": "Excuse me, where is the station?", "explanation": "Hỏi đường = lịch sự hỏi 'where is...'"}
          ]}}
      ]},
 
@@ -824,21 +826,21 @@ A1_TOPICS: List[Dict[str, Any]] = [
              {"word": "use a computer", "meaning": "dùng máy tính", "example": "She can use a computer well.", "pronunciation": "/juːz ə kəmˈpjuːtər/"}
          ]}},
          {"order": 3, "lesson_type": "practice", "title": "Practice: Can & Can't", "title_vi": "Luyện tập: Can & Can't", "content": {"exercises": [
-             {"type": "fill_blank", "question": "She _____ speak 3 languages. (positive ability)", "options": ["can", "can't", "cans", "is can"], "answer": "can", "explanation": "Can + động từ nguyên mẫu. Không thêm -s cho she."},
-             {"type": "fill_blank", "question": "He _____ drive. He doesn't have a license. (negative)", "options": ["can", "can't", "cannot", "can't / cannot"], "answer": "can't / cannot", "explanation": "Can't / cannot = không thể."},
-             {"type": "multiple_choice", "question": "_____ you help me, please?", "options": ["Do", "Are", "Can", "Is"], "answer": "Can", "explanation": "Can you...? = Bạn có thể...? (yêu cầu/xin phép)."},
-             {"type": "multiple_choice", "question": "Which is WRONG?", "options": ["I can swim.", "She can swim.", "He cans swim.", "They can swim."], "answer": "He cans swim.", "explanation": "Can KHÔNG BAO GIỜ thêm -s: he CAN (không phải 'he cans')."},
-             {"type": "fill_blank", "question": "_____ I use your phone? (permission)", "options": ["Can", "Do", "Am", "Is"], "answer": "Can", "explanation": "Can I...? = Tôi có thể...không? (xin phép)."}
+             {"type": "fill_blank", "question": "She _____ speak 3 languages.", "options": ["can", "can't", "cans", "is can"], "answer": "can", "explanation": "Can + động từ nguyên mẫu. Không thêm -s cho she."},
+             {"type": "fill_blank", "question": "He _____ drive. He doesn't have a license.", "options": ["can", "can't", "cannot", "can't"], "answer": "can't", "explanation": "Can't / cannot = không thể."},
+             {"type": "fill_blank", "question": "_____ you help me, please?", "options": ["Do", "Are", "Can", "Is"], "answer": "Can", "explanation": "Can you...? = Bạn có thể...? (yêu cầu/xin phép)."},
+             {"type": "multiple_choice", "question": "Which is WRONG?", "question_vi": "Câu nào SAI?", "options": ["I can swim.", "She can swim.", "He cans swim.", "They can swim."], "answer": "He cans swim.", "explanation": "Can KHÔNG BAO GIỜ thêm -s: he CAN (không phải 'he cans')."},
+             {"type": "fill_blank", "question": "_____ I use your phone?", "options": ["Can", "Do", "Am", "Is"], "answer": "Can", "explanation": "Can I...? = Tôi có thể...không? (xin phép)."}
          ]}},
          {"order": 4, "lesson_type": "quiz", "title": "Quiz: Modal Verb Can", "title_vi": "Kiểm tra: Động từ Can", "content": {"questions": [
-             {"id": "q1", "question": "She _____ swim. (positive)", "options": ["can", "cans", "is can", "do can"], "correct": "can", "explanation": "Can giống nhau cho tất cả chủ ngữ."},
-             {"id": "q2", "question": "I _____ fly. I'm not a bird! (negative)", "options": ["can", "can't", "am not", "don't"], "correct": "can't", "explanation": "Can't = không thể."},
+             {"id": "q1", "question": "She _____ swim.", "options": ["can", "cans", "is can", "do can"], "correct": "can", "explanation": "Can giống nhau cho tất cả chủ ngữ."},
+             {"id": "q2", "question": "I _____ fly. I'm not a bird!", "options": ["can", "can't", "am not", "don't"], "correct": "can't", "explanation": "Can't = không thể."},
              {"id": "q3", "question": "_____ you play the piano?", "options": ["Do", "Are", "Can", "Is"], "correct": "Can", "explanation": "Can you...? = dạng câu hỏi."},
-             {"id": "q4", "question": "He _____ cook. (= he knows how to cook)", "options": ["can't", "can", "is", "has"], "correct": "can", "explanation": "Can = có khả năng làm gì."},
-             {"id": "q5", "question": "Which sentence is correct?", "options": ["She cans speak English.", "She can speaks English.", "She can speak English.", "She is can speak English."], "correct": "She can speak English.", "explanation": "Can + động từ nguyên mẫu (không -s, không -ing)."},
-             {"id": "q6", "question": "Can I _____ the window? (open)", "options": ["opens", "opening", "open", "opened"], "correct": "open", "explanation": "Can + động từ nguyên mẫu."},
+             {"id": "q4", "question": "He _____ cook.", "options": ["can't", "can", "is", "has"], "correct": "can", "explanation": "Can = có khả năng làm gì."},
+             {"id": "q5", "question": "Which sentence is correct?", "question_vi": "Câu nào đúng?", "options": ["She cans speak English.", "She can speaks English.", "She can speak English.", "She is can speak English."], "correct": "She can speak English.", "explanation": "Can + động từ nguyên mẫu (không -s, không -ing)."},
+             {"id": "q6", "question": "Can I _____ the window?", "options": ["opens", "opening", "open", "opened"], "correct": "open", "explanation": "Can + động từ nguyên mẫu."},
              {"id": "q7", "question": "They _____ drive – they are only 10 years old.", "options": ["can", "can't", "are", "do"], "correct": "can't", "explanation": "Trẻ em không thể lái xe (quá nhỏ tuổi)."},
-             {"id": "q8", "question": "What does 'can't' mean?", "options": ["can / có thể", "cannot / không thể", "don't / không", "isn't / không phải"], "correct": "cannot / không thể", "explanation": "Can't = cannot = không thể."},
+             {"id": "q8", "question": "What does 'can't' mean?", "question_vi": "'Can't' có nghĩa là gì?", "options": ["can / có thể", "cannot / không thể", "don't / không", "isn't / không phải"], "correct": "cannot / không thể", "explanation": "Can't = cannot = không thể."},
              {"id": "q9", "question": "He can _____ very fast.", "options": ["runs", "running", "run", "ran"], "correct": "run", "explanation": "Can + động từ nguyên mẫu: can run."},
              {"id": "q10", "question": "_____ she speak Chinese? – Yes, she can.", "options": ["Do", "Does", "Can", "Is"], "correct": "Can", "explanation": "Câu hỏi với can: Can she...?"}
          ]}}
@@ -872,21 +874,21 @@ A1_TOPICS: List[Dict[str, Any]] = [
          {"order": 3, "lesson_type": "practice", "title": "Practice: Time Prepositions", "title_vi": "Luyện tập: Giới từ thời gian", "content": {"exercises": [
              {"type": "fill_blank", "question": "I have class _____ Monday.", "options": ["in", "on", "at", "by"], "answer": "on", "explanation": "On + ngày trong tuần."},
              {"type": "fill_blank", "question": "My birthday is _____ July.", "options": ["on", "at", "in", "by"], "answer": "in", "explanation": "In + tháng."},
-             {"type": "multiple_choice", "question": "Which day comes after Wednesday?", "options": ["Tuesday", "Thursday", "Friday", "Monday"], "answer": "Thursday", "explanation": "Thứ 2-3-4-5-6-7-CN."},
-             {"type": "multiple_choice", "question": "Which season is coldest?", "options": ["spring", "summer", "autumn", "winter"], "answer": "winter", "explanation": "Winter = mùa đông (mùa lạnh nhất)."},
+             {"type": "multiple_choice", "question": "Which day comes after Wednesday?", "question_vi": "Ngày nào đứng sau thứ Tư?", "options": ["Tuesday", "Thursday", "Friday", "Monday"], "answer": "Thursday", "explanation": "Thứ 2-3-4-5-6-7-CN."},
+             {"type": "multiple_choice", "question": "Which season is coldest?", "question_vi": "Mùa nào lạnh nhất?", "options": ["spring", "summer", "autumn", "winter"], "answer": "winter", "explanation": "Winter = mùa đông (mùa lạnh nhất)."},
              {"type": "fill_blank", "question": "Class starts _____ 8 o'clock.", "options": ["on", "in", "at", "by"], "answer": "at", "explanation": "At + giờ cụ thể."}
          ]}},
          {"order": 4, "lesson_type": "quiz", "title": "Quiz: Days, Months & Seasons", "title_vi": "Kiểm tra: Ngày, Tháng & Mùa", "content": {"questions": [
              {"id": "q1", "question": "School is _____ Monday to Friday.", "options": ["in", "on", "from", "at"], "correct": "from", "explanation": "Từ thứ Hai đến thứ Sáu."},
              {"id": "q2", "question": "Christmas is _____ December.", "options": ["on", "in", "at", "by"], "correct": "in", "explanation": "In + tháng."},
              {"id": "q3", "question": "Christmas Day is _____ December 25th.", "options": ["in", "on", "at", "by"], "correct": "on", "explanation": "On + ngày cụ thể."},
-             {"id": "q4", "question": "Which day is the weekend? (Pick one)", "options": ["Monday", "Wednesday", "Saturday", "Thursday"], "correct": "Saturday", "explanation": "Weekend = thứ Bảy và Chủ nhật."},
-             {"id": "q5", "question": "It snows in _____.", "options": ["summer", "spring", "autumn", "winter"], "correct": "winter", "explanation": "Winter = mùa đông (mùa có tuyết)."},
-             {"id": "q6", "question": "What month comes before March?", "options": ["April", "February", "January", "May"], "correct": "February", "explanation": "Tháng 1 - 2 - 3."},
+             {"id": "q4", "question": "Which day is the weekend?", "question_vi": "Ngày nào là cuối tuần?", "options": ["Monday", "Wednesday", "Saturday", "Thursday"], "correct": "Saturday", "explanation": "Weekend = thứ Bảy và Chủ nhật."},
+             {"id": "q5", "question": "It snows in _____. (tuyết rơi)", "options": ["summer", "spring", "autumn", "winter"], "correct": "winter", "explanation": "Winter = mùa đông (mùa có tuyết)."},
+             {"id": "q6", "question": "What month comes before March?", "question_vi": "Tháng nào đứng trước tháng Ba?", "options": ["April", "February", "January", "May"], "correct": "February", "explanation": "Tháng 1 - 2 - 3."},
              {"id": "q7", "question": "I relax _____ weekends.", "options": ["in", "on", "at", "by"], "correct": "on", "explanation": "On weekends (ngày cuối tuần)."},
-             {"id": "q8", "question": "Which season has flowers blooming?", "options": ["winter", "autumn", "spring", "summer"], "correct": "spring", "explanation": "Spring = mùa xuân (hoa nở)."},
+             {"id": "q8", "question": "Which season has flowers blooming?", "question_vi": "Mùa nào có hoa nở?", "options": ["winter", "autumn", "spring", "summer"], "correct": "spring", "explanation": "Spring = mùa xuân (hoa nở)."},
              {"id": "q9", "question": "The meeting is _____ 3 p.m.", "options": ["in", "on", "at", "by"], "correct": "at", "explanation": "At + giờ cụ thể trong ngày."},
-             {"id": "q10", "question": "How many days are in a week?", "options": ["5", "6", "7", "8"], "correct": "7", "explanation": "7 ngày: T2, T3, T4, T5, T6, T7, CN."}
+             {"id": "q10", "question": "How many days are in a week?", "question_vi": "Một tuần có bao nhiêu ngày?", "options": ["5", "6", "7", "8"], "correct": "7", "explanation": "7 ngày: T2, T3, T4, T5, T6, T7, CN."}
          ]}}
      ]},
 
@@ -923,13 +925,13 @@ A1_TOPICS: List[Dict[str, Any]] = [
          ]}},
          {"order": 4, "lesson_type": "quiz", "title": "Quiz: Jobs & Occupations", "title_vi": "Kiểm tra: Nghề nghiệp", "content": {"questions": [
              {"id": "q1", "question": "She is _____ artist.", "options": ["a", "an", "the", "–"], "correct": "an", "explanation": "Artist bắt đầu bằng nguyên âm 'a' → dùng an."},
-             {"id": "q2", "question": "Where do teachers work?", "options": ["hospital", "school", "farm", "office"], "correct": "school", "explanation": "Giáo viên làm việc ở trường học."},
-             {"id": "q3", "question": "He drives a taxi. He is a:", "options": ["pilot", "driver", "engineer", "farmer"], "correct": "driver", "explanation": "Taxi driver = tài xế."},
+             {"id": "q2", "question": "Where do teachers work?", "question_vi": "Giáo viên làm việc ở đâu?", "options": ["hospital", "school", "farm", "office"], "correct": "school", "explanation": "Giáo viên làm việc ở trường học."},
+             {"id": "q3", "question": "He drives a taxi. He is a:", "question_vi": "Anh ấy lái taxi. Anh ấy là:", "options": ["pilot", "driver", "engineer", "farmer"], "correct": "driver", "explanation": "Taxi driver = tài xế."},
              {"id": "q4", "question": "What _____ you do for a living?", "options": ["is", "do", "are", "can"], "correct": "do", "explanation": "What do you do? = job question."},
              {"id": "q5", "question": "She works _____ a nurse.", "options": ["in", "as", "on", "by"], "correct": "as", "explanation": "Works as + job."},
              {"id": "q6", "question": "I am _____ teacher.", "options": ["an", "a", "the", "–"], "correct": "a", "explanation": "Teacher bắt đầu bằng phụ âm 't' → dùng a."},
-             {"id": "q7", "question": "He works in a hospital. He is probably a:", "options": ["farmer", "teacher", "doctor or nurse", "driver"], "correct": "doctor or nurse", "explanation": "Hospital = bệnh viện → doctors/nurses work there."},
-             {"id": "q8", "question": "What does a chef do?", "options": ["teaches students", "cooks food", "drives cars", "plants crops"], "correct": "cooks food", "explanation": "Chef / cook = đầu bếp."},
+             {"id": "q7", "question": "He works in a hospital. He is probably a:", "question_vi": "Anh ấy làm ở bệnh viện. Anh ấy có thể là:", "options": ["farmer", "teacher", "doctor or nurse", "driver"], "correct": "doctor or nurse", "explanation": "Hospital = bệnh viện → doctors/nurses work there."},
+             {"id": "q8", "question": "What does a chef do?", "question_vi": "Đầu bếp làm gì?", "options": ["teaches students", "cooks food", "drives cars", "plants crops"], "correct": "cooks food", "explanation": "Chef / cook = đầu bếp."},
              {"id": "q9", "question": "She works in _____ office.", "options": ["a", "an", "the", "–"], "correct": "an", "explanation": "Office bắt đầu bằng nguyên âm 'o' → dùng an."},
              {"id": "q10", "question": "My father _____ a businessman.", "options": ["work", "works", "is", "are"], "correct": "is", "explanation": "Bố tôi là doanh nhân (to be + nghề nghiệp)."}
          ]}}
@@ -967,16 +969,16 @@ A1_TOPICS: List[Dict[str, Any]] = [
              {"type": "fill_blank", "question": "The park is _____ the hotel. (đối diện)", "options": ["between", "next to", "opposite", "behind"], "answer": "opposite", "explanation": "Opposite = đối diện."}
          ]}},
          {"order": 4, "lesson_type": "quiz", "title": "Quiz: Places in the City", "title_vi": "Kiểm tra: Địa điểm trong thành phố", "content": {"questions": [
-             {"id": "q1", "question": "Where do you watch movies?", "options": ["library", "hospital", "cinema", "bank"], "correct": "cinema", "explanation": "Cinema = rạp chiếu phim."},
+             {"id": "q1", "question": "Where do you watch movies?", "question_vi": "Bạn xem phim ở đâu?", "options": ["library", "hospital", "cinema", "bank"], "correct": "cinema", "explanation": "Cinema = rạp chiếu phim."},
              {"id": "q2", "question": "Excuse me, _____ is the nearest bank?", "options": ["what", "who", "where", "when"], "correct": "where", "explanation": "Where = hỏi địa điểm."},
-             {"id": "q3", "question": "Where do sick people go?", "options": ["school", "library", "hotel", "hospital"], "correct": "hospital", "explanation": "Hospital = bệnh viện."},
+             {"id": "q3", "question": "Where do sick people go?", "question_vi": "Người bệnh đi đâu?", "options": ["school", "library", "hotel", "hospital"], "correct": "hospital", "explanation": "Hospital = bệnh viện."},
              {"id": "q4", "question": "The café is _____ the post office. (both sides)", "options": ["opposite", "between", "next to", "behind"], "correct": "next to", "explanation": "Next to = bên cạnh."},
-             {"id": "q5", "question": "You need to send a letter. Go to the:", "options": ["bank", "post office", "hotel", "library"], "correct": "post office", "explanation": "Post office = bưu điện."},
+             {"id": "q5", "question": "You need to send a letter. Go to the:", "question_vi": "Bạn cần gửi thư. Đi đến:", "options": ["bank", "post office", "hotel", "library"], "correct": "post office", "explanation": "Post office = bưu điện."},
              {"id": "q6", "question": "The park is _____ the school. (directly across)", "options": ["next to", "behind", "opposite", "between"], "correct": "opposite", "explanation": "Opposite = đối diện."},
-             {"id": "q7", "question": "Where do tourists usually stay?", "options": ["school", "hospital", "hotel", "cinema"], "correct": "hotel", "explanation": "Hotel = khách sạn."},
-             {"id": "q8", "question": "I need money. Where should I go?", "options": ["library", "restaurant", "bank", "park"], "correct": "bank", "explanation": "Bank = ngân hàng."},
+             {"id": "q7", "question": "Where do tourists usually stay?", "question_vi": "Khách du lịch thường ở đâu?", "options": ["school", "hospital", "hotel", "cinema"], "correct": "hotel", "explanation": "Hotel = khách sạn."},
+             {"id": "q8", "question": "I need money. Where should I go?", "question_vi": "Tôi cần tiền. Tôi nên đi đâu?", "options": ["library", "restaurant", "bank", "park"], "correct": "bank", "explanation": "Bank = ngân hàng."},
              {"id": "q9", "question": "The market is _____ the park and the school.", "options": ["next to", "opposite", "between", "behind"], "correct": "between", "explanation": "Between = ở giữa."},
-             {"id": "q10", "question": "Where do you buy food in a big store?", "options": ["restaurant", "bank", "supermarket", "cinema"], "correct": "supermarket", "explanation": "Supermarket = siêu thị."}
+             {"id": "q10", "question": "Where do you buy food in a big store?", "question_vi": "Bạn mua thực phẩm ở cửa hàng lớn nào?", "options": ["restaurant", "bank", "supermarket", "cinema"], "correct": "supermarket", "explanation": "Supermarket = siêu thị."}
          ]}}
      ]},
 
@@ -1014,14 +1016,14 @@ A1_TOPICS: List[Dict[str, Any]] = [
          ]}},
          {"order": 4, "lesson_type": "quiz", "title": "Quiz: Health & Body Parts", "title_vi": "Kiểm tra: Sức khỏe & Cơ thể", "content": {"questions": [
              {"id": "q1", "question": "My _____ hurts. I can't walk. (chân)", "options": ["arm", "head", "leg", "hand"], "correct": "leg", "explanation": "Leg = chân."},
-             {"id": "q2", "question": "I have a headache means:", "options": ["My stomach hurts", "My head hurts", "I am tired", "I have a cold"], "correct": "My head hurts", "explanation": "Headache = đau đầu."},
+             {"id": "q2", "question": "I have a headache means:", "question_vi": "'I have a headache' có nghĩa là:", "options": ["My stomach hurts", "My head hurts", "I am tired", "I have a cold"], "correct": "My head hurts", "explanation": "Headache = đau đầu."},
              {"id": "q3", "question": "You look sick. You _____ rest.", "options": ["can", "do", "should (nên)", "will"], "correct": "should (nên)", "explanation": "Should = lời khuyên."},
              {"id": "q4", "question": "She has a _____. Her temperature is 39°C.", "options": ["cold", "headache", "fever", "stomachache"], "correct": "fever", "explanation": "Fever = sốt (high temperature)."},
-             {"id": "q5", "question": "What body part do you use to see?", "options": ["ear", "nose", "eye", "mouth"], "correct": "eye", "explanation": "Eye = mắt (to see)."},
+             {"id": "q5", "question": "What body part do you use to see?", "question_vi": "Bạn dùng bộ phận nào để nhìn?", "options": ["ear", "nose", "eye", "mouth"], "correct": "eye", "explanation": "Eye = mắt (to see)."},
              {"id": "q6", "question": "I _____ a stomachache. (Khai báo triệu chứng)", "options": ["am", "feel", "have", "get"], "correct": "have", "explanation": "I have a + symptom."},
              {"id": "q7", "question": "My _____ hurts. I can't write. (bàn tay)", "options": ["leg", "hand", "eye", "ear"], "correct": "hand", "explanation": "Hand = bàn tay."},
              {"id": "q8", "question": "I feel very _____. I need to sleep. (mệt)", "options": ["happy", "hungry", "tired", "cold"], "correct": "tired", "explanation": "Tired = mệt mỏi."},
-             {"id": "q9", "question": "Where is your stomach?", "options": ["in your head", "in your abdomen", "in your arm", "in your leg"], "correct": "in your abdomen", "explanation": "Stomach / abdomen = bụng."},
+             {"id": "q9", "question": "Where is your stomach?", "question_vi": "Dạ dày/bụng của bạn ở đâu?", "options": ["in your head", "in your abdomen", "in your arm", "in your leg"], "correct": "in your abdomen", "explanation": "Stomach / abdomen = bụng."},
              {"id": "q10", "question": "He has a cold. He _____ see a doctor.", "options": ["can", "do", "should (nên)", "must"], "correct": "should (nên)", "explanation": "Should = nên (advice)."}
          ]}}
      ]},
@@ -1063,10 +1065,10 @@ A1_TOPICS: List[Dict[str, Any]] = [
              {"id": "q3", "question": "How _____ do you go swimming?", "options": ["many", "much", "often", "long"], "correct": "often", "explanation": "How often = frequency question."},
              {"id": "q4", "question": "He enjoys _____ to music.", "options": ["listen", "listens", "listening", "listened"], "correct": "listening", "explanation": "Enjoy + verb-ing: listening."},
              {"id": "q5", "question": "I love _____. (du lịch)", "options": ["travel", "traveling", "travels", "traveled"], "correct": "traveling", "explanation": "Love + verb-ing: traveling."},
-             {"id": "q6", "question": "Which is a hobby?", "options": ["sleep", "work", "painting", "be sick"], "correct": "painting", "explanation": "Painting = vẽ tranh (a hobby)."},
+             {"id": "q6", "question": "Which is a hobby?", "question_vi": "Từ nào là sở thích?", "options": ["sleep", "work", "painting", "be sick"], "correct": "painting", "explanation": "Painting = vẽ tranh (a hobby)."},
              {"id": "q7", "question": "She _____ shopping on weekends.", "options": ["love", "loves", "loving", "is love"], "correct": "loves", "explanation": "She → loves (ngôi thứ 3)."},
              {"id": "q8", "question": "Do you enjoy _____ movies?", "options": ["watch", "watches", "watching", "watched"], "correct": "watching", "explanation": "Enjoy + verb-ing."},
-             {"id": "q9", "question": "'Once a week' means:", "options": ["every day", "7 times a week", "1 time per week", "never"], "correct": "1 time per week", "explanation": "Once a week = 1 lần/tuần."},
+             {"id": "q9", "question": "'Once a week' means:", "question_vi": "'Once a week' có nghĩa là:", "options": ["every day", "7 times a week", "1 time per week", "never"], "correct": "1 time per week", "explanation": "Once a week = 1 lần/tuần."},
              {"id": "q10", "question": "They _____ cycling on weekends.", "options": ["enjoy", "enjoys", "enjoying", "enjoyed"], "correct": "enjoy", "explanation": "They → enjoy (base form, no -s)."}
          ]}}
      ]},
@@ -1105,14 +1107,14 @@ A1_TOPICS: List[Dict[str, Any]] = [
          {"order": 4, "lesson_type": "quiz", "title": "Quiz: Weather & Seasons", "title_vi": "Kiểm tra: Thời tiết & Mùa", "content": {"questions": [
              {"id": "q1", "question": "What's the weather _____?", "options": ["as", "like", "look", "see"], "correct": "like", "explanation": "What's the weather like? = standard question."},
              {"id": "q2", "question": "It _____ hot today. I need a fan.", "options": ["am", "are", "is", "be"], "correct": "is", "explanation": "It is (weather description)."},
-             {"id": "q3", "question": "It's raining. The weather is:", "options": ["sunny", "windy", "rainy", "snowy"], "correct": "rainy", "explanation": "Rain → rainy."},
-             {"id": "q4", "question": "Spring is usually:", "options": ["cold", "warm", "very hot", "snowy"], "correct": "warm", "explanation": "Spring = ấm áp."},
-             {"id": "q5", "question": "You need an umbrella when it's:", "options": ["sunny", "windy", "rainy", "cool"], "correct": "rainy", "explanation": "Umbrella = for rain."},
-             {"id": "q6", "question": "The temperature is 5°C. It's very:", "options": ["hot", "warm", "cool", "cold"], "correct": "cold", "explanation": "5°C = very cold."},
+             {"id": "q3", "question": "It's raining. The weather is:", "question_vi": "Trời đang mưa. Thời tiết là:", "options": ["sunny", "windy", "rainy", "snowy"], "correct": "rainy", "explanation": "Rain → rainy."},
+             {"id": "q4", "question": "Spring is usually:", "question_vi": "Mùa xuân thường:", "options": ["cold", "warm", "very hot", "snowy"], "correct": "warm", "explanation": "Spring = ấm áp."},
+             {"id": "q5", "question": "You need an umbrella when it's:", "question_vi": "Bạn cần dù khi trời:", "options": ["sunny", "windy", "rainy", "cool"], "correct": "rainy", "explanation": "Umbrella = for rain."},
+             {"id": "q6", "question": "The temperature is 5°C. It's very:", "question_vi": "Nhiệt độ 5°C. Trời rất:", "options": ["hot", "warm", "cool", "cold"], "correct": "cold", "explanation": "5°C = very cold."},
              {"id": "q7", "question": "It _____ in winter in northern countries.", "options": ["snows", "rains", "is sunny", "is warm"], "correct": "snows", "explanation": "It snows in winter (cold countries)."},
-             {"id": "q8", "question": "Which season is usually hottest?", "options": ["spring", "summer", "autumn", "winter"], "correct": "summer", "explanation": "Summer = mùa hè (hottest)."},
+             {"id": "q8", "question": "Which season is usually hottest?", "question_vi": "Mùa nào thường nóng nhất?", "options": ["spring", "summer", "autumn", "winter"], "correct": "summer", "explanation": "Summer = mùa hè (hottest)."},
              {"id": "q9", "question": "It _____ windy outside. Hold your hat!", "options": ["am", "are", "is", "be"], "correct": "is", "explanation": "It is + adjective."},
-             {"id": "q10", "question": "What is 'nhiệt độ' in English?", "options": ["weather", "climate", "temperature", "season"], "correct": "temperature", "explanation": "Temperature = nhiệt độ."}
+             {"id": "q10", "question": "What is 'nhiệt độ' in English?", "question_vi": "'Nhiệt độ' trong tiếng Anh là gì?", "options": ["weather", "climate", "temperature", "season"], "correct": "temperature", "explanation": "Temperature = nhiệt độ."}
          ]}}
      ]},
 
@@ -1148,16 +1150,16 @@ A1_TOPICS: List[Dict[str, Any]] = [
              {"type": "fill_blank", "question": "She _____ Physics on Tuesday. (have)", "options": ["have", "has", "having", "had"], "answer": "has", "explanation": "She → dùng has (có tiết học)."}
          ]}},
          {"order": 4, "lesson_type": "quiz", "title": "Quiz: School & Education", "title_vi": "Kiểm tra: Trường học & Giáo dục", "content": {"questions": [
-             {"id": "q1", "question": "What subject involves numbers and equations?", "options": ["History", "Art", "Math", "Music"], "correct": "Math", "explanation": "Math = Toán học."},
+             {"id": "q1", "question": "What subject involves numbers and equations?", "question_vi": "Môn nào liên quan đến số và phương trình?", "options": ["History", "Art", "Math", "Music"], "correct": "Math", "explanation": "Math = Toán học."},
              {"id": "q2", "question": "She _____ English every day.", "options": ["study", "studies", "studying", "studied"], "correct": "studies", "explanation": "She → studies (ngôi thứ 3: study + ies)."},
-             {"id": "q3", "question": "In which class do you do physical activity?", "options": ["Math", "History", "PE", "Art"], "correct": "PE", "explanation": "PE = Physical Education = Thể dục."},
+             {"id": "q3", "question": "In which class do you do physical activity?", "question_vi": "Bạn tập thể dục ở lớp nào?", "options": ["Math", "History", "PE", "Art"], "correct": "PE", "explanation": "PE = Physical Education = Thể dục."},
              {"id": "q4", "question": "Open your _____. (sách)", "options": ["pen", "notebook", "book", "board"], "correct": "book", "explanation": "Book = sách."},
-             {"id": "q5", "question": "What subject teaches about the past?", "options": ["Science", "History", "Geography", "Music"], "correct": "History", "explanation": "History = Lịch sử (dạy về quá khứ)."},
+             {"id": "q5", "question": "What subject teaches about the past?", "question_vi": "Môn nào dạy về quá khứ?", "options": ["Science", "History", "Geography", "Music"], "correct": "History", "explanation": "History = Lịch sử (dạy về quá khứ)."},
              {"id": "q6", "question": "I have _____ class on Monday. (English)", "options": ["an English", "a English", "English", "the English"], "correct": "English", "explanation": "I have English class (không dùng mạo từ trước tên môn học)."},
              {"id": "q7", "question": "Do your _____ tonight! (assignment at home)", "options": ["test", "homework", "lesson", "subject"], "correct": "homework", "explanation": "Homework = bài tập về nhà."},
-             {"id": "q8", "question": "The teacher writes on the _____.", "options": ["notebook", "book", "pen", "board"], "correct": "board", "explanation": "Board (bảng đen/bảng trắng) = bảng."},
+             {"id": "q8", "question": "The teacher writes on the _____.", "question_vi": "Giáo viên viết lên _____.", "options": ["notebook", "book", "pen", "board"], "correct": "board", "explanation": "Board (bảng đen/bảng trắng) = bảng."},
              {"id": "q9", "question": "I _____ History on Thursday.", "options": ["study", "studies", "am study", "have"], "correct": "study", "explanation": "I → dùng study (dạng nguyên mẫu)."},
-             {"id": "q10", "question": "Which subject is about living things?", "options": ["Math", "History", "Science", "Geography"], "correct": "Science", "explanation": "Science = Khoa học (sinh học, hóa học, vật lý...)."}
+             {"id": "q10", "question": "Which subject is about living things?", "question_vi": "Môn nào về sinh vật sống?", "options": ["Math", "History", "Science", "Geography"], "correct": "Science", "explanation": "Science = Khoa học (sinh học, hóa học, vật lý...)."}
          ]}}
      ]},
 
@@ -1193,61 +1195,61 @@ A1_TOPICS: List[Dict[str, Any]] = [
              {"type": "multiple_choice", "question": "Those = multiple things that are:", "options": ["near + singular", "near + plural", "far + singular", "far + plural"], "answer": "far + plural", "explanation": "Those = xa + số nhiều (số nhiều)."}
          ]}},
          {"order": 4, "lesson_type": "quiz", "title": "Quiz: Clothes Shopping", "title_vi": "Kiểm tra: Mua quần áo", "content": {"questions": [
-             {"id": "q1", "question": "_____ jacket is too big. (Chiếc áo khoác đó, một chiếc, ở xa)", "options": ["This", "These", "That", "Those"], "correct": "That", "explanation": "That = singular + far."},
+             {"id": "q1", "question": "_____ jacket is too big. (ở xa)", "options": ["This", "These", "That", "Those"], "correct": "That", "explanation": "That = singular + far."},
              {"id": "q2", "question": "These shoes are _____ expensive. I can't buy them.", "options": ["very", "so", "too", "a little"], "correct": "too", "explanation": "Too = quá (implies problem)."},
-             {"id": "q3", "question": "She wears a _____ in summer. (váy)", "options": ["jacket", "skirt", "socks", "hat"], "correct": "skirt", "explanation": "Skirt = váy."},
-             {"id": "q4", "question": "Can I try _____ on? (this jacket)", "options": ["this", "these", "that", "those"], "correct": "this", "explanation": "Try this on = thử cái này."},
-             {"id": "q5", "question": "He wears _____ and a T-shirt. (quần ngắn)", "options": ["trousers", "shorts", "dress", "skirt"], "correct": "shorts", "explanation": "Shorts = quần ngắn."},
-             {"id": "q6", "question": "_____ trousers are nice! (The ones near you, multiple)", "options": ["This", "That", "These", "Those"], "correct": "These", "explanation": "These = plural + near."},
-             {"id": "q7", "question": "The shoes fit perfectly. They are the right:", "options": ["price", "color", "size", "style"], "correct": "size", "explanation": "Fit = vừa size."},
-             {"id": "q8", "question": "It's raining. Bring a:", "options": ["shorts", "T-shirt", "jacket", "dress"], "correct": "jacket", "explanation": "Jacket = for cold/rainy weather."},
-             {"id": "q9", "question": "What do you put on your feet?", "options": ["hat", "shirt", "jacket", "shoes"], "correct": "shoes", "explanation": "Shoes = giày (worn on feet)."},
-             {"id": "q10", "question": "_____ dress is beautiful! (One dress, far away)", "options": ["This", "These", "That", "Those"], "correct": "That", "explanation": "That = singular + far."}
+             {"id": "q3", "question": "She wears a _____ in summer.", "question_vi": "Cô ấy mặc _____ vào mùa hè.", "options": ["jacket", "skirt", "socks", "hat"], "correct": "skirt", "explanation": "Skirt = váy."},
+             {"id": "q4", "question": "Can I try _____ on?", "options": ["this", "these", "that", "those"], "correct": "this", "explanation": "Try this on = thử cái này."},
+             {"id": "q5", "question": "He wears _____ and a T-shirt.", "options": ["trousers", "shorts", "dress", "skirt"], "correct": "shorts", "explanation": "Shorts = quần ngắn."},
+             {"id": "q6", "question": "_____ trousers are nice!", "options": ["This", "That", "These", "Those"], "correct": "These", "explanation": "These = plural + near."},
+             {"id": "q7", "question": "The shoes fit perfectly. They are the right:", "question_vi": "Giày vừa hoàn hảo. Chúng đúng:", "options": ["price", "color", "size", "style"], "correct": "size", "explanation": "Fit = vừa size."},
+             {"id": "q8", "question": "It's raining. Bring a:", "question_vi": "Trời mưa. Mang theo:", "options": ["shorts", "T-shirt", "jacket", "dress"], "correct": "jacket", "explanation": "Jacket = for cold/rainy weather."},
+             {"id": "q9", "question": "What do you put on your feet?", "question_vi": "Bạn đi gì ở chân?", "options": ["hat", "shirt", "jacket", "shoes"], "correct": "shoes", "explanation": "Shoes = giày (worn on feet)."},
+             {"id": "q10", "question": "_____ dress is beautiful!", "options": ["This", "These", "That", "Those"], "correct": "That", "explanation": "That = singular + far."}
          ]}}
      ]},
 
-    {"level": "A1", "order": 20, "name": "Review & Consolidation",
-     "name_vi": "Ôn tập & Củng cố kiến thức A1",
-     "description": "Review all A1 topics: grammar, vocabulary, and communication skills.",
-     "description_vi": "Ôn tập toàn bộ chủ đề A1: ngữ pháp, từ vựng và kỹ năng giao tiếp.",
-     "grammar_focus": ["Toàn bộ ngữ pháp A1", "Ôn tập lỗi phổ biến"],
-     "vocabulary_tags": ["review", "all topics", "consolidation"],
-     "estimated_minutes": 40,
+    {"level": "A1", "order": 20, "name": "Animals & Pets", "name_vi": "Động vật & Thú cưng",
+     "description": "Learn the names of common animals and how to describe pets.",
+     "description_vi": "Học tên các loài động vật phổ biến và cách mô tả thú cưng.",
+     "grammar_focus": ["have + động vật", "Tính từ mô tả động vật", "like + động vật"],
+     "vocabulary_tags": ["animals", "pets", "nature", "description"],
+     "estimated_minutes": 25,
      "lessons": [
-         {"order": 1, "lesson_type": "ngữ pháp", "title": "Grammar Review: Key A1 Structures", "title_vi": "Ôn tập ngữ pháp: Cấu trúc A1 chính", "content": {"explanation": "Review the 10 most important grammar points from A1 level.", "explanation_vi": "Ôn tập 10 điểm ngữ pháp quan trọng nhất của trình độ A1.", "key_points": ["1. To be: am/is/are", "2. Present Simple (I go / She goes)", "3. Have/Has", "4. Can/Can't", "5. There is / There are", "6. Adjectives (position + too)", "7. Possessive adjectives (my/his/her...)", "8. This/That/These/Those", "9. Prepositions: in/on/at/under/next to", "10. Wh- questions + Time prepositions"], "examples": [{"en": "I am a student. (to be)", "vi": "Tôi là học sinh."}, {"en": "She can speak 3 languages. (can)", "vi": "Cô ấy có thể nói 3 ngôn ngữ."}, {"en": "There are 20 students in the class. (there are)", "vi": "Có 20 học sinh trong lớp."}], "notes": "Chúc mừng bạn hoàn thành A1! Hãy luyện tập hàng ngày để đạt kết quả tốt nhất."}},
-         {"order": 2, "lesson_type": "vocabulary", "title": "Vocabulary Review: A1 Essential Words", "title_vi": "Ôn tập từ vựng: Từ thiết yếu A1", "content": {"words": [
-             {"word": "introduce", "meaning": "giới thiệu", "example": "Let me introduce myself.", "pronunciation": "/ˌɪntrəˈdjuːs/"},
-             {"word": "describe", "meaning": "mô tả", "example": "Can you describe your house?", "pronunciation": "/dɪˈskraɪb/"},
-             {"word": "understand", "meaning": "hiểu", "example": "Do you understand?", "pronunciation": "/ˌʌndərˈstænd/"},
-             {"word": "repeat", "meaning": "lặp lại", "example": "Can you repeat that, please?", "pronunciation": "/rɪˈpiːt/"},
-             {"word": "please", "meaning": "làm ơn/xin", "example": "A glass of water, please.", "pronunciation": "/pliːz/"},
-             {"word": "thank you", "meaning": "cảm ơn", "example": "Thank you very much!", "pronunciation": "/θæŋk juː/"},
-             {"word": "sorry", "meaning": "xin lỗi", "example": "I'm sorry, I'm late.", "pronunciation": "/ˈsɒri/"},
-             {"word": "excuse me", "meaning": "xin lỗi (để hỏi)", "example": "Excuse me, where is the bank?", "pronunciation": "/ɪkˈskjuːz miː/"},
-             {"word": "of course", "meaning": "tất nhiên", "example": "Of course, I can help!", "pronunciation": "/əv kɔːrs/"},
-             {"word": "I don't know", "meaning": "Tôi không biết", "example": "I don't know the answer.", "pronunciation": "/aɪ doʊnt noʊ/"},
-             {"word": "I don't understand", "meaning": "Tôi không hiểu", "example": "I don't understand. Can you repeat?", "pronunciation": "/aɪ doʊnt ˌʌndərˈstænd/"},
-             {"word": "Can you help me?", "meaning": "Bạn có thể giúp tôi không?", "example": "Excuse me, can you help me?", "pronunciation": "/kæn juː help miː/"}
+         {"order": 1, "lesson_type": "ngữ pháp", "title": "Grammar: Talking About Animals", "title_vi": "Ngữ pháp: Nói về động vật", "content": {"explanation": "Dùng 'have' để nói về thú cưng của bạn. Dùng tính từ để mô tả động vật.", "explanation_vi": "Dùng 'have' để nói về thú cưng. Dùng tính từ để mô tả động vật.", "key_points": ["I have a dog/cat. (Tôi có một con chó/mèo)", "My dog is big/small/cute.", "What pet do you have?", "Do you like animals? – Yes, I love animals!", "It/He/She can run/jump/swim/fly."], "examples": [{"en": "I have a cat. Her name is Mimi.", "vi": "Tôi có một con mèo. Tên nó là Mimi."}, {"en": "My dog is very friendly.", "vi": "Con chó của tôi rất thân thiện."}, {"en": "Cats like fish.", "vi": "Mèo thích cá."}], "notes": "Dùng 'it' cho động vật khi không biết giới tính. Dùng 'he/she' khi muốn thể hiện tình cảm với thú cưng."}},
+         {"order": 2, "lesson_type": "vocabulary", "title": "Vocabulary: Common Animals", "title_vi": "Từ vựng: Động vật phổ biến", "content": {"words": [
+             {"word": "dog", "meaning": "chó", "example": "I have a dog.", "pronunciation": "/dɒɡ/"},
+             {"word": "cat", "meaning": "mèo", "example": "She loves cats.", "pronunciation": "/kæt/"},
+             {"word": "bird", "meaning": "chim", "example": "Birds can fly.", "pronunciation": "/bɜːrd/"},
+             {"word": "fish", "meaning": "cá", "example": "Fish live in water.", "pronunciation": "/fɪʃ/"},
+             {"word": "rabbit", "meaning": "thỏ", "example": "Rabbits have long ears.", "pronunciation": "/ˈræbɪt/"},
+             {"word": "cow", "meaning": "bò", "example": "Cows give milk.", "pronunciation": "/kaʊ/"},
+             {"word": "pig", "meaning": "lợn/heo", "example": "Pigs are pink.", "pronunciation": "/pɪɡ/"},
+             {"word": "chicken", "meaning": "gà", "example": "Chickens lay eggs.", "pronunciation": "/ˈtʃɪkɪn/"},
+             {"word": "horse", "meaning": "ngựa", "example": "Horses run fast.", "pronunciation": "/hɔːrs/"},
+             {"word": "elephant", "meaning": "voi", "example": "Elephants are big.", "pronunciation": "/ˈelɪfənt/"},
+             {"word": "lion", "meaning": "sư tử", "example": "Lions are strong.", "pronunciation": "/ˈlaɪən/"},
+             {"word": "monkey", "meaning": "khỉ", "example": "Monkeys like bananas.", "pronunciation": "/ˈmʌŋki/"},
+             {"word": "pet", "meaning": "thú cưng", "example": "Do you have a pet?", "pronunciation": "/pet/"},
+             {"word": "wild animal", "meaning": "động vật hoang dã", "example": "Lions are wild animals.", "pronunciation": "/waɪld ˈænɪməl/"}
          ]}},
-         {"order": 3, "lesson_type": "practice", "title": "Mixed Practice: All A1 Topics", "title_vi": "Luyện tập tổng hợp: Toàn bộ chủ đề A1", "content": {"exercises": [
-             {"type": "multiple_choice", "question": "Which is correct?", "options": ["She have a red car.", "She has a red car.", "She red car has.", "Has she a red car."], "answer": "She has a red car.", "explanation": "She → has. Adjective before noun: red car."},
-             {"type": "fill_blank", "question": "_____ are you late? – Because I missed the bus.", "options": ["What", "Where", "Why", "Who"], "answer": "Why", "explanation": "Why = asking for reason."},
-             {"type": "multiple_choice", "question": "The bank is _____ the pharmacy and the post office.", "options": ["next to", "opposite", "between", "behind"], "answer": "between", "explanation": "Between = ở giữa hai vật/địa điểm."},
-             {"type": "fill_blank", "question": "I love _____ to music. (listen → gerund)", "options": ["listen", "listens", "listening", "listened"], "answer": "listening", "explanation": "Love + verb-ing."},
-             {"type": "multiple_choice", "question": "It's 7:30. How do you say it?", "options": ["Seven past thirty", "Thirty past seven", "Half past seven", "Seven thirty past"], "answer": "Half past seven", "explanation": "7:30 = half past seven."},
-             {"type": "fill_blank", "question": "She _____ to school by motorbike. (go)", "options": ["go", "goes", "going", "gone"], "answer": "goes", "explanation": "She → goes (present simple, ngôi thứ 3)."}
+         {"order": 3, "lesson_type": "practice", "title": "Practice: Animals & Pets", "title_vi": "Luyện tập: Động vật & Thú cưng", "content": {"exercises": [
+             {"type": "fill_blank", "question": "I _____ a dog and a cat.", "options": ["have", "has", "am", "is"], "answer": "have", "explanation": "I → have (có thú cưng)."},
+             {"type": "multiple_choice", "question": "Which animal can fly?", "question_vi": "Động vật nào có thể bay?", "options": ["dog", "fish", "bird", "cat"], "answer": "bird", "explanation": "Bird = chim (can fly)."},
+             {"type": "fill_blank", "question": "My cat _____ very cute.", "options": ["am", "is", "are", "have"], "answer": "is", "explanation": "My cat (it) → is."},
+             {"type": "multiple_choice", "question": "What pet is common in homes?", "question_vi": "Thú cưng nào phổ biến trong nhà?", "options": ["elephant", "lion", "dog", "cow"], "answer": "dog", "explanation": "Dog = chó (common pet)."},
+             {"type": "fill_blank", "question": "Fish _____ in water.", "options": ["live", "lives", "living", "lived"], "answer": "live", "explanation": "Fish (số nhiều) → live."}
          ]}},
-         {"order": 4, "lesson_type": "quiz", "title": "Final A1 Quiz – All Topics", "title_vi": "Bài kiểm tra cuối A1 – Tổng hợp", "content": {"questions": [
-             {"id": "q1", "question": "I _____ a student from Vietnam.", "options": ["is", "am", "are", "be"], "correct": "am", "explanation": "I → am."},
-             {"id": "q2", "question": "She _____ to work by bus every day. (go)", "options": ["go", "goes", "going", "gone"], "correct": "goes", "explanation": "She → goes."},
-             {"id": "q3", "question": "My mother _____ two sisters.", "options": ["have", "has", "is", "are"], "correct": "has", "explanation": "My mother (she) → has."},
-             {"id": "q4", "question": "I _____ swim. I'm afraid of water.", "options": ["can", "can't", "don't", "am not"], "correct": "can't", "explanation": "Can't = không thể."},
-             {"id": "q5", "question": "_____ are five books on the table.", "options": ["It", "There", "This", "These"], "correct": "There", "explanation": "There are = có (số nhiều)."},
-             {"id": "q6", "question": "How _____ is the red bag? ($20)", "options": ["many", "much", "old", "big"], "correct": "much", "explanation": "How much = hỏi giá."},
-             {"id": "q7", "question": "I like _____ movies on weekends.", "options": ["watch", "watches", "watching", "watched"], "correct": "watching", "explanation": "Like + verb-ing."},
-             {"id": "q8", "question": "My birthday is _____ January.", "options": ["on", "in", "at", "by"], "correct": "in", "explanation": "In + tháng."},
-             {"id": "q9", "question": "Where _____ you from? – I'm from Hanoi.", "options": ["is", "am", "are", "do"], "correct": "are", "explanation": "Where are you from?"},
-             {"id": "q10", "question": "_____ you like some coffee?", "options": ["Do", "Are", "Would", "Should"], "correct": "Would", "explanation": "Would you like = lịch sự hỏi ý muốn."}
+         {"order": 4, "lesson_type": "quiz", "title": "Quiz: Animals & Pets", "title_vi": "Kiểm tra: Động vật & Thú cưng", "content": {"questions": [
+             {"id": "q1", "question": "I _____ a pet rabbit.", "options": ["am", "have", "has", "is"], "correct": "have", "explanation": "I have a pet = Tôi có thú cưng."},
+             {"id": "q2", "question": "Which animal says 'meow'?", "question_vi": "Động vật nào kêu 'meow'?", "options": ["dog", "cat", "bird", "cow"], "correct": "cat", "explanation": "Cat = mèo (says meow)."},
+             {"id": "q3", "question": "_____ can fly in the sky.", "options": ["Dogs", "Fish", "Birds", "Cats"], "correct": "Birds", "explanation": "Birds = chim (can fly)."},
+             {"id": "q4", "question": "My dog _____ very friendly.", "options": ["am", "is", "are", "have"], "correct": "is", "explanation": "My dog (it) → is."},
+             {"id": "q5", "question": "Which is NOT a pet?", "question_vi": "Động vật nào KHÔNG phải thú cưng?", "options": ["dog", "cat", "fish", "elephant"], "correct": "elephant", "explanation": "Elephant (voi) là động vật hoang dã, không phải thú cưng."},
+             {"id": "q6", "question": "What do rabbits eat?", "question_vi": "Thỏ ăn gì?", "options": ["meat", "fish", "vegetables", "bread"], "correct": "vegetables", "explanation": "Rabbits eat vegetables (carrots, etc.)."},
+             {"id": "q7", "question": "_____ are big and gray with long trunks.", "options": ["Lions", "Monkeys", "Elephants", "Horses"], "correct": "Elephants", "explanation": "Elephants = voi (big, gray, long trunk)."},
+             {"id": "q8", "question": "She _____ dogs. She thinks they are cute.", "options": ["like", "likes", "liking", "is like"], "correct": "likes", "explanation": "She → likes (ngôi thứ 3)."},
+             {"id": "q9", "question": "Fish live in:", "question_vi": "Cá sống ở:", "options": ["trees", "water", "sky", "land"], "correct": "water", "explanation": "Fish = cá (live in water)."},
+             {"id": "q10", "question": "What is 'thú cưng' in English?", "question_vi": "'Thú cưng' trong tiếng Anh là gì?", "options": ["wild animal", "pet", "bird", "fish"], "correct": "pet", "explanation": "Pet = thú cưng."}
          ]}}
      ]}
 ]
