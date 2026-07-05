@@ -2640,9 +2640,20 @@ def page_quiz():
     with st.form("quiz_form"):
         for i, q in enumerate(questions, 1):
             qid = q["id"]
-            st.markdown(f"""<div class="lp-card">
-                <div style="font-weight:600; font-size:1rem;">Câu {i}/{total}: {q['question']}</div>
-            </div>""", unsafe_allow_html=True)
+            question_text = q['question']
+            question_vi = q.get('question_vi', '')
+            
+            # Display question with Vietnamese translation if available
+            if question_vi:
+                st.markdown(f"""<div class="lp-card">
+                    <div style="font-weight:600; font-size:1rem;">Câu {i}/{total}: {question_text}</div>
+                    <div style="color:#94a3b8; font-size:0.9rem; margin-top:0.5rem;">({question_vi})</div>
+                </div>""", unsafe_allow_html=True)
+            else:
+                st.markdown(f"""<div class="lp-card">
+                    <div style="font-weight:600; font-size:1rem;">Câu {i}/{total}: {question_text}</div>
+                </div>""", unsafe_allow_html=True)
+            
             choice = st.radio("Chọn đáp án", q["options"], key=f"q_{qid}", label_visibility="collapsed")
             answers[qid] = choice
             st.markdown("")
