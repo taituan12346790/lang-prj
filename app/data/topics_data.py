@@ -259,7 +259,7 @@ A1_TOPICS: List[Dict[str, Any]] = [
                         {"id": "q6", "question": "100 in English is:", "question_vi": "Số 100 trong tiếng Anh là:", "options": ["ten", "thousand", "hundred", "ninety"], "correct": "hundred", "explanation": "100 = one hundred."},
                         {"id": "q7", "question": "I _____ 30 years old.", "options": ["am", "is", "are", "be"], "correct": "am", "explanation": "I am → dùng 'am'."},
                         {"id": "q8", "question": "School finishes at 5 _____ (afternoon).", "options": ["a.m.", "p.m.", "o'clock", "hours"], "correct": "p.m.", "explanation": "Afternoon/evening = p.m."},
-                        {"id": "q9", "question": "What does 'a.m.' mean?", "question_vi": "'a.m.' có nghĩa là gì?", "options": ["Afternoon", "Morning", "Evening", "Night"], "correct": "Morning", "explanation": "a.m. = ante meridiem = buổi sáng (từ 12:00 đêm đến 12:00 trưa)."},
+                        {"id": "q9", "question": "What is 'twenty + seven'?", "options": ["27", "72", "207", "270"], "correct": "27", "explanation": "twenty (20) + seven (7) = twenty-seven (27)."},
                         {"id": "q10", "question": "Which number comes after nineteen?", "question_vi": "Số nào đứng sau số nineteen?", "options": ["Ninety", "Twenty", "Eleven", "Eighteen"], "correct": "Twenty", "explanation": "19 → 20 = twenty."}
                     ]
                 }
