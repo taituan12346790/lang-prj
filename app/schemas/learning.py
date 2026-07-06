@@ -133,6 +133,7 @@ class UpdateLessonProgressResponse(BaseModel):
 class QuizQuestion(BaseModel):
     id: str
     question: str
+    question_vi: Optional[str] = None
     options: List[str]
     # correct & explanation NOT exposed in list
 

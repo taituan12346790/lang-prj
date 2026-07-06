@@ -276,6 +276,7 @@ class TopicService:
             QuizQuestion(
                 id=q["id"],
                 question=q["question"],
+                question_vi=q.get("question_vi"),  # ADD THIS
                 options=q["options"],
             )
             for q in raw_questions
