@@ -154,7 +154,9 @@ class Pipeline:
                 memory_insights["user_style"] = "very_detailed"
                 logger.info("💡 User needs very detailed explanations")
         
-        return {"memory_insights": memory_insights}
+        # Memory insights are used internally, not added to state
+        # Just log and continue
+        return {}
 
     async def _execute_tools_node(self, state: AgentState) -> Dict[str, Any]:
         """Node 2: Execute tools in parallel"""

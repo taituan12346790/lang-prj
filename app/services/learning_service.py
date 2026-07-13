@@ -373,26 +373,27 @@ class LearningService:
             # B1: Convert topic_id to string if UUID
             topic_id_str = str(topic_id) if topic_id else None
             
-            conv_service = ConversationService(db)
-            
+            # ConversationService uses static methods
             # Save user message
-            await conv_service.save_message(
+            await ConversationService.save_message(
                 user_id=UUID(user_id),
                 session_id=session_id,
                 role="user",
                 message=user_input,
                 topic_id=topic_id_str,
-                learning_mode=learning_mode
+                learning_mode=learning_mode,
+                db=db
             )
             
             # Save assistant message
-            await conv_service.save_message(
+            await ConversationService.save_message(
                 user_id=UUID(user_id),
                 session_id=session_id,
                 role="assistant",
                 message=assistant_response,
                 topic_id=topic_id_str,
-                learning_mode=learning_mode
+                learning_mode=learning_mode,
+                db=db
             )
             
             logger.info(f"✅ Saved conversation for {user_id} to DB (session: {session_id[:8]}...)")
