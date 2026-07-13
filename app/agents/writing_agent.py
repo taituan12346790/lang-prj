@@ -153,7 +153,10 @@ Provide response in this JSON format:
 Respond ONLY with valid JSON, no additional text."""
 
         try:
-            response = await self.llm_client.generate_text(evaluation_prompt)
+            response = await self.llm_client.generate_async(
+                user_input=evaluation_prompt,
+                system_prompt="You are an expert English writing evaluator. Provide detailed, constructive feedback."
+            )
             
             # Parse JSON response
             # Remove markdown code blocks if present
