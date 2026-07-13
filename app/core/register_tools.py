@@ -40,7 +40,7 @@ def register_all_tools(llm_client):
         # ========================================
         # Initialize tools for Core Agents
         # ========================================
-        error_analyzer_tool = ErrorAnalyzer(llm=llm_client)
+        error_analyzer_tool = ErrorAnalyzer()  # Uses get_llm_client() internally
         exercise_tool = ExerciseGenerator(llm=llm_client)
         writing_service = WritingService()
         
