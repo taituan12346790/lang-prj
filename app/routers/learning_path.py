@@ -19,7 +19,6 @@ from app.models.user import User
 from app.services.topic_service import TopicService
 from app.services.error_service import ErrorService
 from app.services.level_progress_service import LevelProgressService
-from app.core.error_analyzer import ErrorAnalyzer
 from app.schemas.learning import (
     DashboardResponse,
     TopicResponse,
@@ -138,13 +137,17 @@ async def analyze_error(
     Trả về error analysis + suggestion + frequency
     """
     try:
-        # 1. Analyze error
-        analyzer = ErrorAnalyzer()
-        error_data = await analyzer.analyze(
-            question=request.question,
-            user_answer=request.user_answer,
-            correct_answer=request.correct_answer,
-            skill_tag=request.skill_tag
+        # 1. Analyze error using ErrorAnalyzerAgent
+        from app.tools.tool_registry import tool_registry
+        
+        error_data = await tool_registry.call(
+            "error_analyzer",
+            {
+                "question": request.question,
+                "user_answer": request.user_answer,
+                "correct_answer": request.correct_answer,
+                "skill_tag": request.skill_tag
+            }
         )
         
         # 2. Get error frequency (before logging this error)
