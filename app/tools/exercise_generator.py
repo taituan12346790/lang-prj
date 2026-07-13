@@ -233,9 +233,9 @@ Mỗi bài tập PHẢI có: exercise_type, question, options (hoặc null), cor
                 response_format = LessonOnly
                 temperature = 0.35
             elif lesson_type == "exercise_only":
-                response_format = ExerciseList
+                response_format = ExerciseList  # FIXED: Use ExerciseList not FullLesson
                 temperature = 0.3
-            else:
+            else:  # "both"
                 response_format = FullLesson
                 temperature = 0.35
 

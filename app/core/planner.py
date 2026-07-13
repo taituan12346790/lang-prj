@@ -113,6 +113,27 @@ Return JSON with steps array:
 }}
 """
         
+        # HOTFIX: Disable LLM planning to save API calls
+        # Always use fallback plan
+        return LearningPlan(
+            overall_goal=f"Hỗ trợ yêu cầu: {user_input[:60]}...{learning_context_goal}",
+            reasoning=f"Fallback plan for mode={mode}",
+            steps=[
+                PlanStep(
+                    step=1,
+                    action=steps_context,
+                    tool=suggested_tools[0] if suggested_tools else "llm_response",
+                    purpose="Xử lý câu hỏi chính",
+                    expected_outcome="Người dùng nhận được câu trả lời"
+                )
+            ],
+            tools_to_use=suggested_tools[:2] if len(suggested_tools) > 1 else suggested_tools,
+            estimated_duration="5-8 phút",
+            personalization_notes=f"Tập trung vào chủ đề đang học{learning_context_goal}"
+        )
+        
+        # Original LLM planning code (disabled):
+        """
         try:
             plan_dict = await self.llm.generate_structured_async(
                 system_prompt=system_prompt,
@@ -125,8 +146,9 @@ Return JSON with steps array:
                 return LearningPlan(**plan_dict)
         except Exception as e:
             logger.warning(f"LLM planning failed: {e}, using fallback")
+        """
         
-        # Fallback if LLM fails
+        # Fallback if LLM fails (disabled above)
         return LearningPlan(
             overall_goal=f"Hỗ trợ yêu cầu: {user_input[:60]}...{learning_context_goal}",
             reasoning=f"Fallback plan after LLM error for mode={mode}",

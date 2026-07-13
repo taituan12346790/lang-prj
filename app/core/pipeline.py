@@ -67,9 +67,13 @@ class Pipeline:
         # graph.add_edge("generate_response", "reflect")  # CÁCH 3: Reflect before validate
         # graph.add_edge("reflect", "validate_output")
         graph.add_edge("generate_response", "validate_output")  # Skip reflect to save tokens
+        # HOTFIX: Skip repair to save API calls - accept all responses
+        graph.add_edge("validate_output", "finalize")
+        
+        # Original repair logic (disabled):
+        """
         # CÁCH 1: Self-Correction - Repair invalid responses
         graph.add_node("repair", self._repair_node)
-
 
         # Route to repair if validation fails
         graph.add_conditional_edges(
@@ -84,6 +88,7 @@ class Pipeline:
             self._after_repair,
             {"valid": "finalize", "invalid": "finalize"}
         )
+        """
 
         graph.add_edge("finalize", END)
 

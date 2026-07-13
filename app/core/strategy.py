@@ -225,6 +225,18 @@ Return JSON:
 }}
 """
         
+        # HOTFIX: Disable LLM strategy decision to save API calls
+        # Always use rule-based fallback
+        return StrategyDecision(
+            mode=base_mode,
+            reasoning=f"Rule-based decision: mode={base_mode}",
+            priority_focus=priority_focus,
+            suggested_tools=["llm_response"],
+            difficulty_adjustment="maintain"
+        )
+        
+        # Original LLM decision code (disabled):
+        """
         try:
             decision_dict = await self.llm.generate_structured_async(
                 system_prompt=system_prompt,
@@ -237,8 +249,9 @@ Return JSON:
                 return StrategyDecision(**decision_dict)
         except Exception as e:
             logger.warning(f"LLM strategy decision failed: {e}, using fallback")
+        """
         
-        # Fallback if LLM fails
+        # Fallback if LLM fails (disabled above)
         reasoning = f"Fallback after LLM error: mode={base_mode}"
         if learning_context_str:
             reasoning += f" | Active topic detected"

@@ -16,6 +16,17 @@ class LLMClient:
         self.max_tokens = max_tokens
 
     async def generate_async(self, user_input: str, system_prompt: str = "", **kwargs):
+        # DEBUG: Log FIRST - before any processing
+        import traceback
+        import time
+        call_timestamp = time.time()
+        print(f"\n{'='*80}")
+        print(f"🔍 API CALL #{call_timestamp} - STACK TRACE:")
+        print(''.join(traceback.format_stack()[-5:-1]))  # Show last 4 stack frames
+        print(f"🔍 Model: {self.model}")
+        print(f"🔍 Input length: {len(user_input) if user_input else 0}")
+        print(f"{'='*80}\n")
+        
         # Accept alias user_prompt for backward compatibility
         if not user_input and kwargs.get("user_prompt"):
             user_input = kwargs["user_prompt"]
@@ -25,9 +36,6 @@ class LLMClient:
         messages.append({"role": "user", "content": user_input})
         temperature = kwargs.get("temperature", self.temperature)
         max_tokens = kwargs.get("max_tokens", self.max_tokens)
-        
-        # DEBUG: Log model being used
-        print(f"🔍 DEBUG: Using model: {self.model}")
         
         loop = asyncio.get_running_loop()
         try:
@@ -48,6 +56,16 @@ class LLMClient:
 
     async def stream_async(self, user_input: str, system_prompt: str = "", **kwargs):
         """Stream LLM response chunk by chunk (for better UX)"""
+        # DEBUG: Log FIRST
+        import traceback
+        import time
+        call_timestamp = time.time()
+        print(f"\n{'='*80}")
+        print(f"🔍 STREAM API CALL #{call_timestamp} - STACK TRACE:")
+        print(''.join(traceback.format_stack()[-5:-1]))
+        print(f"🔍 Model: {self.model}")
+        print(f"{'='*80}\n")
+        
         if not user_input and kwargs.get("user_prompt"):
             user_input = kwargs["user_prompt"]
         
@@ -58,8 +76,6 @@ class LLMClient:
         
         temperature = kwargs.get("temperature", self.temperature)
         max_tokens = kwargs.get("max_tokens", self.max_tokens)
-        
-        print(f"🔍 DEBUG: Streaming with model: {self.model}")
         
         try:
             # Groq supports streaming
@@ -85,6 +101,16 @@ class LLMClient:
         
         Returns raw text (not parsed) - caller must handle JSON parsing
         """
+        # DEBUG: Log FIRST
+        import traceback
+        import time
+        call_timestamp = time.time()
+        print(f"\n{'='*80}")
+        print(f"🔍 STRUCTURED API CALL #{call_timestamp} - STACK TRACE:")
+        print(''.join(traceback.format_stack()[-5:-1]))
+        print(f"🔍 Model: {self.model}")
+        print(f"{'='*80}\n")
+        
         # Groq doesn't support structured output natively, so we just call generate_async
         # and return the raw response. The retry logic in ExerciseGenerator will handle it.
         try:
