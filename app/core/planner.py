@@ -115,9 +115,9 @@ Return JSON with steps array:
         
         try:
             plan_dict = await self.llm.generate_structured_async(
-                user_input=user_input,
                 system_prompt=system_prompt,
-                response_model=LearningPlan,
+                user_prompt=user_input,
+                response_format=LearningPlan,
                 temperature=0.3
             )
             

@@ -79,8 +79,15 @@ class LLMClient:
             print(f"❌ LLM stream error: {e}")
             raise
 
-    async def generate_structured_async(self, system_prompt, user_prompt, response_format, **kwargs):
-        # Tạm thời bỏ qua structured, trả về None để fallback
+    async def generate_structured_async(self, system_prompt: str, user_prompt: str, response_format, **kwargs):
+        """
+        Generate structured output (simplified - just returns None for fallback)
+        
+        NOTE: This is a stub - Groq doesn't support structured output like OpenAI.
+        Callers should handle None return and use fallback logic.
+        """
+        # For now, always return None to trigger fallback
+        # In future, could parse LLM output with Pydantic
         return None
 
 

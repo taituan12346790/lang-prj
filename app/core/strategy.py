@@ -227,9 +227,9 @@ Return JSON:
         
         try:
             decision_dict = await self.llm.generate_structured_async(
-                user_input=user_input,
                 system_prompt=system_prompt,
-                response_model=StrategyDecision,
+                user_prompt=user_input,
+                response_format=StrategyDecision,
                 temperature=0.3
             )
             
