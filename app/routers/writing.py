@@ -67,7 +67,7 @@ async def submit_writing(
         
         try:
             # Call WritingAgent through tool_registry
-            feedback_result = await tool_registry.call(
+            result = await tool_registry.execute(
                 "writing_evaluator",
                 {
                     "user_text": request.user_text,
@@ -75,6 +75,12 @@ async def submit_writing(
                     "cefr_level": cefr_level
                 }
             )
+            
+            # Unwrap if needed
+            if result.get("success") and "data" in result:
+                feedback_result = result["data"]
+            else:
+                feedback_result = result
             
             if not feedback_result.get("success"):
                 raise ValueError(feedback_result.get("error", "Writing evaluation failed"))

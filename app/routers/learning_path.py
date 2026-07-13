@@ -140,7 +140,7 @@ async def analyze_error(
         # 1. Analyze error using ErrorAnalyzerAgent
         from app.tools.tool_registry import tool_registry
         
-        error_data = await tool_registry.call(
+        result = await tool_registry.execute(
             "error_analyzer",
             {
                 "question": request.question,
@@ -149,6 +149,12 @@ async def analyze_error(
                 "skill_tag": request.skill_tag
             }
         )
+        
+        # Unwrap if needed
+        if result.get("success") and "data" in result:
+            error_data = result["data"]
+        else:
+            error_data = result
         
         # 2. Get error frequency (before logging this error)
         frequency_data = await ErrorService.get_error_frequency(
