@@ -27,7 +27,8 @@ class Pipeline:
     """
 
     def __init__(self):
-        self.llm = LLMClient()
+        from app.llm.llm_client import get_llm_client
+        self.llm = get_llm_client()  # Use singleton
         # Phase 2: Use singleton tool_registry instead of creating new instance
         from app.tools.tool_registry import tool_registry
         self.tool_registry = tool_registry

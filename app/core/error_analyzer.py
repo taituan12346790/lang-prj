@@ -13,7 +13,8 @@ class ErrorAnalyzer:
     """Analyze user errors and classify them"""
     
     def __init__(self):
-        self.llm = LLMClient()
+        from app.llm.llm_client import get_llm_client
+        self.llm = get_llm_client()  # Use singleton
     
     def _detect_skill_by_rules(
         self, 

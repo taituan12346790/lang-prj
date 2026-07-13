@@ -19,7 +19,8 @@ class ReflectorEnhanced:
     """Enhanced reflector that updates user weak/strong skills"""
 
     def __init__(self):
-        self.llm = LLMClient()
+        from app.llm.llm_client import get_llm_client
+        self.llm = get_llm_client()  # Use singleton
         self.system_prompt = """Bạn là Reflector cho AI Language Tutor.
 Nhiệm vụ:
 - Phân tích cuộc hội thoại giữa AI và học viên

@@ -153,7 +153,8 @@ User error pattern:
 """
         
         # Generate suggestion based on frequency
-        llm = LLMClient()
+        from app.llm.llm_client import get_llm_client
+        llm = get_llm_client()  # Use singleton
         
         if frequency == 1:
             # First time error

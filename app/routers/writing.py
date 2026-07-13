@@ -62,7 +62,8 @@ async def submit_writing(
         )
         
         # Get AI feedback with structured scoring
-        llm = LLMClient()
+        from app.llm.llm_client import get_llm_client
+        llm = get_llm_client()  # Use singleton
         
         # Build context-aware grading prompt
         topic_context = ""

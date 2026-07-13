@@ -30,7 +30,8 @@ class ReActPlanner:
     """ReAct Planner - Tối ưu cho LangGraph"""
 
     def __init__(self):
-        self.llm = LLMClient()
+        from app.llm.llm_client import get_llm_client
+        self.llm = get_llm_client()  # Use singleton
 
     async def create_plan(
         self,

@@ -32,7 +32,8 @@ class StrategyDecision(BaseModel):
 class StrategySelector:
     def __init__(self):
         self.parser = LanguageParser()
-        self.llm = LLMClient()
+        from app.llm.llm_client import get_llm_client
+        self.llm = get_llm_client()  # Use singleton
 
     def _fallback_strategy(self, reason: str) -> Dict[str, Any]:
         """Trả về chiến lược mặc định khi không thể quyết định"""
@@ -157,8 +158,9 @@ class StrategySelector:
             return "translation"
         if any(k in text_lower for k in ["sửa", "grammar", "ngữ pháp", "cấu trúc", "thì"]):
             return "grammar"
-        if any(k in text_lower for k in ["bài tập", "exercise", "luyện", "quiz"]):
-            return "exercise"
+        # DISABLED: Exercise mode to test API calls
+        # if any(k in text_lower for k in ["bài tập", "exercise", "luyện", "quiz"]):
+        #     return "exercise"
         return "general"
 
     async def _llm_decide(
