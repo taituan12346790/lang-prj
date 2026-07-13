@@ -345,17 +345,15 @@ Generate improved version (keep same language):"""
                 )
                 
                 logger.success(f"✅ Response improved (score was {score}/10)")
-                return {
-                    "response": improved_response,
-                    "reflection_score": score,
-                    "was_improved": True
-                }
+                # Update response in state, but don't add reflection_score/was_improved (not in AgentState)
+                return {"response": improved_response}
             
-            return {"reflection_score": score, "was_improved": False}
+            # Reflection passed, no state update needed
+            return {}
             
         except Exception as e:
             logger.warning(f"Reflection failed: {e}, continuing without improvement")
-            return {"reflection_score": 7.0, "was_improved": False}
+            return {}
 
     async def _validate_output_node(self, state: AgentState) -> Dict[str, Any]:
         """Node 4: Validate LLM output"""
