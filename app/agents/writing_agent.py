@@ -3,6 +3,7 @@
 Writing Evaluator Agent: Specialized AI Agent for evaluating student writing submissions.
 Role: Grade writing based on CEFR criteria and provide detailed feedback.
 """
+import json
 from typing import Dict, Any, Optional
 from uuid import UUID
 from loguru import logger
@@ -155,7 +156,6 @@ Respond ONLY with valid JSON, no additional text."""
             response = await self.llm_client.generate_text(evaluation_prompt)
             
             # Parse JSON response
-            import json
             # Remove markdown code blocks if present
             response_clean = response.strip()
             if response_clean.startswith("```json"):
