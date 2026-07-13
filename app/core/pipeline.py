@@ -507,9 +507,23 @@ Generate improved version (keep same language):"""
     ):
         """Execute single tool with timeout"""
         try:
-            # Tool is a function (agent.execute), not an object
+            # Build params dict for agent.execute(params)
+            params = {
+                "content": user_input,
+                "user_input": user_input,
+                "topic": strategy.get("context", {}).get("topic", "general"),
+                "cefr_level": strategy.get("context", {}).get("level", "B1"),
+                "target_lang": strategy.get("params", {}).get("target_lang", "English"),
+                "teaching_lang": strategy.get("explain_in", "Vietnamese"),
+                "weaknesses": strategy.get("context", {}).get("weaknesses", []),
+                "num": 5,
+                "lesson_type": "both",
+                "user_id": user_id,
+            }
+            
+            # Tool is agent.execute method, call with params dict
             result = await asyncio.wait_for(
-                tool(user_input, strategy, user_id),
+                tool(params),
                 timeout=12.0
             )
             return tool_name, {"success": True, "data": result}
