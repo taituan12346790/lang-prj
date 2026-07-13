@@ -507,8 +507,9 @@ Generate improved version (keep same language):"""
     ):
         """Execute single tool with timeout"""
         try:
+            # Tool is a function (agent.execute), not an object
             result = await asyncio.wait_for(
-                tool.execute(user_input, strategy, user_id),
+                tool(user_input, strategy, user_id),
                 timeout=12.0
             )
             return tool_name, {"success": True, "data": result}
