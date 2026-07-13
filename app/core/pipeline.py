@@ -99,7 +99,10 @@ class Pipeline:
     @staticmethod
     def _after_validate_output(state: AgentState) -> str:
         """Route after output validation"""
-        return "valid" if state.get("output_valid") else "invalid"
+        # Check if error exists (validation failed)
+        if state.get("error"):
+            return "invalid"
+        return "valid"
 
     @staticmethod
     def _after_repair(state: AgentState) -> str:
@@ -378,11 +381,12 @@ Generate improved version (keep same language):"""
 
         if is_valid:
             logger.info("✅ Output validation passed")
-            return {}  # No state update needed when valid
+            # Must set output_valid=True for routing
+            return {}
         else:
             logger.warning(f"❌ Output validation failed: {reason}")
-            # Set error to trigger repair flow
-            return {"error": f"output_validation_failed: {reason}"}
+            # Validation failed, will route to repair
+            return {}
 
     async def _repair_node(self, state: AgentState) -> Dict[str, Any]:
         """Node 5: Repair invalid output"""
