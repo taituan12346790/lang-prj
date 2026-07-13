@@ -150,7 +150,7 @@ async def root():
 
 @app.get("/health")
 async def health_check():
-    """Health check endpoint - Enhanced for debugging"""
+    """Health check endpoint - FIXED: No Groq API calls"""
     import os
     
     health_status = {
@@ -179,23 +179,9 @@ async def health_check():
         health_status["checks"]["database_connection"] = f"failed: {str(e)}"
         health_status["status"] = "degraded"
     
-    # Test Groq API
-    if groq_key:
-        try:
-            from groq import Groq
-            client = Groq(api_key=groq_key)
-            # Quick test
-            response = client.chat.completions.create(
-                model="openai/gpt-oss-120b",
-                messages=[{"role": "user", "content": "Hi"}],
-                max_tokens=10
-            )
-            health_status["checks"]["groq_api"] = "working"
-        except Exception as e:
-            health_status["checks"]["groq_api"] = f"failed: {str(e)[:100]}"
-            health_status["status"] = "degraded"
-    else:
-        health_status["checks"]["groq_api"] = "not_configured"
+    # REMOVED: Groq API test to save API calls
+    # Health check should NOT call external APIs!
+    health_status["checks"]["groq_api"] = "not_tested_in_health_check"
     
     return health_status
 
