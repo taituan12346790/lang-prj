@@ -8,8 +8,33 @@ logger = logging.getLogger(__name__)
 
 EXERCISE_SYSTEM_PROMPT = """Bạn là giáo viên ngoại ngữ chuyên nghiệp, am hiểu sâu CEFR.
 Tạo nội dung rõ ràng, logic, thực tế và phù hợp với học viên người Việt.
-Chỉ trả về JSON thuần theo đúng schema được yêu cầu.
-KHÔNG thêm markdown, KHÔNG code block, KHÔNG giải thích thêm."""
+
+QUAN TRỌNG - OUTPUT FORMAT:
+- Chỉ trả về JSON thuần, KHÔNG thêm markdown, KHÔNG code block ```json
+- Mỗi exercise PHẢI có đầy đủ các field sau:
+  * exercise_type: "multiple_choice" | "fill_in_blank" | "sentence_transformation" | "writing" | "matching" | "open_question"
+  * question: câu hỏi (string)
+  * options: mảng đáp án (nếu multiple_choice hoặc matching), null nếu không cần
+  * correct_answer: đáp án đúng (string)
+  * explanation: giải thích (string)
+  * difficulty: "A1" | "A2" | "B1" | "B2" | "C1" | "C2"
+
+VÍ DỤ JSON ĐÚNG:
+{
+  "exercises": [
+    {
+      "exercise_type": "multiple_choice",
+      "question": "How much ___ this shirt?",
+      "options": ["is", "are", "do", "does"],
+      "correct_answer": "is",
+      "explanation": "Dùng 'is' vì 'this shirt' là số ít",
+      "difficulty": "A1"
+    }
+  ]
+}
+
+KHÔNG được dùng key "type", phải dùng "exercise_type"!
+"""
 
 
 # ========================== MODELS ==========================
@@ -83,8 +108,8 @@ class ExerciseGenerator:
 
     def __init__(self, llm):
         self.llm = llm
-        self.max_retries = 3
-        self.timeout_seconds = 50
+        self.max_retries = 1  # FIXED: Only 1 attempt to save API calls
+        self.timeout_seconds = 30  # Reduced timeout
 
     async def _safe_generate(self, user_prompt: str, response_format, lesson_type: str, temperature: float):
         for attempt in range(self.max_retries):
@@ -106,7 +131,31 @@ class ExerciseGenerator:
                     # Parse JSON response manually
                     import json
                     try:
-                        data = json.loads(result)
+                        # Remove markdown if present
+                        result_clean = result.strip()
+                        if result_clean.startswith("```"):
+                            # Extract JSON from markdown code block
+                            lines = result_clean.split('\n')
+                            result_clean = '\n'.join(lines[1:-1])
+                        
+                        data = json.loads(result_clean)
+                        
+                        # FIX: Convert "type" to "exercise_type" if needed
+                        if "exercises" in data:
+                            for ex in data["exercises"]:
+                                if "type" in ex and "exercise_type" not in ex:
+                                    ex["exercise_type"] = ex.pop("type")
+                                # FIX: Flatten nested options arrays
+                                if "options" in ex and ex["options"]:
+                                    flattened = []
+                                    for opt in ex["options"]:
+                                        if isinstance(opt, list):
+                                            # Nested array like ['price', 'giá'] → take first
+                                            flattened.append(opt[0] if opt else "")
+                                        else:
+                                            flattened.append(opt)
+                                    ex["options"] = flattened
+                        
                         # Validate with Pydantic
                         validated = response_format(**data)
                         return validated
@@ -169,7 +218,9 @@ Yêu cầu:
 - Ngôn ngữ đơn giản, dễ hiểu với người Việt
 - Tập trung khắc phục điểm yếu
 - Nội dung thực tế, ứng dụng cao
-- Tối đa 5 sections, 12 từ vựng, 8 bài tập
+
+OUTPUT: JSON object với key "exercises" chứa mảng các bài tập.
+Mỗi bài tập PHẢI có: exercise_type, question, options (hoặc null), correct_answer, explanation, difficulty.
 """
 
         if lesson_type in ["lesson_only", "both"]:
