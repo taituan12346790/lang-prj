@@ -81,14 +81,23 @@ class LLMClient:
 
     async def generate_structured_async(self, system_prompt: str, user_prompt: str, response_format, **kwargs):
         """
-        Generate structured output (simplified - just returns None for fallback)
+        Generate structured output - calls normal generate_async since Groq doesn't have native structured mode
         
-        NOTE: This is a stub - Groq doesn't support structured output like OpenAI.
-        Callers should handle None return and use fallback logic.
+        Returns raw text (not parsed) - caller must handle JSON parsing
         """
-        # For now, always return None to trigger fallback
-        # In future, could parse LLM output with Pydantic
-        return None
+        # Groq doesn't support structured output natively, so we just call generate_async
+        # and return the raw response. The retry logic in ExerciseGenerator will handle it.
+        try:
+            response = await self.generate_async(
+                user_input=user_prompt,
+                system_prompt=system_prompt,
+                temperature=kwargs.get('temperature', self.temperature),
+                max_tokens=kwargs.get('max_tokens', self.max_tokens)
+            )
+            return response  # Return raw text, caller parses JSON
+        except Exception as e:
+            print(f"❌ generate_structured_async error: {e}")
+            return None
 
 
 # Lazy initialize on first use

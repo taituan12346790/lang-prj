@@ -70,11 +70,12 @@ class ReActPlanner:
         
         # Map mode to suggested tools if strategy didn't provide
         # Phase 2: Use correct tool names that match registry
+        # HOTFIX: Disable ExerciseGenerator to save API calls - it's broken
         if not suggested_tools or suggested_tools == ["llm_response"]:
             mode_tool_map = {
-                "grammar": ["grammar", "llm_response"],  # Fixed: grammar_checker → grammar
+                "grammar": ["grammar", "llm_response"],  
                 "translation": ["translator", "llm_response"],
-                "exercise": ["exercise", "llm_response"],  # Fixed: exercise_generator → exercise
+                "exercise": ["llm_response"],  # DISABLED exercise tool - too many API calls
                 "vocabulary": ["llm_response"],
                 "conversation": ["llm_response"],
             }

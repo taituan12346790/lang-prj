@@ -123,7 +123,7 @@ A1_TOPICS: List[Dict[str, Any]] = [
                         {
                             "type": "multiple_choice",
                             "question": "How do you greet someone in the morning?",
-                            "question_vi": "Bạn chào người khác vào buổi sáng như thế nào?",
+                            "question_vi": "Bạn chào ai đó vào buổi sáng như thế nào?",
                             "options": ["Good evening", "Good morning", "Good night", "Goodbye"],
                             "answer": "Good morning",
                             "explanation": "'Good morning' dùng từ khoảng 6 giờ sáng đến 12 giờ trưa."

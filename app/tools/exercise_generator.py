@@ -91,23 +91,31 @@ class ExerciseGenerator:
             try:
                 logger.info(f"ExerciseGenerator [{lesson_type}] Attempt {attempt+1}/{self.max_retries}")
 
+                # Call generate_async directly since Groq doesn't support structured output
                 result = await asyncio.wait_for(
-                    self.llm.generate_structured_async(
+                    self.llm.generate_async(
+                        user_input=user_prompt,
                         system_prompt=EXERCISE_SYSTEM_PROMPT,
-                        user_prompt=user_prompt,
-                        response_format=response_format,
                         temperature=temperature,
-                        max_retries=0,
+                        max_tokens=2000,
                     ),
                     timeout=self.timeout_seconds,
                 )
-                if result is not None:
-                    return result
+                
+                if result:
+                    # Parse JSON response manually
+                    import json
+                    try:
+                        data = json.loads(result)
+                        # Validate with Pydantic
+                        validated = response_format(**data)
+                        return validated
+                    except (json.JSONDecodeError, ValidationError) as e:
+                        logger.warning(f"Failed to parse/validate response: {e}")
+                        continue
 
             except asyncio.TimeoutError:
                 logger.warning(f"Timeout at attempt {attempt+1}")
-            except ValidationError as ve:
-                logger.warning(f"Validation failed (attempt {attempt+1}): {ve}")
             except Exception as e:
                 error_str = str(e).lower()
                 if any(x in error_str for x in ["rate limit", "timeout", "connection", "overloaded", "busy"]):

@@ -1,0 +1,450 @@
+\documentclass[notheorems,hyperref={bookmarks=true}]{beamer}
+
+% --- PACKAGES ---
+\usepackage[framesassubsections]{beamerprosper}
+\usepackage{multirow}
+\usepackage[utf8]{inputenc} 
+\usepackage[utf8]{vietnam} 
+\usepackage{amsmath, amsthm, amssymb, tikz}
+\usetikzlibrary{calc, shapes.geometric, positioning, shadows}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{booktabs} 
+\usepackage[table]{xcolor}
+
+% --- THEME ---
+\usetheme{CambridgeUS}
+\usecolortheme{rose} 
+\usefonttheme[onlylarge]{structurebold}
+\usefonttheme{professionalfonts}
+
+\setbeamercolor{title}{fg=red!80!black,bg=blue!20!white}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{blocks}[rounded][shadow=true]
+
+\logo{\includegraphics[height=1cm]{logoHust.png}}
+
+\setbeamertemplate{footline}{
+  \leavevmode%
+  \hbox{%
+    \begin{beamercolorbox}[wd=.33\paperwidth,ht=2.5ex,dp=1.5ex,center]{author in head/foot}%
+      Nguyễn Tuấn Tài
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.34\paperwidth,ht=2.5ex,dp=1.5ex,center]{title in head/foot}%
+      \footnotesize{AI Agent hỗ trợ học ngoại ngữ}
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.33\paperwidth,ht=2.5ex,dp=1.5ex,right]{date in head/foot}%
+      \insertframenumber/\inserttotalframenumber \hspace*{2ex} 
+    \end{beamercolorbox}%
+  }%
+  \vskip0pt%
+}
+
+\title[AI Agent dạy ngoại ngữ]{
+    \Large\bfseries Xây dựng AI Agent hỗ trợ học ngoại ngữ
+}
+
+\institute[\scriptsize Khoa Toán - Tin]{
+    \small
+    \begin{tabular}{l}
+        \textbf{Giảng viên hướng dẫn: \textcolor{red!80!black}{TS. Tạ Anh Sơn}} \\
+        \textbf{Sinh viên thực hiện: \textcolor{red!80!black}{Nguyễn Tuấn Tài (20216959)}} \\
+    \end{tabular} \\[0.5em]
+    \textbf{Khoa Toán - Tin, Đại học Bách khoa Hà Nội} \\[0.3em]
+    \includegraphics[height=1.5cm]{fami.png}
+}
+
+\date[Hà Nội, 06/2026]{\scriptsize\bfseries\color{red!80!black}Hà Nội, 06/2026}
+
+\begin{document}
+
+\begin{frame}
+    \maketitle
+\end{frame}
+
+\footnotesize
+
+% ==========================================
+% SLIDE 1: ĐẶT VẤN ĐỀ
+% ==========================================
+\begin{frame}{Vấn đề cần giải quyết}
+\begin{columns}[c]
+    \begin{column}{0.5\textwidth}
+        \begin{alertblock}{3 Hạn chế học truyền thống}
+            \begin{enumerate}
+                \item Chi phí cao (200k-500k/giờ)
+                \item Không cá nhân hóa
+                \item Bài tập hạn chế
+            \end{enumerate}
+        \end{alertblock}
+        
+        \vspace{0.5cm}
+        
+        \begin{exampleblock}{Giải pháp}
+            \textbf{Hệ thống Multi-Agent}
+            \begin{itemize}
+                \item Miễn phí, 24/7
+                \item Phân tích lỗi tức thì
+                \item Sinh bài tập vô hạn
+            \end{itemize}
+        \end{exampleblock}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+        \centering
+        \begin{figure}
+        \resizebox{0.9\textwidth}{!}{
+        \begin{tikzpicture}[
+            vertex/.style={circle, fill=red!10, draw=red!70, thick, minimum size=15mm, align=center, font=\tiny\bfseries},
+            target/.style={circle, draw=blue!70, fill=blue!10, very thick, dashed, minimum size=22mm, align=center, font=\small\bfseries\color{blue!90}}
+        ]
+            \node[vertex] (Tutor) at (90:2.8) {Gia sư\\truyền thống};
+            \node[vertex] (App) at (210:2.8) {Ứng dụng\\tự học};
+            \node[vertex] (Center) at (330:2.8) {Trung tâm\\ngoại ngữ};
+            \node[target] (Goal) at (0,0) {GIA SƯ AI\\\normalfont\tiny (Mục tiêu)};
+            
+            \draw[->, blue!60, thick] (Tutor) -- (Goal);
+            \draw[->, blue!60, thick] (App) -- (Goal);
+            \draw[->, blue!60, thick] (Center) -- (Goal);
+        \end{tikzpicture}
+        }
+        \end{figure}
+    \end{column}
+\end{columns}
+\end{frame}
+
+% ==========================================
+% SLIDE 2: KIẾN TRÚC MULTI-AGENT
+% ==========================================
+\begin{frame}{Kiến trúc Multi-Agent}
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    node distance=1.3cm,
+    agent_box/.style={rectangle, draw=gray!60, fill=blue!8, text width=3.5cm, align=center, minimum height=2cm, rounded corners=5pt, font=\scriptsize},
+    arrow/.style={->, >=stealth, thick, color=gray!70}
+]
+
+\node[agent_box] (ErrorAgent) at (0, 0) {
+    \textbf{\color{red!80}Error Analyzer}\\[0.2cm]
+    {\tiny • Nhận diện lỗi\\• Giải thích chi tiết}
+};
+
+\node[agent_box, right=of ErrorAgent, fill=green!8] (ExerciseAgent) {
+    \textbf{\color{green!80}Exercise Generator}\\[0.2cm]
+    {\tiny • Sinh bài tập tự động\\• Thích ứng độ khó}
+};
+
+\node[agent_box, right=of ExerciseAgent, fill=purple!8] (WritingAgent) {
+    \textbf{\color{purple!80}Writing Evaluator}\\[0.2cm]
+    {\tiny • Chấm 4 tiêu chí\\• Phản hồi chi tiết}
+};
+
+\node[
+    rectangle, draw=orange!60, fill=orange!15, text width=2.5cm, align=center,
+    minimum height=1.5cm, rounded corners=5pt, font=\small,
+    below=2cm of ExerciseAgent
+] (AITutor) {
+    \textbf{\color{orange!80}AI Tutor}\\
+    \tiny (Điều phối)
+};
+
+\draw[arrow] (ErrorAgent.south) -- (AITutor.north west);
+\draw[arrow] (ExerciseAgent.south) -- (AITutor.north);
+\draw[arrow] (WritingAgent.south) -- (AITutor.north east);
+
+\end{tikzpicture}
+\caption{3 Agents chuyên biệt + AI Tutor điều phối}
+\end{figure}
+\end{frame}
+
+% ==========================================
+% KẾT QUẢ 1: MÔ HÌNH TRI THỨC
+% ==========================================
+\begin{frame}{Kết quả 1: Mô hình tri thức toàn diện}
+\begin{columns}[c]
+    \begin{column}{0.45\textwidth}
+        \begin{block}{190 Chủ đề CEFR}
+            \textbf{Phạm vi:} A1 → C2\\[0.3cm]
+            \textbf{Mỗi chủ đề:} 5 bài học
+            \begin{enumerate}
+                \item Grammar
+                \item Vocabulary
+                \item Practice
+                \item Writing
+                \item Quiz
+            \end{enumerate}
+        \end{block}
+        
+        \begin{alertblock}{Kết quả}
+            \textbf{950 bài học} được chuẩn hóa
+        \end{alertblock}
+    \end{column}
+    \begin{column}{0.55\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{ũiuhsx.png}
+        
+        {\scriptsize Giao diện chủ đề bài học}
+    \end{column}
+\end{columns}
+\end{frame}
+
+% ==========================================
+% KẾT QUẢ 2: PHÂN TÍCH LỖI
+% ==========================================
+\begin{frame}{Kết quả 2: Phân tích lỗi thông minh}
+\begin{columns}[c]
+    \begin{column}{0.5\textwidth}
+        \begin{exampleblock}{Error Analyzer}
+            \begin{itemize}
+                \item \textbf{Phát hiện:} Ngữ pháp/Từ vựng
+                \item \textbf{Giải thích:} Tiếng Việt chi tiết
+                \item \textbf{Lưu trữ:} Ghi nhớ lỗi sai
+            \end{itemize}
+        \end{exampleblock}
+        
+        \vspace{0.5cm}
+        
+        \begin{block}{Workflow}
+            \begin{tikzpicture}[node distance=1cm, box/.style={rectangle, draw, fill=blue!10, text width=2.5cm, align=center, minimum height=0.6cm, rounded corners, font=\tiny}, arrow/.style={->, >=stealth}]
+                \node[box] (1) {Người học làm sai};
+                \node[box, below=of 1] (2) {Phân tích lỗi};
+                \node[box, below=of 2] (3) {Giải thích + Đề xuất};
+                
+                \draw[arrow] (1) -- (2);
+                \draw[arrow] (2) -- (3);
+            \end{tikzpicture}
+        \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+        \centering
+        \fbox{\includegraphics[width=0.9\textwidth]{jhsavs.png}}
+        
+        {\scriptsize AI Tutor phân tích lỗi và giải thích}
+    \end{column}
+\end{columns}
+\end{frame}
+
+% ==========================================
+% KẾT QUẢ 3: SINH BÀI TẬP
+% ==========================================
+\begin{frame}{Kết quả 3: Sinh bài tập cá nhân hóa}
+\begin{block}{Exercise Generator - Luyện tập vô hạn}
+    \begin{columns}[c]
+        \begin{column}{0.5\textwidth}
+            \textbf{Input:}
+            \begin{itemize}
+                \item Kỹ năng yếu
+                \item Chủ đề + trình độ
+            \end{itemize}
+            
+            \vspace{0.3cm}
+            
+            \textbf{Output:}
+            \begin{itemize}
+                \item 5-10 bài tập mới
+                \item Độ khó thích ứng
+                \item Tập trung đúng lỗi
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \centering
+            \begin{tikzpicture}[
+                box/.style={rectangle, draw, fill=green!10, text width=3cm, align=center, minimum height=0.7cm, rounded corners, font=\small},
+                arrow/.style={->, >=stealth, thick}
+            ]
+                \node[box] (1) at (0, 1.5) {\tiny Lỗi sai};
+                \node[box] (2) at (0, 0.5) {\tiny Agent sinh bài tập};
+                \node[box] (3) at (0, -0.5) {\tiny 5-10 câu mới};
+                \node[box] (4) at (0, -1.5) {\tiny Học sinh luyện tập};
+                
+                \draw[arrow] (1) -- (2);
+                \draw[arrow] (2) -- (3);
+                \draw[arrow] (3) -- (4);
+                \draw[arrow, dashed] (4) to[bend right=60] (1);
+            \end{tikzpicture}
+        \end{column}
+    \end{columns}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{alertblock}{Lợi ích}
+    \textbf{Không giới hạn} nguồn luyện tập • Củng cố \textbf{ngay tại chỗ} • Không lặp lại
+\end{alertblock}
+\end{frame}
+
+% ==========================================
+% KẾT QUẢ 4: ĐÁNH GIÁ BÀI VIẾT
+% ==========================================
+\begin{frame}{Kết quả 4: Đánh giá bài viết tự động}
+\begin{columns}[c]
+    \begin{column}{0.5\textwidth}
+        \begin{exampleblock}{Writing Evaluator}
+            \textbf{4 Tiêu chí CEFR:}
+            \begin{enumerate}
+                \item Ngữ pháp (Grammar)
+                \item Từ vựng (Vocabulary)
+                \item Nội dung (Content)
+                \item Cấu trúc (Structure)
+            \end{enumerate}
+        \end{exampleblock}
+        
+        \vspace{0.5cm}
+        
+        \begin{block}{Phản hồi chi tiết}
+            • Chỉ ra từng câu cần sửa\\
+            • Gợi ý cách hành văn\\
+            • Lưu lịch sử tiến bộ
+        \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+        \centering
+        \begin{table}
+            \tiny
+            \begin{tabular}{|l|c|}
+                \hline
+                \rowcolor{purple!20} \textbf{Tiêu chí} & \textbf{Điểm} \\
+                \hline
+                Grammar & 8.0/10 \\
+                \hline
+                Vocabulary & 7.5/10 \\
+                \hline
+                Content & 8.5/10 \\
+                \hline
+                Structure & 8.0/10 \\
+                \hline
+                \rowcolor{green!20} \textbf{Tổng} & \textbf{8.0/10} \\
+                \hline
+            \end{tabular}
+        \end{table}
+        
+        \vspace{0.5cm}
+        
+        {\scriptsize Ví dụ kết quả đánh giá tự động}
+    \end{column}
+\end{columns}
+\end{frame}
+
+% ==========================================
+% KẾT QUẢ 5: BỘ NHỚ HỌC TẬP
+% ==========================================
+\begin{frame}{Kết quả 5: Quản lý bộ nhớ học tập}
+\begin{block}{Hệ thống bộ nhớ 2 tầng}
+    \begin{columns}[c]
+        \begin{column}{0.5\textwidth}
+            \begin{exampleblock}{Short-term}
+                • Mạch hội thoại\\
+                • Ngữ cảnh phiên hiện tại\\
+                • Lỗi vừa mắc
+            \end{exampleblock}
+        \end{column}
+        \begin{column}{0.5\textwidth}
+            \begin{exampleblock}{Long-term}
+                • Hồ sơ lỗi sai\\
+                • Xu hướng học tập\\
+                • Dashboard thống kê
+            \end{exampleblock}
+        \end{column}
+    \end{columns}
+\end{block}
+
+\vspace{0.5cm}
+
+\begin{figure}
+\centering
+\begin{tikzpicture}[
+    box/.style={rectangle, draw, fill=yellow!10, text width=3cm, align=center, minimum height=1cm, rounded corners, font=\small},
+    db/.style={cylinder, draw, fill=blue!10, shape border rotate=90, aspect=0.3, minimum height=1cm, minimum width=2cm, font=\small}
+]
+    \node[box] (user) at (0, 0) {Người học\\tương tác};
+    \node[db, right=2cm of user] (stm) {Short-term\\Memory};
+    \node[db, right=2cm of stm] (ltm) {Long-term\\Memory\\(PostgreSQL)};
+    
+    \draw[->, >=stealth, thick] (user) -- (stm);
+    \draw[->, >=stealth, thick] (stm) -- (ltm);
+    \draw[->, >=stealth, thick, dashed] (ltm) to[bend right=30] node[above, font=\tiny]{Cá nhân hóa} (user);
+\end{tikzpicture}
+\end{figure}
+\end{frame}
+
+% ==========================================
+% KẾT QUẢ 6: TRIỂN KHAI PRODUCTION
+% ==========================================
+\begin{frame}{Kết quả 6: Triển khai thực tế}
+\begin{table}
+    \centering
+    \small
+    \begin{tabular}{|l|l|}
+        \hline
+        \rowcolor{blue!20} \textbf{Thành phần} & \textbf{Công nghệ} \\
+        \hline
+        Backend API & FastAPI + LangChain \\
+        \hline
+        Frontend & Streamlit \\
+        \hline
+        Database & PostgreSQL (Neon Tech) \\
+        \hline
+        LLM Service & Groq API (Llama 3.1 70B) \\
+        \hline
+        Hosting & Render.com \\
+        \hline
+    \end{tabular}
+\end{table}
+
+\vspace{0.5cm}
+
+\begin{exampleblock}{Hệ thống đang Live}
+    \centering
+    \textbf{URL:} \texttt{https://lang-prj.onrender.com}
+\end{exampleblock}
+
+\begin{block}{Tính năng hoạt động}
+    ✅ 190 chủ đề • ✅ Chat với AI • ✅ Phân tích lỗi • ✅ Sinh bài tập • ✅ Đánh giá bài viết
+\end{block}
+\end{frame}
+
+% ==========================================
+% TỔNG KẾT
+% ==========================================
+\begin{frame}{Tổng kết}
+\begin{exampleblock}{Giải quyết 3 vấn đề đặt ra}
+    ✅ \textbf{Chi phí/Thời gian:} Miễn phí, 24/7\\
+    ✅ \textbf{Cá nhân hóa:} Phân tích lỗi + bộ nhớ dài hạn\\
+    ✅ \textbf{Bài tập hạn chế:} Sinh vô hạn, thích ứng trình độ
+\end{exampleblock}
+
+\vspace{0.3cm}
+
+\begin{block}{6 Kết quả kỹ thuật}
+    \begin{enumerate}
+        \item Kiến trúc Multi-Agent (3 agents + AI Tutor)
+        \item Mô hình tri thức (190 chủ đề × 5 bài = 950 bài học)
+        \item Error Analyzer (phân tích lỗi 2 cấp độ)
+        \item Exercise Generator (sinh bài tập tự động)
+        \item Writing Evaluator (chấm 4 tiêu chí CEFR)
+        \item Triển khai production (live trên Cloud)
+    \end{enumerate}
+\end{block}
+\end{frame}
+
+% ==========================================
+% CẢM ƠN
+% ==========================================
+\begin{frame}
+    \begin{center}
+        \LARGE\bfseries Cảm ơn thầy cô và các bạn\\đã lắng nghe!
+        
+        \vspace{1cm}
+        
+        \normalsize
+        \textbf{Sinh viên thực hiện:} Nguyễn Tuấn Tài\\
+        \textbf{MSSV:} 20216959\\
+        \textbf{Giảng viên hướng dẫn:} TS. Tạ Anh Sơn
+        
+        \vspace{0.5cm}
+        
+        \includegraphics[width=0.3\linewidth]{sloth.jpg}
+    \end{center}
+\end{frame}
+
+\end{document}

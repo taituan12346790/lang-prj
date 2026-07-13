@@ -1,0 +1,487 @@
+\documentclass[notheorems,hyperref={bookmarks=true}]{beamer}
+
+% --- CÁC GÓI LỆNH CẦN THIẾT ---
+\usepackage[framesassubsections]{beamerprosper}
+\usepackage{multirow}
+\usepackage[utf8]{inputenc} 
+\usepackage[utf8]{vietnam} 
+\usepackage{ulem}
+\usepackage{pifont}
+\usepackage[mathscr]{eucal}
+\usepackage{amsmath, amsthm, amssymb, amsxtra, latexsym, amscd, makeidx, tikz}
+\usetikzlibrary{calc, shapes.geometric, positioning}
+\usepackage{graphicx}
+\usepackage{array}
+\usepackage{multicol}
+\usepackage{multimedia}
+\usepackage{xcolor}
+\usepackage{booktabs} 
+\usepackage[table]{xcolor}
+\usetikzlibrary{shadows}
+
+% --- CÀI ĐẶT GIAO DIỆN ---
+\usetheme{CambridgeUS}
+\usecolortheme{rose} 
+\usefonttheme[onlylarge]{structurebold}
+\usefonttheme{professionalfonts}
+
+\setbeamercolor{title}{fg=red!80!black,bg=blue!20!white}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{blocks}[rounded][shadow=true]
+
+% \logo{\includegraphics[height=1cm]{logoHust.png}} % Comment nếu không có hình
+
+\setbeamertemplate{footline}{
+  \leavevmode%
+  \hbox{%
+    \begin{beamercolorbox}[wd=.33\paperwidth,ht=2.5ex,dp=1.5ex,center]{author in head/foot}%
+      Nguyễn Tuấn Tài
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.34\paperwidth,ht=2.5ex,dp=1.5ex,center]{title in head/foot}%
+      \footnotesize{AI Agent hỗ trợ học ngoại ngữ}
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.33\paperwidth,ht=2.5ex,dp=1.5ex,right]{date in head/foot}%
+      \insertframenumber/\inserttotalframenumber \hspace*{2ex} 
+    \end{beamercolorbox}%
+  }%
+  \vskip0pt%
+}
+
+\title[AI Agent dạy ngoại ngữ]{
+    \Large\bfseries Xây dựng AI Agent hỗ trợ học ngoại ngữ\\
+    \large Tóm tắt kết quả chính
+}
+
+\institute[\scriptsize Khoa Toán - Tin]{
+    \small
+    \begin{tabular}{l}
+        \textbf{Giảng viên hướng dẫn: \textcolor{red!80!black}{TS. Tạ Anh Sơn}} \\
+        \textbf{Sinh viên thực hiện: \textcolor{red!80!black}{Nguyễn Tuấn Tài (20216959)}} \\
+    \end{tabular} \\[0.5em]
+    \textbf{Khoa Toán - Tin, Đại học Bách khoa Hà Nội}
+}
+
+\date[Hà Nội, 06/2025]{\scriptsize\bfseries\color{red!80!black}Hà Nội, 06/2026}
+
+\begin{document}
+
+\begin{frame}
+    \maketitle
+\end{frame}
+
+\footnotesize
+
+% ==========================================
+\section{Đặt vấn đề và Hướng giải quyết}
+% ==========================================
+
+\begin{frame}{Đặt vấn đề: 3 Hạn chế của phương pháp truyền thống}
+\begin{block}{Vấn đề 1: Chi phí cao \& Thời gian cố định}
+    \begin{itemize}
+        \item Gia sư/Trung tâm: 200k-500k/giờ, lịch học cố định
+        \item \textbf{→ Đồ án giải quyết:} Miễn phí, học mọi lúc mọi nơi
+    \end{itemize}
+\end{block}
+
+\begin{block}{Vấn đề 2: Thiếu phản hồi cá nhân hóa}
+    \begin{itemize}
+        \item Ứng dụng tự học không phân tích lỗi chi tiết
+        \item \textbf{→ Đồ án giải quyết:} Error Analyzer phân tích lỗi tức thì + ghi nhớ điểm yếu
+    \end{itemize}
+\end{block}
+
+\begin{block}{Vấn đề 3: Nguồn luyện tập hạn chế}
+    \begin{itemize}
+        \item Bài tập cố định, không thích ứng độ khó
+        \item \textbf{→ Đồ án giải quyết:} Exercise Generator sinh bài tập vô hạn, thích ứng trình độ
+    \end{itemize}
+\end{block}
+\end{frame}
+
+% ==========================================
+\section{Kiến trúc hệ thống Multi-Agent}
+% ==========================================
+
+\begin{frame}{Kiến trúc Multi-Agent: 3 Agents chuyên biệt}
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+    node distance=1.5cm,
+    agent_box/.style={
+        rectangle,
+        draw=gray!60,
+        fill=blue!8,
+        text width=4.2cm,
+        align=center,
+        minimum height=2.5cm,
+        rounded corners=5pt,
+        font=\small
+    },
+    arrow/.style={->, >=stealth, thick, color=gray!70}
+]
+
+% Agent 1: Error Analyzer
+\node[agent_box] (ErrorAgent) at (0, 0) {
+    \textbf{\color{red!80}Error Analyzer}\\[0.2cm]
+    \textit{Phân tích lỗi học tập}\\[0.3cm]
+    {\small \color{gray!80}
+    • Nhận diện loại lỗi\\
+    • Giải thích chi tiết\\
+    • Đưa hướng sửa
+    }
+};
+
+% Agent 2: Exercise Generator
+\node[agent_box, right=of ErrorAgent, fill=green!8] (ExerciseAgent) {
+    \textbf{\color{green!80}Exercise Generator}\\[0.2cm]
+    \textit{Sinh bài tập tự động}\\[0.3cm]
+    {\small \color{gray!80}
+    • Sinh bài tập mới\\
+    • Thích ứng độ khó\\
+    • Luyện tập vô hạn
+    }
+};
+
+% Agent 3: Writing Evaluator
+\node[agent_box, right=of ExerciseAgent, fill=purple!8] (WritingAgent) {
+    \textbf{\color{purple!80}Writing Evaluator}\\[0.2cm]
+    \textit{Đánh giá bài viết}\\[0.3cm]
+    {\small \color{gray!80}
+    • Chấm 4 tiêu chí\\
+    • Phản hồi chi tiết\\
+    • Ghi điểm lịch sử
+    }
+};
+
+% Center: AI Tutor
+\node[
+    rectangle,
+    draw=orange!60,
+    fill=orange!15,
+    text width=3cm,
+    align=center,
+    minimum height=1.8cm,
+    rounded corners=5pt,
+    font=\small,
+    below=2.5cm of ExerciseAgent
+] (AITutor) {
+    \textbf{\color{orange!80}AI Tutor}\\
+    \small (Điều phối)\\[0.3cm]
+    {\tiny \color{gray!80}
+    Quyết định gọi\\
+    agent nào khi nào
+    }
+};
+
+% Arrows
+\draw[arrow] (ErrorAgent.south) -- (AITutor.north west);
+\draw[arrow] (ExerciseAgent.south) -- (AITutor.north);
+\draw[arrow] (WritingAgent.south) -- (AITutor.north east);
+
+\end{tikzpicture}
+\caption{Kiến trúc Multi-Agent với AI Tutor điều phối 3 Agents chuyên biệt}
+\end{figure}
+\end{frame}
+
+% ==========================================
+\section{Kết quả triển khai}
+% ==========================================
+
+\begin{frame}{Kết quả 1: Hệ thống nội dung toàn diện}
+\begin{columns}
+    \begin{column}{0.45\textwidth}
+        \begin{block}{190 chủ đề CEFR}
+            \textbf{Mỗi chủ đề gồm:}
+            \begin{enumerate}
+                \item \textbf{Grammar}
+                \item \textbf{Vocabulary}
+                \item \textbf{Practice}
+                \item \textbf{Writing}
+                \item \textbf{Quiz}
+            \end{enumerate}
+        \end{block}
+        
+        \vspace{0.3cm}
+        
+        \begin{alertblock}{Kết quả}
+            \centering
+            \Large \textbf{950 bài học}\\
+            \small được chuẩn hóa
+        \end{alertblock}
+    \end{column}
+    \begin{column}{0.55\textwidth}
+        \centering
+        % Nếu có hình ũiuhsx.png thì dùng, không thì comment lại
+        % \includegraphics[width=\textwidth]{ũiuhsx.png}
+        
+        % Thay bằng text mô tả
+        \fbox{\begin{minipage}{0.9\textwidth}
+            \centering
+            \textbf{Cấu trúc lộ trình học}\\[0.3cm]
+            {\footnotesize
+            A1 (20 topics) → A2 (32 topics)\\
+            B1 (33 topics) → B2 (36 topics)\\
+            C1 (35 topics) → C2 (34 topics)\\[0.3cm]
+            Tổng: \textbf{190 topics × 5 lessons}\\
+            = \textbf{950 bài học}
+            }
+        \end{minipage}}
+        
+        \vspace{0.3cm}
+        {\footnotesize \textit{Cung cấp ngữ cảnh phong phú cho AI Agent}}
+    \end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Kết quả 2: Phân tích lỗi thông minh}
+\begin{columns}
+    \begin{column}{0.45\textwidth}
+        \begin{exampleblock}{Error Analyzer Agent}
+            \textbf{Chức năng:}
+            \begin{itemize}
+                \item Phát hiện lỗi \textit{ngữ pháp/từ vựng}
+                \item Giải thích bằng tiếng Việt
+                \item Đưa hướng sửa cụ thể
+            \end{itemize}
+        \end{exampleblock}
+        
+        \vspace{0.3cm}
+        
+        \begin{alertblock}{Ưu điểm}
+            \begin{itemize}
+                \item Phản hồi \textbf{tức thì}
+                \item Phân loại \textbf{2 cấp độ}
+                \item Lưu lịch sử → \textbf{cá nhân hóa}
+            \end{itemize}
+        \end{alertblock}
+    \end{column}
+    \begin{column}{0.55\textwidth}
+        \centering
+        \textbf{Ví dụ phân tích lỗi:}\\[0.3cm]
+        % Nếu có hình jhsavs.png hoặc error_analysis_example.png
+        % \fbox{\includegraphics[width=0.9\textwidth]{jhsavs.png}}
+        
+        % Thay bằng ví dụ text
+        \fbox{\begin{minipage}{0.9\textwidth}
+            \footnotesize
+            \textbf{Input:} \textit{"I \textcolor{red}{go} to school yesterday"}\\[0.2cm]
+            \textbf{Lỗi:} Ngữ pháp - Thì động từ\\[0.2cm]
+            \textbf{Giải thích:} "Yesterday" là dấu hiệu quá khứ, cần dùng \textbf{Past Simple}\\[0.2cm]
+            \textbf{Sửa:} \textit{"I \textcolor{green}{went} to school yesterday"}\\[0.2cm]
+            \textbf{Lưu vào Long-term Memory:} Điểm yếu "Past Simple"
+        \end{minipage}}
+    \end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Kết quả 3: AI Tutor tương tác thông minh}
+\begin{columns}
+    \begin{column}{0.45\textwidth}
+        \begin{exampleblock}{Chức năng}
+            \textbf{1. Giải thích lý thuyết}\\
+            {\footnotesize Bằng tiếng Việt, dễ hiểu}
+            
+            \vspace{0.2cm}
+            
+            \textbf{2. Tạo bài tập trong chat}\\
+            {\footnotesize Khi user yêu cầu luyện tập}
+            
+            \vspace{0.2cm}
+            
+            \textbf{3. Chấm bài tức thì}\\
+            {\footnotesize Feedback chi tiết + sửa lỗi}
+        \end{exampleblock}
+    \end{column}
+    \begin{column}{0.55\textwidth}
+        \centering
+        \textbf{Ví dụ tương tác:}\\[0.2cm]
+        \fbox{\begin{minipage}{0.9\textwidth}
+            \footnotesize
+            \textbf{User:} "Tôi sai Past Simple 3 lần rồi"\\[0.15cm]
+            \textbf{AI Tutor:}\\
+            \textcolor{blue}{• Giải thích quy tắc}\\
+            \textcolor{blue}{• Cho 3 ví dụ minh họa}\\
+            \textcolor{blue}{• Tạo 5 câu luyện tập}\\[0.15cm]
+            \textbf{User:} "1. went 2. played..."\\[0.15cm]
+            \textbf{AI Tutor:}\\
+            \textcolor{green}{✅ Câu 1, 3, 5: Đúng!}\\
+            \textcolor{red}{❌ Câu 2, 4: Sửa...}
+        \end{minipage}}
+    \end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Kết quả 4: Đánh giá bài viết tự động}
+\begin{columns}
+    \begin{column}{0.5\textwidth}
+        \begin{exampleblock}{Writing Evaluator Agent}
+            \textbf{Chấm điểm theo 4 tiêu chí CEFR:}
+            \begin{enumerate}
+                \item \textbf{Ngữ pháp} (Grammar)
+                \item \textbf{Từ vựng} (Vocabulary)
+                \item \textbf{Nội dung} (Content)
+                \item \textbf{Cấu trúc} (Structure)
+            \end{enumerate}
+        \end{exampleblock}
+        
+        \vspace{0.3cm}
+        
+        \begin{block}{Phản hồi chi tiết}
+            \begin{itemize}
+                \item Chỉ ra \textit{từng câu} cần sửa
+                \item Gợi ý cách hành văn tốt hơn
+                \item Lưu lịch sử → theo dõi tiến bộ
+            \end{itemize}
+        \end{block}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+        \centering
+        \textbf{Ví dụ đánh giá bài viết:}\\[0.3cm]
+        % Nếu có hình writing_evaluation_example.png thì dùng
+        % \fbox{\includegraphics[width=0.9\textwidth]{writing_evaluation_example.png}}
+        
+        % Thay bằng bảng điểm mẫu
+        \fbox{\begin{minipage}{0.9\textwidth}
+            \footnotesize
+            \textbf{Topic:} My Daily Routine (A1)\\[0.2cm]
+            \begin{tabular}{ll}
+                \textbf{Grammar:} & 7/10 \\
+                \textbf{Vocabulary:} & 8/10 \\
+                \textbf{Content:} & 9/10 \\
+                \textbf{Structure:} & 7/10 \\
+                \hline
+                \textbf{Tổng:} & \textbf{7.75/10}
+            \end{tabular}
+            \\[0.3cm]
+            \textbf{Nhận xét:} Bài viết tốt, cần chú ý thì động từ ở câu 3 và 5.
+        \end{minipage}}
+    \end{column}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Kết quả 5: Quản lý bộ nhớ học tập}
+\begin{block}{Hệ thống bộ nhớ 2 tầng}
+    \textbf{1. Short-term Memory (Bộ nhớ ngắn hạn)}
+    \begin{itemize}
+        \item Duy trì \textit{mạch hội thoại} trong phiên làm việc
+        \item Ghi nhớ ngữ cảnh: chủ đề đang học, lỗi vừa mắc
+    \end{itemize}
+    
+    \vspace{0.2cm}
+    
+    \textbf{2. Long-term Memory (Bộ nhớ dài hạn)}
+    \begin{itemize}
+        \item Lưu trữ \textit{hồ sơ lỗi sai} lâu dài (PostgreSQL)
+        \item Phân tích \textit{xu hướng học tập} để cá nhân hóa
+        \item Dashboard thống kê kỹ năng yếu
+    \end{itemize}
+\end{block}
+
+\vspace{0.3cm}
+
+\begin{alertblock}{Lợi ích}
+    \textbf{Cá nhân hóa sâu:} AI Tutor "nhớ" điểm yếu của từng người học và ưu tiên luyện tập các kỹ năng đó
+\end{alertblock}
+\end{frame}
+
+\begin{frame}{Kết quả 6: Triển khai thực tế}
+\begin{table}
+    \centering
+    \caption{Hệ thống được triển khai hoàn chỉnh}
+    \resizebox{0.95\textwidth}{!}{
+        \begin{tabular}{|l|l|l|}
+            \hline
+            \rowcolor{blue!20} \textbf{Thành phần} & \textbf{Công nghệ} & \textbf{Trạng thái} \\ \hline
+            \textbf{Backend API} & FastAPI + LangChain & ✅ Triển khai \\ \hline
+            \textbf{Frontend} & Streamlit & ✅ Triển khai \\ \hline
+            \textbf{Database} & PostgreSQL (Neon Tech) & ✅ Cloud \\ \hline
+            \textbf{LLM Service} & Groq API (Llama 3.1 70B) & ✅ Production \\ \hline
+            \textbf{Hosting} & Render.com & ✅ Live \\ \hline
+        \end{tabular}
+    }
+\end{table}
+
+\vspace{0.3cm}
+
+\begin{exampleblock}{URL truy cập}
+    \textbf{Website:} \texttt{https://lang-prj.onrender.com}
+\end{exampleblock}
+
+\begin{block}{Tính năng đã triển khai}
+    \begin{itemize}
+        \item ✅ Lộ trình học 190 chủ đề
+        \item ✅ Chat với AI Tutor
+        \item ✅ Phân tích lỗi tức thì
+        \item ✅ Đánh giá bài viết
+        \item ✅ Dashboard tiến độ
+    \end{itemize}
+\end{block}
+\end{frame}
+
+% ==========================================
+\section{Tổng kết}
+% ==========================================
+
+\begin{frame}{Tổng kết: Các kết quả chính đạt được}
+\begin{exampleblock}{Giải quyết 3 vấn đề đặt ra}
+    \begin{itemize}
+        \item \textbf{Vấn đề chi phí/thời gian:} ✅ Hệ thống online miễn phí, 24/7
+        \item \textbf{Vấn đề cá nhân hóa:} ✅ Phân tích lỗi tức thì + bộ nhớ dài hạn
+        \item \textbf{Vấn đề bài tập hạn chế:} ✅ AI Tutor tạo bài tập trong chat, hỗ trợ linh hoạt
+    \end{itemize}
+\end{exampleblock}
+
+\begin{block}{6 Kết quả kỹ thuật đạt được}
+    \begin{enumerate}
+        \item \textbf{Kiến trúc Multi-Agent:} 3 agents chuyên biệt + AI Tutor điều phối
+        \item \textbf{Mô hình tri thức:} 190 chủ đề CEFR × 5 bài học = 950 bài học
+        \item \textbf{Error Analyzer:} Phân tích lỗi 2 cấp độ (Ngữ pháp/Từ vựng)
+        \item \textbf{AI Tutor thông minh:} Chat tương tác, giải thích, tạo bài tập
+        \item \textbf{Writing Evaluator:} Chấm điểm tự động theo 4 tiêu chí CEFR
+        \item \textbf{Triển khai production:} Hệ thống live trên Cloud (Render + Neon Tech)
+    \end{enumerate}
+\end{block}
+\end{frame}
+
+\begin{frame}{Hạn chế và Hướng phát triển}
+\begin{columns}[T]
+    \begin{column}{0.5\textwidth}
+        \begin{alertblock}{Hạn chế hiện tại}
+            \begin{itemize}
+                \item Chỉ tập trung \textbf{Đọc/Viết}
+                \item Chưa có kỹ năng \textbf{Nghe/Nói}
+                \item Đánh giá bài viết chưa có scoring model riêng
+            \end{itemize}
+        \end{alertblock}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+        \begin{exampleblock}{Hướng phát triển}
+            \begin{itemize}
+                \item Tích hợp \textbf{Voice AI} (Speech-to-Text, Text-to-Speech)
+                \item Mở rộng \textbf{4 kỹ năng} CEFR
+                \item Xây dựng \textbf{scoring model} riêng cho Writing
+                \item Tối ưu chi phí LLM
+            \end{itemize}
+        \end{exampleblock}
+    \end{column}
+\end{columns}
+\end{frame}
+
+\section*{}
+% ==========================================
+\begin{frame}
+    \begin{center}
+         \Large\bfseries Cảm ơn cô và các bạn \\ đã lắng nghe!
+         
+         \vspace{1cm}
+         
+
+         \begin{figure}
+             \centering
+             \includegraphics[width=0.5\linewidth]{sloth.jpg}
+         \end{figure}
+         
+    \end{center}
+\end{frame}
+
+\end{document}
