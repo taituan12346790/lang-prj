@@ -26,12 +26,12 @@ class WritingService:
     ) -> UserWriting:
         """Submit a writing and get attempt number"""
         
-        # Get current attempt number for this lesson
+        # Get current attempt number for this topic
         result = await db.execute(
             select(func.max(UserWriting.attempt_number))
             .where(
                 UserWriting.user_id == user_id,
-                UserWriting.lesson_id == lesson_id
+                UserWriting.topic_id == topic_id
             )
         )
         max_attempt = result.scalar()
@@ -53,7 +53,7 @@ class WritingService:
         await db.commit()
         await db.refresh(writing)
         
-        logger.info(f"Writing submitted: user={user_id}, lesson={lesson_id}, attempt={attempt_number}")
+        logger.info(f"Writing submitted: user={user_id}, topic={topic_id}, attempt={attempt_number}")
         return writing
     
     async def save_feedback(
