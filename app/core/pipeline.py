@@ -422,16 +422,11 @@ Generate improved version (keep same language):"""
 
         if is_valid:
             logger.success("✅ Repaired response is valid")
-            return {
-                "response": repaired_response,
-                "output_valid": True
-            }
+            return {"response": repaired_response}
         else:
             logger.warning("❌ Repaired response still invalid, using fallback")
             return {
-                "response": "Xin lỗi, mình không thể trả lời yêu cầu này theo đúng nguyên tắc. Bạn thử hỏi theo cách khác nhé!",
-                "output_valid": False,
-                "used_fallback": True
+                "response": "Xin lỗi, mình không thể trả lời yêu cầu này theo đúng nguyên tắc. Bạn thử hỏi theo cách khác nhé!"
             }
 
     async def _finalize_node(self, state: AgentState) -> Dict[str, Any]:
