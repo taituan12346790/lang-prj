@@ -192,75 +192,18 @@ Trả về JSON với:
     ) -> Dict[str, Any]:
         """
         Use LLM to analyze conversation and extract insights
+        DISABLED: To save tokens and avoid rate limit
         """
-        try:
-            # Prepare context with recent messages
-            context = f"""
-User Input: {user_input[:500]}
-
-AI Response: {ai_response[:1000]}
-
-Chủ đề hiện tại: {current_topic_id if current_topic_id else 'General'}
-"""
-
-            prompt = f"""{self.system_prompt}
-
-{context}
-
-Hãy phân tích và trả về JSON:
-{{
-  "topics_discussed": ["past_tense", "grammar", ...],
-  "weak_skills": ["grammar_past_tense", ...],
-  "strong_skills": ["vocabulary", ...],
-  "engagement_level": "high|medium|low",
-  "understanding": "poor|fair|good|excellent",
-  "chat_activity": {{
-    "type": "lesson|practice|quiz|vocabulary|none",
-    "title": "Past Simple",
-    "custom_topic": null,
-    "skill_tags": ["past_tense"],
-    "items": [],
-    "summary": "",
-    "key_points": [],
-    "examples": []
-  }}
-}}
-
-Trả về CHỈ JSON, không thêm text khác!"""
-
-            response = await self.llm.generate_async(
-                user_input=prompt,
-                system_prompt="You are a JSON analyzer for learning activities. Return valid JSON only.",
-                temperature=0.3,
-                max_tokens=1000,
-            )
-
-            # Parse response
-            import json
-            if isinstance(response, str):
-                insights = json.loads(response)
-            else:
-                insights = response
-
-            return {
-                "topics_discussed": insights.get("topics_discussed", []),
-                "weak_skills": insights.get("weak_skills", []),
-                "strong_skills": insights.get("strong_skills", []),
-                "engagement_level": insights.get("engagement_level", "medium"),
-                "understanding": insights.get("understanding", "fair"),  # Fixed: was "understanding_level"
-                "chat_activity": insights.get("chat_activity", {"type": "none"}),  # NEW: Extract activity
-            }
-
-        except Exception as e:
-            logger.warning(f"Failed to analyze conversation: {e}")
-            return {
-                "topics_discussed": [],
-                "weak_skills": [],
-                "strong_skills": [],
-                "engagement_level": "medium",
-                "understanding": "fair",
-                "chat_activity": {"type": "none"},  # NEW: Default empty activity
-            }
+        # DISABLED: Skip LLM analysis to save ~2400 tokens per request
+        logger.info("⏭️  Skipping LLM conversation analysis (disabled to save tokens)")
+        return {
+            "topics_discussed": [],
+            "weak_skills": [],
+            "strong_skills": [],
+            "engagement_level": "medium",
+            "understanding": "fair",
+            "chat_activity": {"type": "none"},
+        }
 
     async def _update_topic_skills(
         self,

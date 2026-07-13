@@ -62,8 +62,10 @@ class Pipeline:
         graph.add_edge("analyze_memory", "execute_tools")  # Memory → Tools
 
         graph.add_edge("execute_tools", "generate_response")
-        graph.add_edge("generate_response", "reflect")  # CÁCH 3: Reflect before validate
-        graph.add_edge("reflect", "validate_output")
+        # DISABLED: Reflect node consumes too many tokens (rate limit issue)
+        # graph.add_edge("generate_response", "reflect")  # CÁCH 3: Reflect before validate
+        # graph.add_edge("reflect", "validate_output")
+        graph.add_edge("generate_response", "validate_output")  # Skip reflect to save tokens
         # CÁCH 1: Self-Correction - Repair invalid responses
         graph.add_node("repair", self._repair_node)
 
