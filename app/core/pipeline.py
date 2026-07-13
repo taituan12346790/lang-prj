@@ -44,7 +44,8 @@ class Pipeline:
         graph.add_node("analyze_memory", self._analyze_memory_node)  # CÁCH 2: Memory-driven
         graph.add_node("execute_tools", self._execute_tools_node)
         graph.add_node("generate_response", self._generate_response_node)
-        graph.add_node("reflect", self._reflect_node)  # CÁCH 3: Self-reflection
+        # DISABLED: Reflect node to save tokens
+        # graph.add_node("reflect", self._reflect_node)  # CÁCH 3: Self-reflection
         graph.add_node("validate_output", self._validate_output_node)
         #graph.add_node("repair", self._repair_node)
         graph.add_node("finalize", self._finalize_node)
