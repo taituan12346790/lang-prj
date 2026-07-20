@@ -306,7 +306,7 @@ class LearningService:
         db: AsyncSession,
         user_id: str,
         session_id: Optional[str],
-        limit: int = 15  # Increase from 10 to 15 for better context
+        limit: int = 5  # Reduce from 15 to 5 to prevent token limit
     ) -> Optional[str]:
         """A5: Load short-term memory (last N messages) from PostgreSQL"""
         if not session_id:
