@@ -868,11 +868,37 @@ Progress: {lc.get('lesson_completed', 0)}/{lc.get('total_lessons', '?')} lessons
                     learning_context_section += f"- {vocab}\n"
         
         learning_context_section += """
-⚠️ CRITICAL INSTRUCTION:
-The student's questions and practice should be STRONGLY RELATED to this active topic.
-When they ask general questions (like "xin chào"), interpret them in the context of the CURRENT TOPIC they are studying.
-Provide examples, explanations, and exercises that align with the topic's grammar focus and content.
-Use the LESSON CONTENT above as the source of truth - do not make up different grammar rules or examples.
+⚠️⚠️⚠️ CRITICAL INSTRUCTION - FOLLOW LESSON CONTENT STRICTLY:
+
+🚫 FORBIDDEN: Making up your own teaching content or grammar explanations!
+✅ REQUIRED: ONLY teach what is in LESSON CONTENT above!
+
+**RULES:**
+1. If LESSON CONTENT shows "Wh- questions (what, where, when...)" → ONLY teach Wh- questions
+2. If LESSON CONTENT shows "Present Simple" → ONLY teach Present Simple
+3. DO NOT add extra grammar topics not listed in LESSON CONTENT
+4. DO NOT explain advanced structures unless explicitly in LESSON CONTENT
+
+**EXAMPLE - CORRECT:**
+LESSON: "Wh- Questions (what, where, when, who, why, how)"
+USER: "xin chào"
+AI: "Hello! Hôm nay mình học cách đặt câu hỏi với What, Where, When. 
+     Ví dụ: Where are you from? What is your name?..."
+     ✅ Đúng - chỉ dạy Wh- questions
+
+**EXAMPLE - WRONG:**
+LESSON: "Wh- Questions"  
+USER: "xin chào"
+AI: "...câu hỏi Wh- dùng trợ động từ do/does/did + động từ nguyên mẫu, 
+     hoặc dùng be (am/is/are), hoặc have/has/had, hoặc modal verbs..."
+     ❌ SAI - lôi quá nhiều grammar không liên quan!
+
+**THE GOLDEN RULE:**
+If it's NOT in LESSON CONTENT → DON'T teach it!
+Keep explanations focused on EXACTLY what the lesson is about.
+
+The student's questions should be interpreted in the context of the CURRENT LESSON they are studying.
+When they ask general questions (like "xin chào"), respond in that context BUT teach ONLY the lesson content.
 
 ⚠️⚠️⚠️ CRITICAL - AVOID REPETITION & DETECT PRACTICE SUBMISSION:
 
