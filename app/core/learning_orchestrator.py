@@ -8,6 +8,37 @@ from loguru import logger
 
 from app.schemas.learning_action import SuggestedAction, SuggestedActionType
 
+# Mapping skill_tag (code) → Vietnamese display name
+SKILL_DISPLAY_NAMES = {
+    "irregular_verbs": "động từ bất quy tắc",
+    "regular_verbs": "động từ có quy tắc",
+    "verb_conjugation": "chia động từ",
+    "present_simple": "thì hiện tại đơn",
+    "present_continuous": "thì hiện tại tiếp diễn",
+    "past_simple": "thì quá khứ đơn",
+    "past_continuous": "thì quá khứ tiếp diễn",
+    "present_perfect": "thì hiện tại hoàn thành",
+    "future_simple": "thì tương lai đơn",
+    "articles": "mạo từ (a/an/the)",
+    "prepositions": "giới từ",
+    "pronouns": "đại từ",
+    "possessive_adjectives": "tính từ sở hữu",
+    "adjectives": "tính từ",
+    "adverbs": "trạng từ",
+    "sentence_structure": "cấu trúc câu",
+    "question_formation": "đặt câu hỏi",
+    "negative_sentences": "câu phủ định",
+    "conditionals": "câu điều kiện",
+    "passive_voice": "câu bị động",
+    "modal_verbs": "động từ khiếm khuyết",
+    "gerunds_infinitives": "danh động từ",
+    "vocabulary": "từ vựng",
+    "spelling": "chính tả",
+    "punctuation": "dấu câu",
+    "word_order": "trật tự từ",
+    "countable_uncountable": "danh từ đếm được/không đếm được",
+}
+
 
 class LearningOrchestrator:
     """
@@ -137,19 +168,40 @@ class LearningOrchestrator:
                 priority=1
             ))
         
-        # Default: Continue conversation
+        # Default: Suggest based on weak skills or start new topic
         if not actions:
+            # Priority: Review weakest skill if available
+            if analytics_context:
+                weak_skills = analytics_context.get("weak_skills", {})
+                if weak_skills:
+                    # Get weakest skill (lowest accuracy)
+                    weakest_skill_tag, accuracy = min(weak_skills.items(), key=lambda x: x[1])
+                    
+                    # Convert skill_tag to Vietnamese display name
+                    skill_display = SKILL_DISPLAY_NAMES.get(weakest_skill_tag, weakest_skill_tag.replace("_", " "))
+                    
+                    actions.append(SuggestedAction(
+                        type=SuggestedActionType.REVIEW_WEAK_SKILL,
+                        label=f"🔄 Ôn lại {skill_display}",
+                        reasoning=f"Bạn còn yếu về {skill_display} ({int(accuracy*100)}% độ chính xác)",
+                        params={"skill_tag": weakest_skill_tag, "skill_name": skill_display},
+                        confidence=0.85,
+                        priority=1
+                    ))
+        
+        # If still no actions and no active learning context, suggest start new topic
+        if not actions and not learning_context:
             actions.append(SuggestedAction(
                 type=SuggestedActionType.FREE_CHAT,
-                label="💬 Tiếp tục chat",
-                reasoning="Hỏi thêm hoặc chat tự do",
+                label="📚 Bắt đầu chủ đề học mới",
+                reasoning="Chọn chủ đề từ 190 topics CEFR (A1-B2) để bắt đầu học có hệ thống",
                 params={},
-                confidence=0.7,
-                priority=3
+                confidence=0.75,
+                priority=2
             ))
         
         # Sort by priority (1=highest)
         actions.sort(key=lambda a: a.priority)
         
-        # Return top 3
+        # Return top 3 (or empty if no meaningful suggestions)
         return actions[:3]
