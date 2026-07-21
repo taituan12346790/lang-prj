@@ -873,32 +873,43 @@ Progress: {lc.get('lesson_completed', 0)}/{lc.get('total_lessons', '?')} lessons
 🚫 FORBIDDEN: Making up your own teaching content or grammar explanations!
 ✅ REQUIRED: ONLY teach what is in LESSON CONTENT above!
 
-**RULES:**
-1. If LESSON CONTENT shows "Wh- questions (what, where, when...)" → ONLY teach Wh- questions
-2. If LESSON CONTENT shows "Present Simple" → ONLY teach Present Simple
-3. DO NOT add extra grammar topics not listed in LESSON CONTENT
-4. DO NOT explain advanced structures unless explicitly in LESSON CONTENT
+**PRIORITY RULES:**
+1. ALWAYS teach the MAIN TOPIC FIRST (focus on lesson title)
+2. Only mention supporting details AFTER explaining the main concept
+3. Keep beginner explanations SHORT and FOCUSED
 
-**EXAMPLE - CORRECT:**
-LESSON: "Wh- Questions (what, where, when, who, why, how)"
-USER: "xin chào"
-AI: "Hello! Hôm nay mình học cách đặt câu hỏi với What, Where, When. 
-     Ví dụ: Where are you from? What is your name?..."
-     ✅ Đúng - chỉ dạy Wh- questions
+**EXAMPLE - CORRECT PRIORITY:**
+LESSON: "Wh- Questions" (what, where, when, who, why, how)
+KEY POINTS: ["What = cái gì", "Where = ở đâu", ..., "Structure: do/does + verb"]
 
-**EXAMPLE - WRONG:**
-LESSON: "Wh- Questions"  
-USER: "xin chào"
-AI: "...câu hỏi Wh- dùng trợ động từ do/does/did + động từ nguyên mẫu, 
-     hoặc dùng be (am/is/are), hoặc have/has/had, hoặc modal verbs..."
-     ❌ SAI - lôi quá nhiều grammar không liên quan!
+✅ CORRECT ORDER:
+"Câu hỏi Wh- dùng 6 từ để hỏi:
+- What = cái gì (What is your name?)
+- Where = ở đâu (Where is the library?)
+- When = khi nào (When is your birthday?)
+- Who = ai (Who is your teacher?)
+- Why = tại sao (Why are you late?)
+- How = thế nào (How are you?)
 
-**THE GOLDEN RULE:**
-If it's NOT in LESSON CONTENT → DON'T teach it!
-Keep explanations focused on EXACTLY what the lesson is about.
+[Cho ví dụ với các từ này trước]
+
+Ghi chú: Với động từ thường, ta dùng do/does (What do you like?). 
+Với 'to be', không cần do/does (Where is she?)."
+
+❌ WRONG - Starting with grammar details:
+"Câu hỏi Wh- dùng trợ động từ do/does/did, hoặc be (am/is/are), 
+hoặc have/has/had... [giải thích dài dòng về trợ động từ]"
+→ SAI vì chưa dạy ý nghĩa các từ Wh- đã lao vào grammar!
+
+**THE GOLDEN RULES:**
+1. Teach VOCABULARY/MEANING before STRUCTURE
+2. Main topic gets 70% explanation, supporting details 30%
+3. For A1: Focus on EXAMPLES, minimize grammar rules
+
+If it's NOT the main focus → mention briefly at the end, not at the beginning!
 
 The student's questions should be interpreted in the context of the CURRENT LESSON they are studying.
-When they ask general questions (like "xin chào"), respond in that context BUT teach ONLY the lesson content.
+When they ask general questions (like "xin chào"), respond in that context BUT teach the MAIN TOPIC FIRST.
 
 ⚠️⚠️⚠️ CRITICAL - AVOID REPETITION & DETECT PRACTICE SUBMISSION:
 
